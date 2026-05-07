@@ -1,0 +1,147 @@
+[
+  {
+    "index": 1,
+    "source": "references/AssistancePaper/KCI_FI002782747.pdf",
+    "text_path": "logs/extracted_text/01__references__AssistancePaper__KCI_FI002782747.pdf.txt",
+    "pages": 9,
+    "total_chars": 16642,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 2,
+    "source": "references/AssistancePaper/N0210430501.pdf",
+    "text_path": "logs/extracted_text/02__references__AssistancePaper__N0210430501.pdf.txt",
+    "pages": 13,
+    "total_chars": 27179,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 3,
+    "source": "references/AssistancePaper/drones-08-00702-v2.pdf",
+    "text_path": "logs/extracted_text/03__references__AssistancePaper__drones-08-00702-v2.pdf.txt",
+    "pages": 28,
+    "total_chars": 123552,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 4,
+    "source": "references/AssistancePaper/ro220216.pdf",
+    "text_path": "logs/extracted_text/04__references__AssistancePaper__ro220216.pdf.txt",
+    "pages": 40,
+    "total_chars": 157996,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 5,
+    "source": "references/MainPaper/1-s2.0-S0968090X22001097-main.pdf",
+    "text_path": "logs/extracted_text/05__references__MainPaper__1-s2.0-S0968090X22001097-main.pdf.txt",
+    "pages": 26,
+    "total_chars": 118597,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 6,
+    "source": "references/MainPaper/1-s2.0-S2352864823000512-main.pdf",
+    "text_path": "logs/extracted_text/06__references__MainPaper__1-s2.0-S2352864823000512-main.pdf.txt",
+    "pages": 14,
+    "total_chars": 68370,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 7,
+    "source": "references/MainPaper/AIAA_Technical_Journals_Panel_Method_Based_Guidance__Revision_ (1).pdf",
+    "text_path": "logs/extracted_text/07__references__MainPaper__AIAA_Technical_Journals_Panel_Method_Based_Guidance__Revision__1_.pdf.txt",
+    "pages": 35,
+    "total_chars": 67911,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 8,
+    "source": "references/MainPaper/Autonomous_Free_Flight_Operations_in_Urban_Air_Mobility_With_Computational_Guidance_and_Collision_Avoidance.pdf",
+    "text_path": "logs/extracted_text/08__references__MainPaper__Autonomous_Free_Flight_Operations_in_Urban_Air_Mobility_With_Computational_Guidance_and_Collision_Avoidance.pdf.txt",
+    "pages": 14,
+    "total_chars": 76883,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 9,
+    "source": "references/MainPaper/KCI_FI003258855.pdf",
+    "text_path": "logs/extracted_text/09__references__MainPaper__KCI_FI003258855.pdf.txt",
+    "pages": 8,
+    "total_chars": 19369,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 10,
+    "source": "references/MainPaper/document.pdf",
+    "text_path": "logs/extracted_text/10__references__MainPaper__document.pdf.txt",
+    "pages": 16,
+    "total_chars": 51729,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 11,
+    "source": "references/MainPaper/drones-07-00491.pdf",
+    "text_path": "logs/extracted_text/11__references__MainPaper__drones-07-00491.pdf.txt",
+    "pages": 22,
+    "total_chars": 91085,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 12,
+    "source": "references/MainPaper/wevj-15-00300-v2.pdf",
+    "text_path": "logs/extracted_text/12__references__MainPaper__wevj-15-00300-v2.pdf.txt",
+    "pages": 18,
+    "total_chars": 60118,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 13,
+    "source": "references/MainPaper/다중 무인 항공기의 협동 작업을 위한 무 충돌 비행 계획.pdf",
+    "text_path": "logs/extracted_text/13__references__MainPaper___.pdf.txt",
+    "pages": 8,
+    "total_chars": 15014,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 14,
+    "source": "references/MainPaper/기상 제약조건을 고려한 계절별 UAM 경로 선정 연구 대한민국 제주 관광노선을 중심으로.p.pdf",
+    "text_path": "logs/extracted_text/14__references__MainPaper___UAM_.p.pdf.txt",
+    "pages": 14,
+    "total_chars": 27189,
+    "zero_text_pages": [],
+    "errors": []
+  },
+  {
+    "index": 15,
+    "source": "references/Referenceinformation/한국형_도심항공교통(K-UAM)_기술로드맵.pdf",
+    "text_path": "logs/extracted_text/15__references__Referenceinformation_____K-UAM___.pdf.txt",
+    "pages": 600,
+    "total_chars": 535171,
+    "zero_text_pages": [
+      1,
+      20,
+      48,
+      50,
+      114,
+      162,
+      198,
+      200,
+      238
+    ],
+    "errors": []
+  }
+]

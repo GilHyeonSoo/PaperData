@@ -1,0 +1,22 @@
+description: 중소형 확장 도시 시나리오
+model: D
+map:
+  width: 2000
+  height: 2000
+  grid_size: 50
+  road_width: 12
+  building_density: 0.35
+vertiports:
+  count: 12
+  pad_occupancy_enabled: true
+aircraft:
+  fleet_size: 100
+  cruise_speed_kmh: 240
+simulation:
+  random_seed: 1103
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60

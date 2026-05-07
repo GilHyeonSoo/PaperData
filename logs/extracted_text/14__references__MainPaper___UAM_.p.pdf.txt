@@ -1,0 +1,510 @@
+SOURCE: references/MainPaper/기상 제약조건을 고려한 계절별 UAM 경로 선정 연구 대한민국 제주 관광노선을 중심으로.p.pdf
+PAGES: 14
+
+
+
+===== PAGE 1 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 125
+ARTICLE
+기상/.null제약조건을/.null고려한/.null계절별/.nullUAM 경로/.null선정/.null
+연구: 대한민국/.null제주/.null관광노선을/.null중심으로
+김은지1 ･ 성진규2 ･ 이강민3 ･ 김휘양4*
+1한국항공대학교/.null 항공교통물류학과/.null박사과정, 2한국교통안전공단/.null 항공자격처/.null책임연구원, 
+3진에어/.null운항관리사, 4한국항공대학교/.null 항공교통물류학부/.null부교수
+A Study on Seasonal UAM Route Selection 
+Considering Weather Constraints: 
+Focusing on Tourism Routes in Jeju, South Korea
+KIM, Eunji1
+ ･ SEONG, Jinkyu2
+ ･ LEE, Kangmin3
+ ･ KIM, Huiyang4*
+1Ph.D Candidate, Department of Air Transportation and Logistics, Korea Aerospace University, Gyeonggi
+10540, Korea
+2Chief Researcher, Airmen Licensing Department, Korea Transportation Safety Authority, Seoul 03918,
+Korea
+3Flight Dispatcher, Jin Air, Seoul 07802, Korea
+4Associate Professor, Department of Air Transportation and Logistics, Korea Aerospace University,
+Gyeonggi 10540, Korea
+*Corresponding author: igreenbee@kau.ac.kr
+Abstract
+Urban Air Mobility (UAM) is emerging as an alternative transportation method to solve 
+urban ground traffic jams, but due to constraints such as infrastructure expansion and safety, 
+Jeju Island is being considered as an early commercialization region. However, considering 
+the
+regional characteristics of Jeju Island and the characteristics of UAM aircraft, the operation of 
+UAMs in Jeju Island is expected to be highly constrained by weather requirements, especially 
+wind. Therefore, it is necessary to consider the weather constraints in the operation 
+planning, 
+and this study tried to design a route for seasonal tourism UAM with wind speed as the main 
+factor. The routes were set as Jeju International Airport - Seongsan and Jeju International 
+Airport - Jungmun Tourist Complex, and the vertiport locations were assumed as departure an
+d
+arrival points based on several key requirements such as obstacle separation and site 
+availability. For route design, we analyzed the seasonal and spatial wind speed impact on Jej
+u 
+Island based on meteorological data at the expected flight altitude of the UAM, converted the 
+constraints such as ground obstacles and tourist attractions into a total cost, and derived 
+seasonal routes with the minimum cost by also considering the distance. As a result, it was 
+found that the flight paths for each route were selected differently by season. This study is 
+expected to contribute to the initial demonstration and actual operation of UAMs by 
+presenting 
+a route planning method and results considering weather, which is a major constraint in UAM 
+operations.
+Keywords: geographic information system, route selection, urban air mobility, weather, wind 
+speed impact
+ARTICLE HISTORY
+Received: 10 November 2023
+Revised: 6 December 2023
+Accepted: 29 March 2024
+Copyright Ⓒ
+Korean Society of Transportation
+This is an Open-Access article distributed under 
+the terms of the Creative Commons Attribution 
+Non-Commercial License
+(http://creativecommons.org/licenses/by-nc/3.0) 
+which permits unrestricted non-commercial use, 
+distribution, and reproduction in any medium, 
+provided the original work is properly cited.
+J. Korean Soc. Transp.
+Vol.42, No.2, pp.125-138, April 2024
+https://doi.org/10.7470/jkst.2024.42.2.125
+pISSN : 1229-1366
+eISSN : 2234-4217
+
+===== PAGE 2 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024126
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+초록
+도심항공교통(Urban Air Mobility, 이하 UAM)은 도심 지상교통혼잡 해결을 위한 대체 교통수단으로 대두되고 
+있으나, 인프라 확충 및 안전성과 같은 제약사항으로 인해 초기상용화 지역으로 제주도가 검토되고 있다. 그러나, 
+제주도의 지역적 특징과 UAM 기체의 특성을 고려할 때, 제주도에서의 UAM 운용은 기상요건, 특히 바람에 많은 
+제약을 받을 것으로 생각된다. 따라서 운항 검토에 있어 기상 제약조건에 대한 고려가 필요하며, 본 연구는 그중 풍
+속을 주요인으로 하여 계절별 관광 UAM의 경로를 선정해보고자 하였다. 노선은 제주국제공항-성산 및 제주국제
+공항-중문관광단지로 설정하고, 장애물 분리, 부지확보 가능 여부 등 몇 가지 핵심 요건을 토대로 버티포트 위치를 
+선정, 출, 도착지로 가정하였다. 경로 선정은 UAM 예상 운항 고도에서의 기상자료를 토대로 제주도 전역에 대한 계
+절별, 공간별 풍속 영향도를 분석한 결과에 지상 장애물과 관광지까지 세 가지 제약조건을 종합 비용으로 환산, 거리
+까지 고려하여 최소비용을 가지는 노선별, 계절별 경로를 도출하였다. 그 결과 노선별 비행경로가 계절별로 상이하
+게 선정된 것을 확인할 수 있었다. 본 연구는 UAM 운항에서의 주요 제약조건인 기상을 고려한 경로 선정 방법과 그 
+결과를 제시함으로써, UAM 초기 실증 및 실제 운영에 기여할 수 있을 것으로 기대된다.
+주요어: 공간정보시스템, 경로 선정, 도심항공교통, 기상, 풍속 영향도
+연구의/.null 배경/.null 및/.null목적
+UAM은 도심 내 활용이 가능한 전기동력 수직이착륙기(eVTOL) 등을 이용, 승객이나 화물 운송 등을 목적으로 
+타 교통수단과 연계되어 운용되는 새로운 항공교통체계로 도심 내외 승객 및 화물 운송을 비롯하여 공공목적과 관
+광사업 등을 위해 운용될 수 있다(UAM Team Korea, 2021). UAM은 도심 지상교통혼잡을 해결할 수 있는 새로운 
+패러다임의 교통수단으로 전 세계적인 주목을 받고 있으며, 대한민국 정부는 2025년 상용화를 목표로 2023년 4월 
+국토교통부의 UAM 안전운용체계 기술을 국가전략으로 선정한 바 있다.
+UAM은 항공교통 수단을 이용한 3차원 교통체계로써 기존의 지상 교통과는 전혀 다른 특성을 가지며, 도심에서 
+UAM을 운용하기 위해서는 많은 제약조건을 극복해야만 한다. 그중 하나로는 버티포트 인프라 확충 문제가 있다. 
+UAM의 지상 인프라인 버티포트는 기존 공항 및 터미널과 다른 새로운 설계 및 운용기준이 필요하며, 상용화 초기 
+소형 버티포트 기준 설계안을 적용할 경우 약 14,000m
+2의 면적 확보가 요구된다(UAM Team Korea, 2022). 또 다
+른 운용 제약조건으로는 안전성을 꼽을 수 있다. UAM 운항의 주요한 위해 요인 중 하나는 지상의 사람 또는 건물과 
+충돌하는 것인데(Washington et al., 2017), 이는 인구밀도가 높은 도심지에서 발생할 확률이 높기 때문이다(Oh et 
+al., 2022). 위와 같은 도심 운용에서의 제약을 반영하듯, SK텔레콤, 한국공항공사, 한화시스템 등이 참여하고 있는 
+UAM 컨소시엄은 UAM 상용화 실증사업 시행을 위한 첫 지역으로 제주도를 선정하였다(Money today, 2023). 제
+주도에서의 UAM 상용화 방안은 특별히 제주도의 지역적 특징이라고 할 수 있는 관광 수요를 중심으로 검토되고 
+있다(Ihalla, 2023).
+제주도에서의 관광 UAM 운용은 상용화 초기 단계에서의 적절한 전략이라고 할 수 있다. 그 첫 번째 이유는 제주
+도가 UAM 인프라 구축에 적절한 지역으로 보이기 때문이다. UAM 인프라 구축에 적절한 입지의 조건으로는 낮은 
+인구 밀집도, 많은 유 휴지, 호수나 강 등과의 인 접성, 취약한 대중교통 망, 인근 대형공항의 존 재가 있는데( Robinson 
+et al., 2018), 제주도는 이와 같은 조건을 대부분 충 족하는 곳으로 볼 수 있다. 특히, UAM 운용 제약사항인 인프라 
+확충과 안전성 문제해결을 위해서는 다수의 유 휴지가 존 재하고 인구밀집도가 낮은 지역이 적절한데 제주도의 경우 
+전체 면적의 27.9%가 목야지나 유 휴지이며, 인구밀집도는 서 울 대비 약 2.3% 수준이다(Statistics Korea, 2023).
+둘째, UAM 상용화 초기에는 통 근 혹은 통 학보다 관광 목적의 이용에 대한 수용성이 더 높을 수 있기 때문이다. 
+국내 20세 이상 성인 남녀 300명 대상의 설문 조사 결과에 따 르면 통 근, 통학 목적보다는 쇼핑, 문화생활과 같은 여
+가활동 목적의 UAM 이용 의사가 더 높게 나타 났으며, 이는 대중 들이 UAM을 일상적 교통수단보다 여가 목적으로 
+
+===== PAGE 3 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 127
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+더 선호한다는 것을 보여주는 것이다(Lee et al., 2022a).
+그러나, 제주도에서의 UAM 운용에는 필수적으로 고려해야 할 주요 제약요인이 있다. Figure 1은 맞바람이 비행
+체 크기 및 속도에 따라 운항시간에 미치는 영향을 나타내고 있는데, 순항속도가 낮은 소형 비행체는 비행시간 오차
+가 증가하는 등 맞바람이 미치는 영향이 급격히 커지는 것을 볼 수 있다( Campbell et al., 2017). UAM 기체는 소형 
+비행체로 개발이 진행 중이 므로 기상 조건에 대한 민 감도가 일반 항공기보다 더 클 수 있으며, 특히 저고도로 비행하
+게 되는 UAM의 운항 특성상 바람은 안전에 영향을 미 칠 수 있는 상 당히 중요한 요인으로 작용할 것이다. 이는 기상
+변화가 잦으며, 특히 내륙과 비교하여 강한 바람이 자주 부는 특징이 있는 제주도에서 특히 고려해야 할 제약조건이 
+될 수 있다.
+따라서, 본 연구는 기상 요인을 고려한 UAM 경로 선정 방법을 제시하고자 하며, 특히 구체적인 사 례로 제주지역
+을 선정, 바람을 고려한 계절별 관광노선을 제안함으로써 UAM 초기 실증 및 운영에 기여하고자 한다.
+Figure 1. Effect of a headwind on flight time for various UAM (Campbell et al., 2017)
+선행연구
+1. UAM 기상/.null영향도
+Reiche et al.(2018)은 법률 및 규제, 기상, 기체 인증, 대중적 인 식, 인프라 등을 UAM 운항 제약조건으로 검토하
+여 다 양한 비 즈니스 모델에 대한 시장 규모를 측정하는 연구를 수행하였다. 이때 UAM 시장 성 숙도에 따른 과제 들
+을 규명하였는데, 기상의 경우 단기와 장기 시장 모두에서 UAM의 운항을 제한할 수 있는 주요 요인으로 꼽 혔다.
+발굴한 제약사항 들을 토대로 UAM 운항 가능성을 구체적으로 평가하기 위해 Reiche et al.(2021)은 기상으로 인
+한 운항 영향도 분석에 관한 연구를 진행, 미국 도심지 10 곳(댈러스, 덴버, 로스 엔젤레스 등)을 선정하여 UAM 고도
+에 대한 계절별 및 일별 기상분석을 수행하였다. 기상분석 수행기준을 정 립하기 위하여 M ETAR1) 자료에 포함된 
+기상 현상을 대상으로 1부터 10 사이의 값으로 영향 점수를 정의하고, 이를 활용하여 10 개 도심지에 대해 계절별, 운
+영 시간대별 평균 영향 점수(impact score)를 산정하였다. 이때, 영향 점수 3을 초과하는 경우를 UAM 운항이 기상
+에 영향을 받을 수 있는 ‘영향 시간대 ’로 정의, 계절별 ‘영향 시간대 ’의 평균 빈도를 산정하여 지역별 기상 영향도 분
+석을 수행하였다. 정의한 영향 점수표가 Table 1에 나타나 있다.
+1) METeorological Aerodrome Report, 공항지역의육며null기상정보가육며null포함된육며null정시관측보고
+
+===== PAGE 4 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024128
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+Table 1. Impact scores for each weather condition from METAR (Reiche et al., 2021)
+Weather condition Score Weather condition Score
+Drizzle 1 Wind 20-25kts 7
+Rain 1 Smoke (<3sm) 7
+MVFR ceiling 1 LIFR ceiling 7
+Haze 1 Non-VFR visibility 7
+Ice crystals 1 Wind ≥ 25kts 8
+Sand whirls 1 Sleet 8
+Sand 2 Squalls 8
+Snow grains 2 Fog 8.5
+Temp ≤32℉ 3 Freezing fog 8.5
+Temp ≥ 100℉ 3 Freezing drizzle 9
+Non-VFR ceiling 4 Thunderstorms 9
+Dust 5 Dust storm 10
+Snow 5 Funnel cloud/Tornado 10
+Sandstorm 5 Freezing rain 10
+Wind 15-20kts 5 Hail 10
+M i s t  ( v i s  > =  5 / 8 s m ) 6 Volcanic ash 10
+Snow pellets 6
+Chao et al.(2021)은 Reiche et al.(2021)이 정의한 영향점수표(Table 1)를 활용하여 도심 2 개 지역 기상 영향도 
+분석연구를 수행하였다. 이때, 평균 영향 점수를 산정하여 위 험도를 평가한다면 점수가 높은, 즉 운항에 대한 영향이 
+매우 큰 기상 현상의 영향도가 줄어들 수 있어 실제 위 험성을 온전히 반영하지 못한다는 문제를 제기하였다. 이에 동
+일 시간대에서 가장 높은 점수를 해 당 시간대의 영향 점수로 간주하고, UAM 운항의 목적인 통 근을 반영하기 위해 
+시간대별 통 근 통행 량을 별도의 가중치로 부여하여 기상 영향도를 분석하였다.
+2. UAM 경로/.null선정
+Lee et al.(2020)은 UAM 운용체계 개념을 기반으로 사 례 지역 서 울시에 대한 운항 경로를 구축하였다. 운용체계 
+개념을 비행체, 환경, 규정, 교통, 인프라 총 5가지로 나 누어서 검토한 후 주요 고려 대상으로 공역 운용상 제한, 각 
+공항의 관제 권 구성, 이착륙장 시설 선정 관 련 규정, 인프라 요소를 선정하였고, 이를 기준으로 경로를 구축하였다. 
+이때, 주요 고려 대상에 저촉하지 않는 조건에서 기존 항공기 회랑(Corridor)2), 시계비행경로, 시각참조 점 등 기존 
+인프라를 최대한 활용한 경로를 제시하였다.
+Lee et al.(2021)은 UAM이 승객 수요를 즉각적으로 파악하여 수송 경로를 결정한다는 가정에 따라 V RPP 
+(Vehicle Routing Problem with Profit) 기반의 경로 계 획 방법을 제시하였다. 다수의 승객이 존 재하나 자원은 한정
+된 상 황에서 이 익을 최대화하는 방향으로 승객의 수송 순서를 결정하여 경로를 선정하는 방법이며, 해 당 연구에서
+는 한정된 자원을 UAM의 운송 시간으로 두어 최대의 이 익을 얻을 수 있는 경로를 선정하는 방법을 제시하였다.
+Lee et al.(2022b)는 UAM 상용화를 위해서는 도심 내 다양한 환경과 장애물을 고려한 안전성이 확보되어야 한다는 
+필요성에 따라 경로상 존 재하는 위해요소와 도 움 요소를 식별하고, 이를 기반으로 최적 경로를 산출하였다. 위해요소와 
+도움 요소로 국가 공역, 항로, 제한구역, 고속도로 및 하 천 현황, 비상 착륙지, 고 층빌딩 등의 요소를 식별하였으며 각 요
+소를 중요도에 따라 점수화하여 격자화한 공간에 점수를 책정하였다. 그 후, 책정된 최종 점수를 지도에 히트 맵으로 시
+각화하고 격자 색상 및 지형지물 환경에 따라 항공로의 웨이포인트를 지정하는 방법으로 경로를 선정하였다.
+Sung et al.(2023)은 서울시를 대상으로 버티포트의 최적 입지를 선정하고 해 당 버티포트 간의 최적 경로를 선정
+하였다. 버티포트의 최적 입지는 대중교통 수요 량, 생활인구 밀도, 연 평균 소득, 개별공시지가, 대중교통과의 거리, 
+2) 특정육며null고도로만육며null비행이육며null가능한육며null구역
+
+===== PAGE 5 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 129
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+주거 건물 밀집도를 기준으로 선정하였으며, 최종적으로 12 개의 버티포트 입지를 결정하였다. 버티포트 간 최적 경
+로는 산지 고도와 비행 금지구역 등 공역 상 장애물이 있는 공간을 제외하고 고속도로 및 하 천에 대해서는 가산요인
+을, 주거 건물 밀집 지역에 대해서는 감산요인을 적용하여 Dijkstra 알고리 즘에 따라 선정하였다.
+3. 본/.null 연구의/.null차별성
+UAM에 대한 기상 영향도를 평가한 기존 연구의 경우, 선정지역의 기상요건이 UAM 운항에 미치게 될 영향도를 
+평가하는 것을 목적으로 하였으며 시간대, 통 근 통행 량 등의 요인을 반영하여 공간별로 기상 영향도를 계 량화된 점
+수로 책정하고 운항 영향도 평가에 활용하였다. 그러나, 두 연구 모두 UAM의 운항 고도에서 수집되거나 관 측된 자
+료가 아닌 지상 관 측 자료를 분석에 사용하였다는 한계가 있었다. UAM 경로 선정과 관 련된 기존 연구의 경우, 제한
+구역 등의 공역 환경, 기존 인프라, 승객 수요 및 한정된 자원 등 각 연구 별로 주요하게 고려하는 요인을 반영하여 
+UAM 운항에 적절한 경로를 선정하였으나, 기상 요인을 경로 선정에 반영한 연구는 찾기 어려 웠다.
+이에 본 연구에서는 공간적 범위인 제주도에 대하여 UAM 운항 고도 범위에 준하는 기상자료를 활용해 공간별 
+기상 영향도를 계 량화된 점수로 책정하고, 이 기상 영향 점수를 경로 선정에 활용하여 기상을 고려한 UAM 경로를 
+선정해보고자 하였다.
+연구의/.null방법
+본 연구에서는 기상요건, 그중에서도 바람을 고려하여 계절별 UAM 관광노선을 선정해보고자 하였으며 이를 위
+해 다 음과 같은 과정으로 연구를 수행하였다.
+첫째, 장애물 분리조건 및 설치부지 확보 가능 여부 등 주요 요건을 고려하여 경로의 출, 도착지로 기능하는 버티
+포트의 위치를 가정하였다. 둘째, 가정한 버티포트를 UAM 출발 및 도착지로 적용하고, 주요 경로 선정 요인과 실제 
+거리를 통합적으로 반영하여 최소비용 기반의 계절별 단 일 경로를 선정하였다. 최소비용 기반 경로 선정 방법으로
+는 전문적인 공간정보 분석 및 시각화를 제공하는 프로그 램인 ‘ArcGIS’ 내의 ‘래스터 형 식 최적 경로 ’ 기능을 사용하
+였다. ‘래스터 형 식 최적 경로 ’ 기능은 공간을 격자화하여 각 격자에 사용자가 자 율적으로 할 당한 비용과 측지거리 3)
+를 기반으로 출발지에서 도착지까지의 비용과 거리를 모두 고려한 최적 경로를 선정할 수 있다.
+주요 경로 선정 요인을 통합 반영하여 최적 경로를 산출하기 위해 본 연구에서는 경로 선정 요인을 각각 비용으로 
+환산하고, 합산한 총비용을 산출하여 대상 공간에 대한 통합 비용 지도를 구축하였다. 이때 주요 경로 선정 요인으로
+는 장애물, 풍속 및 관광지를 고려하였으며, 각 선정 요인을 고려한 이유는 다 음과 같다.
+우선, 항공교통은 3차원 공간인 공중을 이용하는 특성상 장애물과의 분리 기준을 필수적으로 고려해야 할 필요가 
+있다. 본 연구의 공간적 범위인 제주도는 비행 금지구역 등 공역 구분으로 인한 제한은 적으나, 산지 등 지형지물이 
+공역 사용의 방해 요인이 될 수 있다. 따라서 국내 항공법에서 제시하는 시계비행(Virt ual Flight Route) 시의 수직, 
+수평 장애물 분리 기준을 적용하여 장애물 요인을 반영하였다.
+두 번째로, 본 연구에서는 풍속을 검토할 주요 기상요건으로 채택하였다. 그 이유는 우선 연구의 공간적 범위인 
+제주도가 내륙에 비하여 강한 바람이 자주 부는 특징을 지 니고 있어 이를 반영하고자 한 것이다. 또한, UAM의 주요 
+기체인 eVTOL 항공기는 보 편적으로 회전익 항공기로 설계되는데 회전익 항공기는 일반적으로 바람의 방향에 상
+관없이 어 느 방향으로나 기동할 수 있다. 따라서 바람의 속성 중 풍향보다는 풍속이 UAM 운항의 기동성과 안정성
+에 영향을 미 칠 수 있는 주요 요인이라고 볼 수 있으며, 실제로 eVTOL 항공기의 풍속 저항성을 중요하다고 여 겨 이
+를 측정하는 방법에 관한 연구 또한 이 루어진 바가 있다( Hou et al., 2019). 이에 본 연구에서는 풍속을 중심으로 경
+로를 선정해보고자 하였으며, 계절별 단 일 경로를 선정하는 만 큼 평균적인 경향성을 반영할 필요가 있어 제주도 전
+3) 지구가육며null구육며null혹은육며null타원체라는육며null점을육며null반영, 3D 구의육며null곡면으로육며null산정한육며null거리
+
+===== PAGE 6 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024130
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+역 공간에 대한 최 근 5년의 평균 풍속 영향도를 산정하여 경로 선정에 활용하였다. 기상자료로는 초단기 기상분석 
+및 예 측시스템(Korea Analysis and Prediction System, 이하 KLAPS) 재분석 자료를 사용하여 UAM 예상 운항 고
+도에서의 풍속을 반영하였으며, UAM 기상 영향 점수표( Reiche et al., 2021, Table 1 참조)를 적용해 계절별, 공간
+별 평균 풍속 영향도를 산정하였다.
+마지막 선정 요인인 관광지의 경우 본 연구에서 다 루는 대상 사 례가 제주도에서 운용되는 ‘관광용 ’ UAM이므로 
+이를 반영하고자 한 것이다. 본 연구에서 정의하는 ‘관광용 ’ UAM이란, UAM 교통 자체가 하나의 관광 상 품으로 기
+능하는 서비스를 의미한다. 즉, 출-도착지 간 이동보다는 UAM을 이용하는 행위 자체가 목적이 될 수 있다. 따라서 
+선정하는 경로가 관광 상 품으로서의 가치를 갖도록 제주도 내의 유 명 관광지 및 계절별로 특 색을 가지는 관광지를 
+공중에서 경유할 수 있게 끔 경로 선정을 유도하고자 하였다.
+계절별/.null 관광/.nullUAM 경로/.null선정
+1. 출/도착지(버티포트) 위치/.null선정
+본 연구에서는 ‘제주형 UAM 시 범사업 ’ 등의 실증사업에서 추진을 계 획 중인(Invest, 2023) 버티포트 위치(제주
+국제공항, 중문관광단지, 성산 일출봉)를 경로 출발 및 도착지 위치로 준용하였다.
+이때, 한국형 버티포트 구축 및 운용 안내서에서 제시한 버티포트 입지요건 체 크리스트를 기반으로 구체적인 버
+티포트 위치를 선정하였다. ① 버티포트 접근 및 출발 경로상 장애물과 분리, ② 관광지 인 근(여객수요 및 접근성), 
+③ 버티포트(이착륙패 드 1개, 계류장소 2개 및 터미널 1 개소 설계기준) 설치부지(약 14,000 ㎡) 확보 가능 여부 및 
+④ 용도지역에 따른 토지이용행위 적합성(제주도의 경우 공항시설은 도시계 획조례에 따라 상업, 공업, 자연 녹지지
+역 내 설치 가능)과 ⑤ 공항지역 버티포트의 경우 기존 항공기 비행경로와 최대한 분리된 UAM 운항 가능 여부(활
+주로로부터 최소 2,500 피트 이 격) 이상 총 5가지 조건을 핵심 요건으로 판단, 이를 바 탕으로 위치를 검토하였다. 그 
+결과 Figure 2와 같이 제주공항은 여객터미널 주차장 서 편지역, 중문관광단지는 중문 골프장 인 근, 성산 일출봉 지역
+의 경우 성산항 인 근 부지가 적합한 곳으로 평가되어 해 당 위치를 버티포트의 위치로 가정, 출 /도착지로 경로를 선
+정하였다.
+Jeju Airport : West side of Airport Parking lot 
+Jungmun Tourist Complex : Around Jungmun CC Seongsan Ilchulbong peak : Around Seongsan Port 
+Figure 2. Selection of vertiport location 
+
+===== PAGE 7 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 131
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+2. 경로/.null 선정/.null 조건/.null환산
+버티포트 위치로 가정한 제주국제공항, 성산 일출봉, 중문관광단지를 기준으로 제주공항-성산 및 제주공항-중
+문관광단지 2 개 노선에 대해 계절별 경로를 선정하였다.
+적절한 비용 입력이 경로 선정에 있어 중요한 요인으로 본 연구에서는 다 음과 같은 경로 선정 제약조건을 설정, 
+비용으로 환산하였다. 첫째, 경로 내에 장애물 제한사항을 충 족한다. 둘째, 풍속 영향 점수가 낮은 공간으로 최대한 
+운항한다. 셋째, 본 연구에서 검토하는 UAM의 목적은 통행이 아닌 관광으로, 제주도 내 주요 관광지 및 계절별 특
+화 관광지를 최대한 경유하도 록 한다. 각 제약조건을 기준에 따라 음 혹은 양의 비용으로 환산, 통합 비용으로 합산
+한 후 최소비용 기반의 경로를 선정하였다.
+1) 장애물
+UAM 비행경로의 예상 고도는 일반 항공기보다 낮은 300- 600m 사이로, 비행고도 내에 건물이나 산지 등의 장
+애물이 존 재할 수 있다. 시계비행 4)에 대한 장애물 회피 수직 분리 기준으로 항공안전법 시행 규칙 제199조(최 저비행
+고도)에서 일반지역은 150m(500ft), 인구 밀집 지역 상공의 경우에는 300m(1000 ft)의 수직 분리를 규정하고 있다.
+본 연구에서는 UAM 운항에 영향을 줄 수 있는 장애물의 범위를 건물 및 지형으로 정의하고 국가정보포 털에서 
+건물의 위치 및 높이 정보, Ar cGIS 내장 데이터로부터 제주도 지형 고도 정보를 수집, 반영하였다. 건물에는 인구 밀
+집 지역의 분리 규정을(300m), 지형에는 일반지역 규정을(150m) 수직 분리 기준으로 적용하였다. 그 결과, 300m 
+이상인 건물이 제주도 전역에 총 8개 존재하여 영향이 거의 없는 것으로 분석되었다. 기타 제주도 대부분 지역은 일
+반지역에 해 당하며, UAM 비행 고도 300-600m에 분리 기준을 적용하면 장애물의 최대 허용 가능 고도는 450m 이
+하라고 할 수 있다. 따라서 450m를 초과하는 고도의 지형에서는 UAM 운항이 불가하다. 또한, 지형 장애물의 고도
+가 150m 이하인 경우는 장애물이 존 재하지 않는 것으로 판단할 수 있다. 종합하여 지형 고도에 따른 비용을 Table 
+2와 같이 설정하였다. 150m 이하는 장애물에 따른 영향이 없어 비용이 없으며, 150-450m 사이는 약간 제한되어 
+100의 비용으로 책정하였으며, 450m를 초과하는 경우는 운항이 불가하여 분석 범위에서 제외하였다. 이를 바 탕으
+로 도출된 지형 고도 래스터는 Figure 3과 같다.
+Table 2. Cost and color code for terrain elevation
+Terrain elevation ran ge Color code Cost
+Less than 150m 0
+150 to 450m 100
+450m or more Null Null
+Figure 3. Analysis results for terrain elevation
+4) Visual Flight, 항공기육며null조종사가육며null외부의육며null상황을육며null보며육며null육안으로육며null지형지물을육며null참조하며육며null하는육며null비행
+
+===== PAGE 8 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024132
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+2) 풍속
+본 연구에서는 분석 자료로 초단기 기상분석 및 예 측시스템(Korea Analysis and Prediction System, 이하 
+KLAPS) 재분석 자료를 사용하였다. KLA PS는 기상분석 및 예 측시스템을 기반으로 관 측자료를 추가, 한반도 중심
+의 공간영역에 대한 기상자료를 재생산한 것으로 초단기 AWS 5), AMeDAS6), METAR, 수직 측풍장비, 레이 더, 위
+성 자료, 낙뢰자료, 항공기 기상관 측자료인 AM DAR7) 등 사 후에 가용한 모든 관측자료를 활용하여 기상 현상을 보
+다 현실에 가 깝게 모의한다고 알려져 있다(Kim, 2011). 또한, 1시간 간격, 수평 해상도 5km, 1100hPa부터 50hPa까
+지 50hPa 간격의 공간적 범위에 대해 연직 격자로 이 루어진 3차원 고해상도의 범위를 가지고 있다. 즉, KLAPS는 예
+측 자료이나 관 측 데이터가 일부 반영되어 있으며, 수집 범위에 따라 UAM 비행고도에 해 당하는 기상 현상의 반영
+이 가능한 자료이다.
+이에 2018년부터 2022년까지의 제주 내륙지역 KLA PS 자료를 수집, 지면 고도와 UAM 운항 고도에서의 평균 풍
+속을 분석하였다. 계절의 평균적인 경향성을 반영하기 위해 태풍 발생 시기의 자료를 제외하고 이상치를 제거하여 
+분석하였으며, 그 결과는 Figure 4와 같다.
+Figure 4. 5-year seasonal average wind speed at surface and 950hPa altitude of Jeju Island 
+모든 계절에서 지상보다 약 500m( 950hPa) 고도에서의 평균 풍속이 약 2 knots 정도 강하며, 계절별로 풍속 차이
+가 존 재하는 것으로 나타나고 있다. 이는 기상이 UAM 운항에 미치는 영향도를 분석할 때 UAM 비행경로 고도에서 
+수집된 자료를 사용할 필요가 있으며, 계절별 분석 또한 유의미할 수 있 음을 시사한다.
+위 분석결과를 기반으로 최 근 5년(2018-2022) 기준 자료에서 가용한 최소 범위인 수 평 5km 격자 단위에 연직으
+로는 UAM 경로 고도 범위인 300-600m에 준하는 기 압 고도 950hPa에서의 측정자료로 제주도의 공간별 풍속을 
+분석하고 비용으로 환산하였다.
+공간별 풍속을 비용으로 환산하기 위해 Reiche et al.(2021)이 제시한 영향점수표(Table 1)를 준용하였으나, 해 당 
+영향 점수표는 공항지역을 중심으로 관 측된 기상자료에 대한 영향 점수를 산정한 것으로 기존 일반 항공기가 영향을 
+받는 기상 현상을 중심으로 책정된 점수라고 할 수 있다. 따라서 UAM에 영향을 미 칠 수 있는 풍속 수준을 설 명하기
+에 다소 제한적이라고 판단되어 추가 기준을 적용하였다.
+개발 중인 UAM 비행체 속도(예. Joby S4 322km/h, Lilium Jet 280km/h 등)는 헬리콥터와 유사(U H-60 
+5) Automatic Weather Station, 자동기상관측시스템에서육며null수집되는육며null기상육며null관측자료
+6) Automated Meteorological Data Acquisition System, 일본육며null기상청에서육며null개발한육며null지상육며null기반육며null관측육며null시스템
+7) Aircraft Meteorological Data Relay, 민간육며null항공기를육며null이용한육며null대기육며null고층부의육며null기상육며null관측육며null수집육며null자료
+
+===== PAGE 9 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 133
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+280km/h)한 수준으로 볼 수 있다. 이에 FAA(미국 연방항공 청, 2022) 헬리콥터 운항참고서에 10 knots 이상 바람에 
+대한 주의가 필요하다고 제시된 점을 참고, 10-15knots 사이의 기준을 추가하였다. 기존 영향 점수의 구간 편차를 
+감안해 4점으로 책정하였으며, 결과적으로 본 연구에서 정의한 풍속 영향 점수는 Table 3과 같다.
+Table 3. UAM Impact scores for wind speed
+Wind speed Impact score
+≤10knots 0
+10-15knots 4
+15-20knots 5
+20-25knots 7
+≥25knots 8
+위 점수를 사용하여 풍속을 비용으로 책정하되, 장애물 및 관광지 비용 수준과의 일관성을 위해 100을 곱
+한 값으로 환산하여 비용으로 적용하였다. Table 4는 풍속 영향 점수, 환산 비용과 해 당하는 색상이다. Reiche 
+et al.(2021)이 기상 영향점수표와 함 께 해당 점수가 3.0 이상일 경우 UAM 운항에 영향을 미 칠 수 있다고 제
+시한 점을 참조, 3.0 이상의 점수를 강조하여 색상을 지정하였다. Figure 5는 풍속 영향 점수를 계절별, 공간별
+로 시각화한 결과로, 계절 및 공간에 따른 풍속 분포가 상이함을 볼 수 있다. 결과를 통해 계절별로 공간에 대
+한 풍속의 영향도를 고려하여 경로를 설정해야 할 필요가 있 음을 다시 한번 확인할 수 있다.
+Table 4. Color code of impact scores and cost for wind speed 
+Impact scores for wind speed Color code Cost
+≤0.5 ≤50
+0.5-1.0 50-100
+1.0-1.5 100-150
+1.5-2.0 150-200
+2.0-2.5 200-250
+2.5-3.0 250-300
+≥ 3.0 ≥ 300
+Spring Summer
+Fall Winter
+Figure 5. Distribution of wind speed impact scores for each season
+
+===== PAGE 10 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024134
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+3) 관광지
+관광지는 제주관광공사에서 제공하는 제주도의 30대 인기 관광지를 수집하였으며, 그 위치는 Figure 6에 나타나 
+있다. 또한, 계절별 관광 경로의 특 색을 위하여 계절에 따른 차이를 가지는 식물(꽃)을 중심으로 Table 5와 같이 계
+절별 특화 관광지를 추가 반영하였다.
+Figure 6. Major tourism location
+Table 5. Seasonal flowers and tourism locations in Jeju Island
+Season Flower Blooming month Tourism location
+Spring Rape flower Mar to May Sanbangsan, Seopjikoji, Noksan-ro
+Hydrangea Apr to Aug Camellia hill botanical garden, Hueree nature life park, Boromwat, 
+Jongdal-ri flower road, Wimi-ri flower road
+Cherry blossoms Mar to Apr Noksan-ro, Jeju national university, Samseonghyeol, Jeonnong-ro
+Summer Sunflower Jun to Jul Hamdeok seoubong peak trail, Let’s run park
+Lavender Jun to Jul Boromwat, Jeju herb garden
+Fall Pink Mully Sep to Nov Hueree nature life park
+Buckwheat flower Sep to Oct Boromwat, Ora-Dong green barley - buckwheat field
+Flame grass Oct to Nov Sangumburi , Saebyeol oreum
+Winter Camellia Dec to Apr Camellia hill botanical garden, Camellia forest, Jeju camellia arboretum 
+Apricot blossom Feb Geolmae eco park, Hueree nature life park, Seogwipo chilsipnisi park
+관광지의 경우 경로 선정에 있어 비용이 아닌 편익 조건이 므로 음의 비용을 적용해야 한다. 계절별로 차별화된 관
+광 UAM 경로를 도출하고자 계절 특화 관광지를 경유하는 경우 –200의 비용을, 기타 주요 관광지에는 –100의 비
+용을 책정하였다. 책정의 기준은 주요 관광지와 계절 특화 관광지 간에 비용적 차별성을 두면서도, 주요 관광지이면
+서 계절 특화 관광지 일 경우 풍속의 영향이 다소 있 더라도 해 당 지점을 경유할 수 있도 록 유도할 수 있는 수준으로 
+하였다.
+4) 통합/.null비용
+위 과정을 통해 산정된 장애물, 풍속 및 관광지 요인별 비용을 합산, 통합 비용 래스터를 산출하였으며, 그 예시( 겨
+울)는 Figure 7과 같다. 적색에 가까 울수록 높은 비용을 의미하는데, 풍속 영향도가 높으며 지상 장애물이 존 재하는 
+공간에 가장 높은 통합 비용이 책정된 것을 확인할 수 있다.
+
+===== PAGE 11 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 135
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+Wind speed Obstacle Tourism location
+ 
+ Cost Color Legend
+ 
+Total cost
+Figure 7. Raster of Wind speed, obstacle, tourism location, and total cost (winter)
+3. 경로/.null 선정/.null결과
+계절별 통합 비용 지도와 경로 선정 방법에 따라 산출된 관광 UAM 경로는 Figure 8과 같다. 최소비용 원 칙에 따
+라 통합 비용이 낮은 공간을 중심으로, 공간 간 통합 비용의 차이가 크지 않을 경우 거리를 고려하여 경로가 선정되
+었다. 또한, Table 6과 같이 계절별 경로에서 주요 관광지를 경유하는 것으로 나타나 본 연구의 목적인 관광 UAM에 
+적절한 경로가 도출되었다.
+Spring Summer
+Fall Winter
+Figure 8. Seasonal UAM route with total cost
+
+===== PAGE 12 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024136
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+Table 6. Tour spot for each seasonal UAM route
+Season Jeju Airport - Jungmun Jeju Airport - Sungsan
+Spring Let's run park Jeju, Saebyeol oreum, Camellia hill* Samseonghyeol*, Bijarim forest
+Summer Let's run park Jeju*, Saebyeol oreum, Camellia hil Bijarim forest
+Fall Let's run park Jeju, Saebyeol oreum*, Camellia hill Bijarim forest
+Winter Saebyeol oreum, Camellia hill* Hamdeok seoubong beach, Manjanggul, Bijarim forest
+*: Seasonal Tourism locations
+계절별, 노선별 UAM의 경로를 비교하면 Figure 9와 같으며, 계절별로 차이가 존 재함을 볼 수 있다.
+Figure 9. Seasonal UAM route
+본 연구에서 도출한 계절별 관광 UAM 경로와 기타 항공정보(제주공항 시계비행로, 각종 공역, 헬기장 위치 등)
+를 종합 반영한 제주 관광 UAM 특화지도를 Figure 10과 같이 구축하였다.
+Figure 10. Jeju tourism UAM chart
+결론
+1. 연구의/.null의의
+초기 UAM 실증단계에서는 인 명 및 재산의 피해를 최소화할 수 있는 지역에서의 실증이 필요하며, 운항 경로 선
+정 시 저고도 비행의 특징을 고려해야 할 필요가 있다. 그중 특히 기상 요인이 UAM의 운항에 영향을 미 칠 수 있다
+
+===== PAGE 13 / 14 =====
+대한교통학회지, 제/.null42권/.null제/.null2호, 2024년/.null4월 137
+KIM, Eunji･SEONG, Jinkyu･LEE, Kangmin･KIM, Huiyang •Article•
+는 인 식은 여러 연구에서 제시된 바이나, 대부분 기상 영향도 수준을 평가하고 분석한 연구였다. 이에 본 연구에서는 
+제주를 대상 지역으로 선정하고 UAM을 관광용으로 도입, 운영하고자 하는 산업계의 추진 방향을 반영하여 기상 
+요인을 고려한 계절별 관광 UAM의 경로를 도출하고자 하였다. 기상 요인으로는 UAM 운항에 주요한 영향을 미 칠 
+것으로 예상되는 풍속을 고려하였으며, 항공기 운항의 주요 제약사항인 지상 장애물, 운항의 목적성을 반영한 관광
+지 총 3가지 요인을 경로 선정에 종합 반영하였다.
+특히 이전 연구 들에서는 지상에서 관 측한 기상자료를 사용 했으나, 본 연구에서는 지상과 상공에서의 기상 상 황
+이 상이할 수 있다는 점을 확인하고 UAM의 예상 운항 고도에서의 기상자료를 활용하였다. 기상자료를 활용, UAM 
+비행경로 고도에서의 풍속 영향도를 계절별로 제주도 전역에 대해 분석하였으며 이를 비용으로써 반영하여 경로를 
+선정하였다. 이러한 접근은 본 연구에서 처음 시도한 것으로, 추후 기상 요인 분석 기반의 UAM 실증노선 검토 시 
+활용 가능한 방법 론을 제시하였다고 할 수 있다.
+풍속, 지상 장애물, 관광지, 그리고 거리를 종합 반영하여 최적 거리를 산정할 수 있도 록 공간정보 분석 프로그 램
+인 ‘ArcGIS’의 ‘래스터 형 식 최적 경로 ’ 기능을 활용하였으며, 그 결과 계절별로 상이한 경로가 도출되었 음을 확인
+할 수 있었다. 이 처럼 상당히 실용적인 관 점에서 수행된 본 연구의 분석 방법과 결과가 UAM의 초기 실증 및 실제 
+운영에 기여할 수 있을 것으로 기대된다.
+2. 연구의/.null 한계/.null 및/.null 추후/.null 연구/.null과제
+본 연구는 UAM 운항에 영향을 미 칠 수 있는 기상 요인 중 풍속 영향성만을 고려하였다. 이는 연구의 공간적 범위
+인 제주도의 지역적 특징 때문이었으나, 실제 UAM 운항에서는 바람 외의 기상 요인, 특히 시정 8)과 운고 9)로 인한 
+제약이 발생할 수 있다. 특히 UAM이 저고도에서 시계비행으로 운항하게 될 것을 고려할 때 시정 및 운고 등 조종사
+의 시계 확보와 관 련된 기상 요인은 상 당히 중요한 제약요건이 될 것으로 예상한다. 따라서 보다 다 양한 기상 요인을 
+반영한 비행경로 선정 연구로 발전시 킬 필요가 있다.
+한편, 기상은 시간에 따라 변동성이 존 재하는 요인으로 실제 운항 시 단 일 경로가 아닌 실시간 기상 변동에 따른 
+경로 선정 가능성이 있어, 이를 반영할 수 있는 방법 론도 추가 연구할 필요가 있다.
+또한, 본 연구에서 고려한 기상, 장애물, 관광지 외에도 다른 조건을 경로 선정에 반영할 수 있다. 예를 들어, 저고
+도로 비행하는 UAM 특성상 우발상 황 발생 시(기계 고장, 위 험 기상 등) 신속한 비상착륙 및 재이륙 등이 가능해야 
+운항 지속성이 보장될 수 있다. 이러한 다 양한 조건 들을 발 굴하고 추가 반영한다면 더욱 정밀하고 실용적인 경로 선
+정 연구로 발전할 수 있을 것이다.
+Funding
+This work is supported by the Korea Agency for Infrastructure Technology Advancement(KAIA) grant 
+funded by the Ministry of Land, Infrastructure and Transport(RS-2022-00143625, RS-2022-00156364).
+ORCID
+KIM, Eunji 
+ http://orcid.org/0009-0009-2004-7272
+SEONG, Jinkyu 
+ http://orcid.org/0009-0002-4418-7586
+LEE, Kangmin 
+ http://orcid.org/0009-0001-2660-4190
+KIM, Huiyang 
+ http://orcid.org/0009-0001-6060-0855
+8) 지표면에서육며null정상적인육며null시력을육며null가진육며null사람이육며null특정육며null물체를육며null보고육며null식별할육며null수육며null있는육며null최대육며null거리
+9) 가장육며null낮은육며null구름의육며null높이
+
+===== PAGE 14 / 14 =====
+Journal of Korean Society of Transportation Vol.42 No.2 April 2024138
+•Article• A Study on Seasonal UAM Route Selection Considering Weather Constraints -Focusing on Tourism Routes in Jeju, South Korea- 
+REFERENCES
+Campbell S.E., Clark D.A., Evans J.E. (2017), Preliminary Weather Information Gap Analysis for UAS Operations, MIT 
+Lincoln Laboratory, Massachusetts Institute of Technology.
+FAA (2022), Helicopter Flying Handbook Chapter 11: Helicopter Emergencies and Hazards, 11.
+Hou Y., Huang W., Zhou H., Gu F., Chang Y., He Y. (2019), Analysis on Wind Resistance Index of Multi-rotor UAV, 
+‘2019 Chinese Control And Decision Conference (CCDC), Nanchang, China, 3693-3696.
+Hsun Chao, Apoorv Maheshwari, Dan DeLaurentis and William Crossley (2021), Weather Impact Assessment for Urban 
+Aerial Trips in Metropolitan Areas, AIAA AVIATION 2021 FORUM
+Ihalla, http://www.ihalla.com/article.php?aid=1672844400736775073, 2023.09.10
+Invest KOREA, https://www.investkorea.org/jj-kr/bbs/i-1154/detail.do?ntt_sn=31, 2023.10.10
+Kim Jina (2011), Meteorological Features for the July 9, 2009 Severe Downpour Case using KLAPS Reanalysis Data 
+(Master’s Degree), Chosun University
+Lee Jaeryoung, Moon Chaehwan, Ahn Jaemyung (2021), Vehicle Routing Problem with Profits based UAV Path Planning 
+in Urban Air Mobility, Proceeding of Korean Society for Aviation and Aeronautics 2021 Conference, 654-655.
+Lee Jongwook, Choi Hyunjung, Hong Sungjo (2022a), Factors Influencing the Intention to Use UAM(Urban Air 
+Mobility) and Acceptance of Ground Infrastructure (Vertiport), Journal of Korea Planning Association, 57(4), 25-36.
+Lee Jooho, Lee Jinyoung, Yoon Donghyun (2022b), Development of UAM Route Design Methodology Using 
+Transportation Bigdata, Proceeding of Korean Society for Aviation and Aeronautics 2022 Fall Conference, 630-631.
+Lee Youngjae, Kwag Taeho, Jeong Gumoon, Ahn Jaehyun, Chung Bong Cheul, Lee Jae-Woo (2020), Flight Routes 
+Establishment Through the Operational Concept Analysis of Urban Air Mobility System, Journal of the Korean 
+Society for Aeronautical & Space Sciences, 48(12), 1021-1031.
+Money today, https://news.mt.co.kr/mtview.php?no=2022091409341775959, 2023.09.08
+Oh Soohwan, Yoon Yoonjin, Kim Seyun (2022), Risk Analysis of Unmanned Aerial System Operations in Urban 
+Airspace Considering Spatiotemporal Population Dynamics , IEEE 25th.
+Reiche C., Cohen A., Fernando C. (2021), An Initial Assessment of the Potential Weather Barriers of Urban Air 
+Mobility, in IEEE Transactions on Intelligent Transportation Systems, 22(9), 6018-6027.
+Reiche C., Goyal R., Cohen A., Serrao J., Kimmel S., Fernando C., Shaheen S. (2018), Urban Air Mobility Market 
+Study, National Aeronautics and Space Administration (NASA).
+Robinson J.N., Sokollek M.D.R., Justin C.Y., Mavris D.N. (2018), Development of a Methodology for Parametric 
+Analysis of STOL Airpark Geo-Density, 2018 Aviation Technology, Integration, and Operations Conference.
+Statistics Korea, Population and housing census, kosis.kr, 2023.11.04
+Sung Yujin, Kim Saebyeok, Choi Yunsu, Cho Seongkil (2023), Selection of the Optimal Urban Air Mobility Vertiport 
+Location and Analysis of Travel Time Effectiveness Through Route Setting, Proceedings of Korean Society for 
+Geospatial Information Science 2023 Spring Conference, 95-98.
+UAM Team Korea (2021), K-UAM Concept of Operations 1.0, 10.
+UAM Team Korea (2022), Guidance for K-UAM Vertiport Design and Operation, 4.
+Washington A., Clothier R.A., Silva J. (2017), A Review of Unmanned Aircraft System Ground Risk Models, Prog. 
+Aerosp. Sci., 95, 22-44.

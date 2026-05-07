@@ -1,0 +1,1082 @@
+SOURCE: references/MainPaper/wevj-15-00300-v2.pdf
+PAGES: 18
+
+
+
+===== PAGE 1 / 18 =====
+Citation: Zheng, G.; Li, P .; Wu, D. An
+Obstacle Avoidance Trajectory
+Planning Methodology Based on
+Energy Minimization (OTPEM) for
+the Tilt-Wing eVTOL in the Takeoff
+Phase. World Electr. Veh. J. 2024, 15,
+300. https://doi.org/10.3390/
+wevj15070300
+Academic Editor: Kaushik
+Rajashekara
+Received: 17 April 2024
+Revised: 16 June 2024
+Accepted: 3 July 2024
+Published: 6 July 2024
+Copyright: © 2024 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license (https://
+creativecommons.org/licenses/by/
+4.0/).
+Article
+An Obstacle Avoidance Trajectory Planning Methodology Based
+on Energy Minimization (OTPEM) for the Tilt-Wing eVTOL in
+the Takeoff Phase
+Guangyu Zheng 1
+ , Peng Li 1,2, *
+ and Dongsu Wu 3
+1 College of Automobile and Traffic Engineering, Nanjing Forestry University, Nanjing 210037, China;
+zgy18816266078@njfu.edu.cn
+2 College of Design and Engineering, National University of Singapore, Singapore 117575, Singapore
+3 College of Civil Aviation, Nanjing University of Aeronautics and Astronautics, Nanjing 210016, China;
+tissle@nuaa.edu.cn
+* Correspondence: dawan007@njfu.edu.cn
+Abstract: Electric tilt-wing flying cars are an efficient, economical, and environmentally friendly
+solution to urban traffic congestion and travel efficiency issues. This article addresses the high energy
+consumption and obstacle interference during the takeoff phase of the tilt-wing eVTOL (electric
+Vertical Takeoff and Landing), proposing a trajectory planning method based on energy minimization
+and obstacle avoidance. Firstly, based on the dynamics analysis, the relationship between energy
+consumption, spatial trajectory, and obstacles is sorted out and the decision variables for the trajectory
+planning problem with obstacle avoidance are determined. Secondly, based on the power discretiza-
+tion during the takeoff phase, the energy minimization objective function is established and the
+constraints of performance limitations and spatial obstacles are derived. Thirdly, by integrating the
+optimization model with the SLSQP (Sequential Least Squares Quadratic Programming algorithm),
+the second-order sequential quadratic programming model and decision variable update equations
+are derived, establishing the solution process for the trajectory planning problem of the tilt-wing
+eVTOL takeoff with obstacle avoidance. Finally, the Airbus Vahana A3 is taken as an example to verify
+and validate the effectiveness, stability, and robustness of the model and optimization algorithm
+proposed. The validation results show that the OTPEM (obstacle avoidance trajectory planning
+methodology based on energy minimization) can effectively handle changes in the takeoff end state
+and exhibits good stability and robustness in different obstacle environments. It can provide a certain
+reference for the three-dimensional obstacle avoidance trajectory planning of Airbus Vahana A3 and
+other tilt-wing eVTOL trajectory planning problems.
+Keywords: eVTOL; takeoff phase; trajectory planning; obstacle avoidance; SLSQP
+1. Introduction
+With the intensification of urbanization, the growth rates of urban populations and
+vehicle transport volumes have been increasing annually. However, urban ground trans-
+portation is becoming saturated, leading to increased congestion and impediments to
+mobility. Future cities require clean and sustainable transportation solutions, with green
+and sustainable development being the trend and goal of future transportation devel-
+opment. One proposed concept is Urban Air Mobility (UAM), which primarily refers
+to manned/unmanned aerial transportation systems that safely and efficiently conduct
+passenger and cargo transport within cities or between urban areas.
+With the introduction of the concept of Urban Air Mobility [1], eVTOL (electric Vertical
+Takeoff and Landing, also known as flying cars), as a kind of carrier that combines the
+advantages of aircraft and automobile performance, has attracted great attention from many
+scholars for its advantages of high transportation efficiency, convenient and economical
+World Electr. Veh. J. 2024, 15, 300. https://doi.org/10.3390/wevj15070300 https://www.mdpi.com/journal/wevj
+
+===== PAGE 2 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 2 of 18
+use, point-to-point transportation, energy sustainability, and environmental protection [2].
+In May 2023, the Federal Aviation Administration (FAA) of the United States released
+“Urban Air Mobility (UAM) Operations Concept 2.0” [ 3]. In the same year in July, the
+FAA formally published “Advanced Air Mobility (AAM) Implementation Plan V1.0”, with
+plans to achieve the large-scale operation of eVTOL by 2028. According to the form of
+power system, eVTOL can be divided into the pure electric rotor type (such as China
+Yihang’s EHang216), the electric tilt-wing type (such as Airbus’s A 3 Vahana), and the
+electric rotor and propulsion rotor hybrid type (such as Boeing’s PAV) [ 4]. Compared
+with other flying cars, tilt-wing eVTOLs combine the dual performance advantages of
+fixed-wing and rotary-wing vehicles with the advantages of long range, relatively low
+energy consumption, flexible takeoff and landing, and faster transport speed [5].
+Restricted by the status quo of urban infrastructure [6] and the requirements of point-
+to-point transportation [7], the takeoff trajectories of electric rotor and tilt-wing eVTOL
+currently face the challenges of many obstacles and complications [8–10], which further
+increase the energy consumption during the takeoff phase. It also introduces safety hazards
+into the already high-risk takeoff and landing process, while affecting the range and
+economic operation of eVTOL. Therefore, in order to further improve the safety and
+practical performance of eVTOL, it is necessary to conduct a comprehensive study on the
+optimization of energy consumption, obstacle avoidance, and trajectory planning in the
+takeoff phase of eVTOL.
+There are many trajectory planning algorithms currently used to solve the problem
+of juggling energy optimization and obstacle avoidance, and heuristic algorithms are one
+of them. Heuristic algorithms are a class of algorithms related to optimization methods
+that require large computing power. They have flourished alongside the development
+of computer technology, including the A* algorithm, particle swarm algorithm, genetic
+algorithm, and ant colony algorithm. Some of the heuristic algorithms have a certain degree
+of randomness, and their solution process tends to fall into a local optimum. Duan H et al.
+proposed a 3D path planning algorithm for unmanned combat aircraft based on a hybrid
+heuristic ant colony algorithm and differential evolutionary algorithm for unmanned
+combat aircraft for the 3D path planning problem of unmanned combat aircraft. In using
+the evolutionary algorithm to optimize the pheromone paths of the improved ant colony
+optimization model, the unmanned aircraft can then find a safe path by connecting selected
+nodes in a 3D grid while avoiding threat areas and consuming the least amount of fuel [11].
+This method retains the robustness of the basic ant colony algorithm but is uncertain
+and difficult to analyze when applied to urban air traffic, and its convergence speed is
+difficult to guarantee. Gutierrez-Martinez M A et al. proposed an algorithm capable of
+generating navigational waypoints, achieving short flight distances and avoiding collisions
+with obstacles. A genetic algorithm is used to obtain waypoints using multi-objective
+functions that include the path length, the distance from the waypoint to the obstacle, and
+the probability that the final trajectory will cross the obstacle [12]. The method is sensitive
+to the choice of initial values and tends to fall into local optimal solutions. Karahan M et al.
+focused on the use of artificial intelligence to optimize UAVs for path planning and collision
+avoidance. Simulations of path planning and collision avoidance were performed using
+MATLAB R2020a under ideal and noisy conditions [13]. The results show that UAVs are
+able to find the shortest path on the map to avoid collision with obstacles, but when dealing
+with large environments and complex scenarios, it usually requires a lot of computational
+resources and time for path planning and collision avoidance.
+The trajectory planning problem is a special case of optimal control problems and
+generally exhibits nonlinearity. This problem aims to minimize a performance metric while
+satisfying boundary conditions and system dynamics. The direct method is a commonly
+used trajectory planning approach that involves discretizing the trajectory planning prob-
+lem and transforming it into a numerical optimization problem. Numerical analysis and
+optimization methods are then used to compute the optimal solution. Again, the direct
+method is sensitive to the selection of the initial parameters, and the selection of the ap-
+
+===== PAGE 3 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 3 of 18
+propriate parameter values requires a certain amount of experience and debugging. When
+dealing with high-dimensional problems, a significant amount of computation is needed to
+search for the optimal solution, leading to lower computational efficiency. Priyank Pradeep
+et al. investigated the effect of wind on the optimal trajectory during flight [ 14]. The
+study solved the optimal control problem numerically using the direct method of nonlinear
+programming. By comparing the energy consumption and flight time of the optimal flight
+trajectory under the influence of wind between origin and destination in an urban area
+with those of a positive arc trajectory between the same origin and destination pairs, the
+optimal flight trajectory under the influence of wind is determined for a short range. Wang
+Z and colleagues proposed a trajectory optimization method for an electric Vertical Takeoff
+and Landing flying car, focusing on the optimal control problem of multirotor eVTOL with
+a fixed flight time. They convexified the problem to better achieve real-time trajectory
+optimization within the required arrival time and conducted simulations using the E-Hang
+184 eVTOL vehicle to validate the effectiveness of the method [15]. Xufei Yan and colleagues
+used the XV-15 tilt-rotor aircraft as an example to establish an augmented flight dynamics
+model suitable for trajectory optimization after single-engine failure in tiltrotor aircraft. The
+research conducted computational analysis and employed a direct transcription method to
+convert the optimal control strategies and trajectory optimization problem during land-
+ing into a nonlinear programming problem. They solved the problem using a sequential
+quadratic programming algorithm, providing a basis for the safe landing implementation
+by the pilot in the event of single-engine failure [16]. Pradeep P et al. studied the landing
+trajectory planning of a multirotor flying car with a given arrival time, transformed the
+trajectory planning problem into an optimal control problem, and solved it numerically
+to obtain the most energy-efficient landing trajectory [ 17]. Shamsheer S. Chauhan and
+Joaquim R. R. A. Martins et al. studied the cruise trajectory of a tilt-rotor electric Vertical
+Takeoff and Landing flying car [18]. The study used a simplified two-degree-of-freedom
+model of the Airbus Vahana A3 tilt-wing eVTOL, for which takeoff trajectories with and
+without stall and acceleration constraints were investigated. However, the study did not
+consider the influence of the environment on the takeoff trajectory. The flying car will ulti-
+mately be integrated into urban traffic. When travelling within the city, the starting point of
+the journey may be in the city square, and the surrounding buildings will inevitably have
+an impact on the takeoff. Therefore, obstacle avoidance is crucial in Urban Air Mobility.
+In summary, this paper integrates the three problems of the energy optimization,
+obstacle avoidance, and trajectory planning of a tilt-wing eVTOL in the takeoff phase. Con-
+sidering constraints such as the performance of eVTOL and the surrounding environment,
+the paper will study the modelling method and solution algorithm of the comprehensive
+optimization problem. The specific contents are as follows: In the second part, considering
+the effects of downwash and wake, as well as the coupling effects of thrust and induced
+velocity, a parameterized energy calculation model and dynamic model will be established.
+Based on this, decision variables, objective functions, and constraints for obstacle avoidance
+trajectory planning will be defined and quantified to complete the construction of the
+optimization model. In the third part, the paper will integrate the optimization model
+with the SLSQP algorithm’s gradient descent search and state iteration process to design a
+solution algorithm for the tilt-wing eVTOL takeoff obstacle avoidance trajectory planning
+problem. In the fourth part, the model and the solution method of this paper are validated
+for feasibility, effectiveness, and robustness in two cases, with and without obstacles. In
+the case of obstacles, this article sets the takeoff environment around Purple Mountain. It
+selects two different terrains and obtains their longitudinal profile data to use as constraints
+for obstacles. Finally, the conclusions and reference value of this paper will be elaborated
+upon in the last section.
+
+===== PAGE 4 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 4 of 18
+2. Optimization Model
+First, the two-degree-of-freedom dynamics and kinematics equations (horizontal and
+vertical displacements in the longitudinal plane) of the tilt-wing eVTOL are established.
+ .
+v = FA+FP+FG
+m.
+r = v (1)
+.
+v is the acceleration. FA =
+h
+FAx, FAy
+iT
+is the aerodynamic force, including wing lift,
+wing drag, and fuselage drag, where FAx is the horizontal component of the aerodynamic
+force and FAy is the vertical component of the aerodynamic force. FP =
+h
+FPx, FPy
+iT
+is the
+propulsion force generated by the propeller, where FPx is the horizontal component of the
+propulsion force and FPy is the vertical component of the propulsion force. FG = [0, −mg]T
+is the force of gravity. m is the mass of the eVTOL. g is the acceleration of the gravitational
+force. r = [x, y]T is the position vector, x is the displacement in the horizontal direction,
+and y is the displacement in the vertical direction. v =
+
+vx, vy
+T is the velocity vector, vx is
+the velocity in the horizontal direction, and vy is the velocity in the vertical direction.
+The lift of the wing L is calculated as follows:
+L = 1
+2 ρv2SCL (2)
+ρ is the air density, S is the wing area, and CL and is the lift coefficient of the wing.
+The drag of the wing D1 is calculated as follows:
+D1 = 1
+2 ρv2SCD (3)
+CD is the drag coefficient of the wing.
+According to [18], when a tilt-wing eVTOL is in flight, the wake created by the rotation
+of the propeller acts on the wing and creates an induced velocity, which is calculated as
+follows:
+vi =
+
+− V∞⊥
+2 +
+s
+V2
+∞⊥
+4 + FP
+2ρSP
+
+ (4)
+V∞⊥ is the component of the free-stream velocity over the propeller disc and SP is the
+area of the propeller disc. Momentum theory is used to multiply vi by a factor and then
+add it to v to calculate both the lift and drag of the wing under the influence of the wake
+produced by the rotor.
+The drag of the fuselage is calculated as follows:
+D2 = 1
+2 ρv2S f CD f (5)
+S f is the reference area of the fuselage and CD f is the drag coefficient of the fuselage.
+The propulsive force generated by the propeller is related to the propeller power
+according to [18]. The propeller power can be calculated using the following formula:
+PP = FPV∞⊥ + κFP
+
+− V∞⊥
+2 +
+s
+V2
+∞⊥
+4 + FP
+2ρSP
+
+ (6)
+κ is a correction factor used to account for induced power losses associated with
+non-uniform inflow, end effects, and other simplifications made in momentum theory.SP
+is the area of the propeller disc.
+
+===== PAGE 5 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 5 of 18
+The aim of this paper is to minimize the energy consumption of the tilt-wing eVTOL
+to reach a given state point, and then perform trajectory planning. The energy consumption
+is mainly determined by the battery power P and flight time t. Due to the characteristics
+of the tilt-wing eVTOL, the wing is tilted to change during the takeoff. The wing angle to
+vertical θ is introduced here. θ and free-stream angle of attack affect the aerodynamic forces
+on the wing. The propulsive force FP generated by the propeller can be calculated based
+on the battery power that minimizes energy consumption. By combining aerodynamics
+and the weight of the eVTOL, acceleration can be calculated using the dynamics equation.
+Taking into account obstacles and relevant dynamic constraints, the planned trajectory can
+be obtained based on the kinematic equation. The relationship between overall energy
+consumption, trajectory, and obstacles is shown in Figure 1 below.
+Figure 1. Map of the relationship between energy consumption, obstacle, and trajectory.
+2.1. Decision Variables
+The optimization model for the takeoff trajectory in this article is based on minimizing
+energy consumption. In order to facilitate the solution of the motion state, objective function,
+and constraints within a limited time, the involved motion equations are discretized,
+thereby transforming the trajectory planning problem into a discrete optimization problem.
+The takeoff phase trajectory is divided into n − 1 flight segments, i.e., n state points.
+Assuming the total flight time is t, the time step for each segment is ∆t = t/(n − 1). For
+the i-th state point, the discrete relationship between adjacent points can be represented
+as follows: 
+
+
+vi+1 = vi + ai∆t
+ri+1 = ri + vi∆t
+ai =
+FAi +FPi +FG
+m
+(7)
+
+===== PAGE 6 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 6 of 18
+The instantaneous power provided by the battery at takeoff can be expressed as follows:
+Pi = PP
+η (8)
+where η is the transmission efficiency and PP is the power at the propeller disc. The
+instantaneous energy E consumption is given by
+E(i) = Pi∆t (9)
+The energy consumption during the entire takeoff process accumulates as the transient
+energy consumption of the eVTOL increases with time. Therefore, this paper introduces the
+discrete dynamics model into the energy consumption optimization model, approximating
+the continuous takeoff process as n − 1 uniform acceleration sub-processes. The decision
+variables of the optimization problem are determined as the wing angle to the vertical
+(θ), the battery power (P), and the flight time (t). It is assumed that the wings are all at
+equal angles to the vertical and the battery supplies the same amount of power to each
+propeller. Since the wing angle to the vertical and the battery power are continuous func-
+tions of time, the two curves are parameterized using a fourth-order B-spline. Each curve
+is fitted with j uniformly spaced control points. The variables to be directly optimized are
+θ =
+
+θ1, θ2, θ3, . . . ,θj
+T, P =
+
+P1, P2, P3, . . . ,Pj
+T and t, for a total of (2 × j + 1) variables. In
+the initial design, feasible analytical initial values are assigned to these variables. Other
+node initial values are obtained through B-spline curves, and a subsequent iterative op-
+timization is conducted based on this foundation to obtain the state parameters under
+the minimum energy consumption. The minimum energy consumption trajectory is then
+obtained by combining the dynamic and kinematic equations.
+2.2. Objective Function
+Calculate the state variables of the flying car at each state point, including the power
+provided by the battery, velocity, acceleration, and force situation. Based on the battery
+power, calculate the energy consumption for each time interval, and finally accumulate to
+obtain the total energy consumption during the takeoff process. Through the calculations,
+obtain the state variables at each state point for the minimum energy consumption scenario.
+Combine dynamic and kinematic equations to calculate the trajectory. This leads to the
+objective function of minimizing energy consumption:
+min f (x) = min
+n
+∑
+i=1
+E(i) = min
+n
+∑
+i=1
+Pi·t/(n − 1). (10)
+n is the number of state points and Pi is the power supplied by the battery at the i-th
+state point.
+2.3. Constraint
+During the optimization process, constraints must also be imposed to ensure that the
+system dynamics are met and obstacles are avoided.
+(1) Initial state and final state: the starting point and the final point of the eVTOL
+must satisfy the given constraints. This paper focuses on trajectory optimization during
+takeoff. The initial state is set as the stationary state r0 = [x0, y0]T, with initial velocity
+v0 =
+
+vx0, vy0
+T. The final state is set as reaching the specified positionr f inal =
+h
+x f inal, y f inal
+iT
+and velocity v f inal =
+h
+vx f inal , vy f inal
+iT
+. The constraints in the terminated state are as follows:
+ yn ≥ y f inal
+vxn = v f inal
+(11)
+
+===== PAGE 7 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 7 of 18
+vxn is the final velocity of the eVTOL in the horizontal direction during takeoff, v f inal
+is the final velocity it needs to reach, yn is the altitude of the eVTOL from the ground at the
+final state point, and y f inal is the required final height.
+(2) Dynamic constraints: The speed and acceleration of the eVTOL must satisfy the
+constraints of the dynamic model. The acceleration must also take into account the comfort
+of the passengers, as an overall acceleration of more than 1 g can cause discomfort or
+dizziness. It is generally accepted that accelerations in the range of 0.1 g to 0.5 g are more
+comfortable for passengers and a value of 0.3 g is often used. Consideration must also
+be given to avoiding stall conditions during flight, as stalls can have adverse effects. The
+power of the eVTOL battery is also limited and should not exceed the maximum power it
+can provide. There are also limitations on the wing angle to the vertical, which should not
+exceed a certain range during flight. The dynamic limitations are as follows:
+
+
+
+ai ≤ amax
+−αs ≤ αi ≤ αs
+Pi ≤ Pmax
+θmin ≤ θi ≤ θmax
+(12)
+ai is the combined acceleration at the i-th point, amax is the maximum acceleration
+considering passenger comfort, αi is the wing angle of attack at the i-th point, αs is the stall
+angle of attack, Pmax is the maximum power supplied by the battery, θi is the magnitude of
+the wing angle to vertical at the i-th state point, and θmin and θmax are the minimum and
+maximum wing angle to vertical, respectively.
+(3) Obstacle constraints: The flight path of a flying car must avoid obstacles. According
+to the Civil Aviation Administration of China, rotorcraft must maintain a safety distance of
+1.5 times the length or width of the aircraft—whichever is greater—when taking off. As
+there are no specific laws and regulations for flying cars, this restriction is currently applied.
+In this paper, we will define the position of the obstacle as well as the height information
+by obtaining the profile height data of the obstacle, with the data type being DEM-30. The
+constraints on the obstacles are as follows:
+Di ≥ Dmax (13)
+Di is the distance between eVTOL and the nearest point of the obstacle at the i-th point
+and Di =
+q
+(xi − xoi)2 + (yi − yoi)2. Dmax is the maximum spacing, (xi, yi) is the position
+of the eVTOL at the i-th point, and (xoi, yoi) is the position of the nearest obstacle to the
+i-th point.
+In summary, the constraints of the optimization problem can be obtained as follows:
+
+
+
+yn ≥ y f inal
+vn = v f inal
+ai ≤ amax
+−αs ≤ αi ≤ αs
+Di ≥ Dmax
+Pi ≤ Pmax
+θmin ≤ θi ≤ θmax
+(14)
+3. Methodological Options
+From the optimization model in the previous section, the trajectory optimization
+problem in this paper becomes a nonlinear optimization problem with equation constraints,
+inequality constraints, and boundary constraints; therefore, the SLSQP (Sequential Least
+Squares Quadratic Programming) algorithm is adopted in this paper. The advantage of the
+SLSQP algorithm is that it can efficiently deal with the optimization problem with nonlinear
+constraints, and usually finds the optimal solution within a small number of iterations.
+
+===== PAGE 8 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 8 of 18
+SLSQP is an optimization algorithm for nonlinear constrained optimization problems.
+It is a sequential quadratic programming method that solves the nonlinear constrained
+problem by transforming it into a series of quadratic programming subproblems. The key
+feature of the SLSQP algorithm is its ability to handle optimization problems with nonlinear
+constraints, using an approximate quadratic model for optimization at each iteration step.
+The SLSQP algorithm determines the quadratic model by calculating the first and second
+derivatives of the objective function and the gradients of the constraint functions. This
+derivative and gradient information are utilized in each iteration to expedite the search
+for the optimal solution. The algorithm is primarily divided into two main phases: the
+search phase and the correction phase. In the search phase, feasible points are found by
+constructing a sequential quadratic programming model. In the correction phase, a local
+search is performed at each iteration to obtain a better approximation and update the
+current estimated points [19]. The optimization flowchart is shown in Figure 2.
+Figure 2. SLSQP Optimization Process.
+In the search phase, the original nonlinear constrained optimization problem is trans-
+formed into an unconstrained least squares problem:
+
+===== PAGE 9 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 9 of 18
+L(x, λ, µ ) = f (P, t) + λTh(P, θ, t) − µ T
+1 g1(P, θ, t) − µ T
+2 g2(P, θ) − µ T
+3 g3(θ) − µ T
+4 g4(θ) − µ T
+5 g5(P, θ, t)
+−µ T
+6 g6(P) − µ T
+7 g7(P) − µ T
+8 g8(θ) − µ T
+9 g9(θ) (15)
+λ and µ are the Lagrange multipliers for the equality and inequality constraints,
+respectively. h(x) represents the equality constraint and g(x) represents the inequality
+constraint. g1(P, θ, t) is the altitude constraint, g2(P, θ) is the acceleration constraint,
+g3(θ) and g4(θ) are the angle of approach constraints, g5(P, θ, t) is the obstacle constraint,
+g6 (P) and g7 (P) are the battery power constraints, g8(θ) and g9(θ) are the wing tilt angle
+to vertical constraints, and h(P, θ, t) is the final horizontal direction velocity constraint.
+The update direction is obtained by solving the following least squares subproblem:
+min 1
+2
+Rkd − uk
+
+2
+s.t.
+h
+∇h
+
+xk
+iT
+·d + h
+
+xk
+
+= 0
+h
+∇g
+
+xk
+iT
+·d + g
+
+xk
+
+≥ 0 (16)
+where ∇h
+
+xk
+
+is the gradient vector of the equality constraints after k iterations, g
+
+xk
+
+is
+the gradient vector of the inequality constraints, Rk is an upper triangular matrix, and uk is
+a vector whose relation satisfies the following equation translation:
+
+Rk
+T
+Rk = Bk (17)
+
+Rk
+T
+uk = −∇ f
+
+xk
+
+(18)
+Bk is an approximate Hessian matrix of L(x, λ, µ ).
+During the correction phase, the update variable needs to calculate the learning rate
+δ = min(1, r), where r is calculated as follows:
+
+
+
+r = max
+ 
+βs, rq
+
+βs =
+ ∂ f
+∂x
+T
+(d/s)
+rq =
+ ∂∇ f
+∂x
+T
+(d/q)
+(19)
+s and q are correction factors, d is the update direction obtained by solving the
+least squares subproblem, and finally the decision variables can be updated as follows,
+xk+1 = xk + δd, where k is the current iteration number.
+4. Example and Analysis of Results
+In order to verify the feasibility and effectiveness of the proposed method, this paper
+takes the Airbus Vahana A 3 tilt-wing eVTOL as an example (Figure 3) and carries out
+the longitudinal obstacle avoidance trajectory planning in two cases: obstacle-free and
+obstacle-present. In the case of obstacles, different terrains around Zijin Mountain in
+Nanjing were selected as obstacle constraints, and the terrain data were taken from the
+National Geospatial Data Cloud website. Table 1 provides the basic parameter information
+of Vahana A3.
+
+===== PAGE 10 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 10 of 18
+World Electr. Veh. J. 2024, 15, 300 9 of 17 
+ 
+constraint, 𝑔଺ (𝑃)  and 𝑔଻ (𝑃)  are the ba ttery power constraints, 𝑔଼(𝜃)  and 𝑔ଽ(𝜃)  are 
+the wing tilt angle to vertical constraints, and ℎ(𝑃, 𝜃, 𝑡) is the ﬁnal horizontal direction 
+velocity constraint. 
+The update direction is obtained by solving the following least squares subproblem: 
+ 𝑚𝑖𝑛 1
+2 ‖𝑅௞𝑑−𝑢 ௞‖ଶ 
+𝑠. 𝑡. [∇ℎ(𝑥௞)]்· 𝑑 + ℎ(𝑥௞) =0  
+  [∇𝑔(𝑥௞)]்· 𝑑 + 𝑔(𝑥௞) ≥ 0 
+(16)
+where ∇ℎ(𝑥௞) is the gradient vector of the equality constraints after 𝑘 iterations, 𝑔(𝑥௞) 
+is the gradient vector of the inequality constraints, 𝑅௞ is an upper triangular matrix, and 
+𝑢௞ is a vector whose relation satis ﬁes the following equation translation: 
+(𝑅௞)்𝑅௞= 𝐵௞ (17)
+(𝑅௞)்𝑢௞= −∇𝑓(𝑥௞) (18)
+𝐵௞ is an approximate Hessian matrix of  𝐿(𝑥, 𝜆, 𝜇). 
+During the correction phase, the update variable needs to calculate the learning rate 
+𝛿 = 𝑚𝑖𝑛 (1, 𝑟), where 𝑟 is calculated as follows: 
+⎩
+⎪
+⎨
+⎪
+⎧ 𝑟 =m a x൫𝛽௦, 𝑟௤൯
+𝛽௦= ൬𝜕𝑓
+𝜕𝑥൰
+்
+(𝑑𝑠⁄ )
+𝑟௤= ൬𝜕∇𝑓
+𝜕𝑥 ൰
+்
+(𝑑𝑞⁄ )
+ (19)
+𝑠  and 𝑞  are correction factors, 𝑑  is the update direction obtained by solving the 
+least squares subproblem, and ﬁnally the decision variables can be updated as follows, 
+𝑥௞ାଵ= 𝑥௞+ 𝛿𝑑, where 𝑘 is the current iteration number. 
+4. Example and Analysis of Results 
+In order to verify the feasibility and eﬀectiveness of the proposed method, this paper 
+takes the Airbus Vahana A3 tilt-wing eVTOL as an example ( Figure 3) and carries out the 
+longitudinal obstacle avoidance trajectory planning in two cases: obstacle-free and obsta-
+cle-present. In the case of obstacles, di ﬀerent terrains around Zijin Mountain in Nanjing 
+were selected as obstacle constraints, and th e terrain data were taken from the National 
+Geospatial Data Cloud website. Table 1 prov ides the basic parameter information of Va-
+hana A3. 
+ 
+Figure 3. Vahana A3. 
+  
+Figure 3. Vahana A3.
+Table 1. Vahana A3 Performance Parameters.
+Parameters Value Unit
+Number of propellers Np 8
+Propeller radius R 0.75 m
+Number of propeller blades Nb 3
+Fuselage length Lb 5.324 m
+Fuselage width Wb 4.972 m
+Maximum electric power Pmax 311,000 W
+Takeoff weight M 725 kg
+Propeller blade chord length c 0.1 m
+wing area S 9 m2
+The optimization needs to take into account the performance of the Vahana A 3, in-
+cluding parameters such as battery power, speed, acceleration, and angle of approach. Its
+acceleration is calculated as follows:
+(
+ax = Tsinθ−D1sin(θ+α)−D2sin(θ+αEFF )−Lcos(θ+αEFF )−Ncos θ
+m
+ay = Tcosθ−D1cos(θ+α)−D2cos(θ+αEFF )+Lsin(θ+αEFF )+Ncos θ−mg
+m
+(20)
+α is the wing angle of attack, αEFF is the effective free-stream angle of attack, m is the
+aircraft mass, T is the total thrust, D1 is the fuselage drag, D2 is the total drag on both
+wings, L is the total lift on both wings, N is the total normal force on the propeller, and g is
+the acceleration due to gravity.
+For the end state, this paper also adopts Uber’s published mission requirements,
+which specify reaching a height of 305 m and a cruising speed of 67 m/s. The stall angle of
+attack for the Vahana A3 is 15◦. The safety distance should be greater than 1.5 times the
+length of the fuselage, which in this case is taken as 8 m. The maximum power output of
+the batteries used is 311 kW and the tilt angle of the wings is between 0◦ and 135◦.
+Combined with the above, the specific constraints for the whole optimization problem
+can be obtained as follows: 
+
+
+yn ≥ 305 m
+vxn = 67 m/sq
+axi
+2 + ayi
+2 ≤ 0.3 g
+−15◦ ≤ αi ≤ 15◦
+Di ≥ 8 m
+Pi ≤ 311, 000 W
+0◦ ≤ θi ≤ 135◦
+(21)
+During the operation of tilt-wing type eVTOL, the induced velocity caused by the
+propellers generates an induced speed that affects the wings to a certain extent. According
+
+===== PAGE 11 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 11 of 18
+to reference [ 18], the results show that the effect is not significant for the Vahana A 3
+configuration. In this paper, we use the ideal case with coefficients close to 100%.
+4.1. T rajectory Planning without Obstacles
+In this part, the methodology of this paper is verified through specific simulation
+examples. The SLSQP algorithm is used to solve the trajectory optimization problem based
+on minimizing energy consumption. The optimization is terminated when the change in
+the objective function value is less than 10−6 and the maximum number of iterations is set
+to 400. The simulation results are compared with the related studies for a validity analysis.
+The parameters of the initial and final states of the simulation are shown in Table 2.
+Table 2. Simulation parameters1.
+Categories Parameters Value Unit
+Initial state Displacement [0, 0] m
+Velocity [0, 0] m/s
+Termination state Displacement [x , 305] m
+Velocity
+
+67, vy ] m/s
+The number of control points for the decision variables j is taken as 20 and the initial
+solution setup is shown in Table 3:
+Table 3. Initial solution.
+Value Unit Quantity
+Flight time t 25 s 1
+Wing angle to verticalθ [36, 36, 36, . . ., 36] ◦ 20
+Battery power P [300,000, 300,000, 300,000, . . ., 300,000] W 20
+Figure 4 shows the takeoff trajectory with no obstacles and state variables during the
+process. The entire process lasts around 26 s with an energy consumption of 1861.2 W·h.
+The takeoff trajectory was smooth with no significant fluctuations. In the first 6 s, the wing
+angle to the vertical increased from 11 degrees near vertical to 40◦at a relatively fast rate,
+with the power stabilizing at around 190 kW. In the next 8 s, the wings started to slow down
+its tilt rate, gradually increasing to 54◦, during which the battery power increased to 290
+kW. At this point, the eVTOL climbed to around 200m and started to slow down its ascent
+rate. In the remaining 12 s, the wing angle to vertical was gradually increased to 80 ◦ while
+the battery power increased to the maximum power it could provide—311 kW. Finally,
+the eVTOL accelerated to the required cruise speed and reached the required altitude.
+Throughout the whole process, there were no stall situations and acceleration remained
+below 0.3 g.
+From Figure 4, it can be observed that the optimized trajectory, wing angle to the
+vertical, flight speed, angle of attack, battery power, acceleration, wing lift and drag, and
+total thrust received by the eVTOL exhibit a trend of change over time that is almost
+identical to the research conducted by Shamsheer S. Chauhan et al [ 18]. In the given
+operating condition, Shamsheer S. Chauhan et al. optimized for a runtime of 27 s with
+a minimum energy consumption of 1863.1 W ·h, while this paper achieved a minimum
+energy consumption of 1861.2 W·h, showing a very small difference. To test the robustness
+of this method, different termination state parameters are set while keeping the initial state
+unchanged. The new simulation parameters are shown in Table 4.
+
+===== PAGE 12 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 12 of 18
+World Electr. Veh. J. 2024, 15, 300 11 of 17 
+ 
+Table 2. Simulation parameters1. 
+Categories Parameters Value Unit 
+Initial state Displacement [0, 0] m 
+Velocity [0, 0] m/s 
+Termination state Displacement [ 𝑥, 305] m 
+Velocity [67, 𝑣௬] m/s 
+The number of control points for the decision variables 𝑗 is taken as 20 and the initial 
+solution setup is shown in Table 3: 
+Table 3. Initial solution. 
+ Value Unit Quantity 
+Flight time 𝑡 25 s 1 
+Wing angle to vertical 𝜃 [36, 36, 36, …, 36] ° 20 
+Battery power 𝑃 [300,000, 300,000, 300,000, …, 300,000] W 20 
+Figure 4 shows the takeoﬀ trajectory with no obstacles and state variables during the 
+process. The entire process lasts around 26 s with an energy consumption of 1861.2 W·h. 
+The takeoﬀ trajectory was smooth with no signiﬁcant ﬂuctuations. In the ﬁrst 6 s, the wing 
+angle to the vertical increased from 11 degrees near vertical to 40°at a relatively fast rate, 
+with the power stabilizing at around 190 kW. In the next 8 s, the wings started to slow 
+down its tilt rate, gradually increasing to 54°, during which the ba ttery power increased 
+to 290 kW. At this point, the eVTOL climbed to around 200m and started to slow down its 
+ascent rate. In the remaining 12 s, the wing angle to vertical was gradually increased to 80° 
+while the battery power increased to the maximum power it could provide—311 kW. Fi-
+nally, the eVTOL accelerated to the required  cruise speed and reached the required alti-
+tude. Throughout the whole process, there were  no stall situations and acceleration re-
+mained below 0.3 g. 
+ 
+Figure 4. State parameters when the termination state was [𝑥, 305] and [67, 𝑣௬] without obstacles, 
+where the dashed line is the results of literature [18] and the solid line is the ﬁndings of this paper. 
+From Figure 4, it can be observed that the optimized trajectory, wing angle to the 
+vertical, ﬂight speed, angle of attack, battery power, acceleration, wing lift and drag, and 
+total thrust received by the eVTOL exhibit a trend of change over time that is almost iden-
+tical to the research conducted by Shamsheer S. Chauhan et al [18]. In the given operating 
+condition, Shamsheer S. Chauhan et al. opti mized for a runtime of 27 s with a minimum 
+Figure 4. State parameters when the termination state was [ x, 305] and [67, vy] without obstacles,
+where the dashed line is the results of literature [18] and the solid line is the findings of this paper.
+Table 4. Simulation parameters2.
+Categories Parameters Value Unit
+Initial state Displacement [0, 0] m
+Velocity [0, 0] m/s
+Termination state Displacement [x , 200] m
+Velocity
+
+52.7, vy ] m/s
+Given a final cruise speed of 52.7 m/s (the official cruise speed of the Vahana A3) and
+a final altitude of more than 200 m, the optimization of the takeoff trajectory with minimum
+energy consumption in this state is investigated, and the results are shown in Figure 5.
+World Electr. Veh. J. 2024, 15, 300 12 of 17 
+ 
+energy consumption of 1863.1 W·h, while this paper achieved a minimum energy con-
+sumption of 1861.2 W·h, showing a very small di ﬀerence. To test the robustness of this 
+method, diﬀerent termination state parameters are set while keeping the initial state un-
+changed. The new simulation parameters are shown in Table 4. 
+Table 4. Simulation parameters2. 
+Categories Parameters Value Unit 
+Initial state Displacement [0, 0] m 
+Velocity [0, 0] m/s 
+Termination state Displacement [ 𝑥, 200] m 
+Velocity [52.7,𝑣௬] m/s 
+Given a ﬁnal cruise speed of 52.7 m/s (the oﬃcial cruise speed of the Vahana A3) and 
+a ﬁnal altitude of more than 200 m, the optimization of the takeo ﬀ trajectory with mini-
+mum energy consumption in this state is investigated, and the results are shown in Figure 
+5. 
+ 
+Figure 5. State parameters when the termination state is [𝑥, 200] and [52.7, 𝑣௬] without obstacles. 
+The whole process lasted 21.57 s, with an  energy consumption of 1293.52 W·h. The 
+generated takeoﬀ trajectory was smooth, with a relatively gentle change in the wing angle 
+to vertical, which guaranteed safety. The speed was similar to the previous condition, 
+steadily increasing to the speciﬁed speed, with the angle of a ttack below 15° and no stall 
+phenomenon. The acceleration also remained below 0.3 g. Due to the reduced ﬁnal height 
+and speed requirements, the time and horizontal displacement to reach the endpoint were 
+decreased. The ba ttery power decreased to around 200 kW, resulting in reduced energy 
+consumption. 
+It can be seen that the performance of this paper’s method in obstacle-free trajectory 
+planning is comparable to that of the existing  research results, and it can be adapted to 
+takeoﬀ trajectory planning in diﬀerent situations. Therefore, it can be used for takeoﬀ ob-
+stacle avoidance trajectory planning on this basis. 
+4.2. Trajectory Planning with Obstacles 
+When planning the obstacle avoidance trajectory, the initial and ﬁnal states are set 
+up in the same way as when there is no obstacle, with the diﬀerence being that the proﬁle 
+Figure 5. State parameters when the termination state is [x, 200] and [52.7, vy] without obstacles.
+The whole process lasted 21.57 s, with an energy consumption of 1293.52 W·h. The
+generated takeoff trajectory was smooth, with a relatively gentle change in the wing angle
+to vertical, which guaranteed safety. The speed was similar to the previous condition,
+
+===== PAGE 13 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 13 of 18
+steadily increasing to the specified speed, with the angle of attack below 15◦ and no stall
+phenomenon. The acceleration also remained below 0.3 g. Due to the reduced final height
+and speed requirements, the time and horizontal displacement to reach the endpoint were
+decreased. The battery power decreased to around 200 kW, resulting in reduced energy
+consumption.
+It can be seen that the performance of this paper’s method in obstacle-free trajectory
+planning is comparable to that of the existing research results, and it can be adapted to
+takeoff trajectory planning in different situations. Therefore, it can be used for takeoff
+obstacle avoidance trajectory planning on this basis.
+4.2. T rajectory Planning with Obstacles
+When planning the obstacle avoidance trajectory, the initial and final states are set up
+in the same way as when there is no obstacle, with the difference being that the profile data
+of the obstacles are added to the optimization model as a new constraint. The trajectory of
+the flying car is ensured to cross the obstacle by setting a new inequality constraint, i.e., the
+distance between the position of the flying car and the obstacle is greater than the set safety
+distance. Then, the SLSQP algorithm is used to optimize the trajectory to make the eVTOL
+avoid the obstacle as much as possible. Figure 6 illustrates the results of the optimization of
+the takeoff trajectory under the influence of obstacle 1, selecting different terrains around
+Purple Mountain in Nanjing City as obstacle constraints with terrain data sourced from
+the National Geographic Spatial Data Cloud website “www.gscloud.cn (accessed on 23
+February 2024)”.
+World Electr. Veh. J. 2024, 15, 300 13 of 17 
+ 
+data of the obstacles are added to the optimization model as a new constraint. The trajec-
+tory of the ﬂying car is ensured to cross the obstacle by setting a new inequality constraint, 
+i.e., the distance between the position of the ﬂying car and the obstacle is greater than the 
+set safety distance. Then, the SLSQP algorithm is used to optimize the trajectory to make 
+the eVTOL avoid the obstacle as much as poss ible. Figure 6 illustrates the results of the 
+optimization of the takeoﬀ trajectory under the inﬂuence of obstacle 1, selecting diﬀerent 
+terrains around Purple Mountain in Nanjing City as obstacle constraints with terrain data 
+sourced from the National Geographic Spatial Data Cloud website “www.gscloud.cn (ac-
+cessed on 23 February 2024)”. 
+ 
+Figure 6. State parameters aﬀected by obstacle 1. 
+A comparison of the trajectories with and without obstacles is shown in Figure 7. 
+ 
+Figure 7. Takeoﬀ trajectory aﬀected by obstacle 1. 
+With the obstacle constraint, the whole process took 27.67 s and the energy consump-
+tion was 1874.6 W·h. It is evident that the trajectory without obstacles collided with the 
+mountain at 400 m, and the trajectory after adding the obstacle constraints is smooth, suc-
+cessfully crossing the obstac les and maintaining a safe di stance. The changes in speed, 
+Figure 6. State parameters affected by obstacle 1.
+A comparison of the trajectories with and without obstacles is shown in Figure 7.
+With the obstacle constraint, the whole process took 27.67 s and the energy consump-
+tion was 1874.6 W·h. It is evident that the trajectory without obstacles collided with the
+mountain at 400 m, and the trajectory after adding the obstacle constraints is smooth,
+successfully crossing the obstacles and maintaining a safe distance. The changes in speed,
+wing angle to the vertical, angle of attack, lift, drag, and total thrust on the wing are not
+very different. In comparing the accelerations, it can be seen that the scenario without
+obstacles was relatively more stable. In the presence of obstacles, the battery power was
+higher than the scenario without obstacles before 13 s but lower after 13 s.
+
+===== PAGE 14 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 14 of 18
+World Electr. Veh. J. 2024, 15, 300 13 of 17 
+ 
+data of the obstacles are added to the optimization model as a new constraint. The trajec-
+tory of the ﬂying car is ensured to cross the obstacle by setting a new inequality constraint, 
+i.e., the distance between the position of the ﬂying car and the obstacle is greater than the 
+set safety distance. Then, the SLSQP algorithm is used to optimize the trajectory to make 
+the eVTOL avoid the obstacle as much as poss ible. Figure 6 illustrates the results of the 
+optimization of the takeoﬀ trajectory under the inﬂuence of obstacle 1, selecting diﬀerent 
+terrains around Purple Mountain in Nanjing City as obstacle constraints with terrain data 
+sourced from the National Geographic Spatial Data Cloud website “www.gscloud.cn (ac-
+cessed on 23 February 2024)”. 
+ 
+Figure 6. State parameters aﬀected by obstacle 1. 
+A comparison of the trajectories with and without obstacles is shown in Figure 7. 
+ 
+Figure 7. Takeoﬀ trajectory aﬀected by obstacle 1. 
+With the obstacle constraint, the whole process took 27.67 s and the energy consump-
+tion was 1874.6 W·h. It is evident that the trajectory without obstacles collided with the 
+mountain at 400 m, and the trajectory after adding the obstacle constraints is smooth, suc-
+cessfully crossing the obstac les and maintaining a safe di stance. The changes in speed, 
+Figure 7. Takeoff trajectory affected by obstacle 1.
+To ensure the robustness of the method in the obstacle avoidance situation, different
+terrain obstacles are changed to verify the obstacle avoidance performance. The simulation
+parameters are the same as in Table 2, the initial state is the stationary state, and the final
+state is to reach the height of 305 m and the speed reaches 67 m/s. The results of the
+simulation are shown in Figures 8 and 9.
+World Electr. Veh. J. 2024, 15, 300 14 of 17 
+ 
+wing angle to the vertical, angle of a ttack, lift, drag, and total thrust on the wing are not 
+very diﬀerent. In comparing the accelerations, it  can be seen that the scenario without 
+obstacles was relatively more stable. In the presence of obstacles, the ba ttery power was 
+higher than the scenario without obstacles before 13 s but lower after 13 s. 
+To ensure the robustness of the method in the obstacle avoidance situation, diﬀerent 
+terrain obstacles are changed to verify the obstacle avoidance performance. The simula-
+tion parameters are the same as in Table 2, the initial state is the stationary state, and the 
+ﬁnal state is to reach the height of 305 m an d the speed reaches 67 m/s. The results of the 
+simulation are shown in Figures 8 and 9. 
+ 
+Figure 8. State parameters aﬀected by obstacle 2. 
+ 
+Figure 9. Takeoﬀ trajectory aﬀected by obstacle 2. 
+Under the inﬂuence of this obstacle, the whole takeo ﬀ process takes 28.88 s and the 
+energy consumption is 1902 .55 W·h. As the obstacle is closer to the takeo ﬀ point in this 
+case and has a greater inﬂuence on the trajectory at the beginning of the takeoﬀ, the wing 
+angle to the vertical at the beginning of the takeo ﬀ is slightly smaller than in the case 
+without obstacles, i.e., it is closer to the vertical takeo ﬀ case. As a result, the power at the 
+beginning of takeo ﬀ is slightly higher compared to the scenario without obstacles. No 
+Figure 8. State parameters affected by obstacle 2.
+Under the influence of this obstacle, the whole takeoff process takes 28.88 s and the
+energy consumption is 1902.55 W·h. As the obstacle is closer to the takeoff point in this
+case and has a greater influence on the trajectory at the beginning of the takeoff, the wing
+angle to the vertical at the beginning of the takeoff is slightly smaller than in the case
+without obstacles, i.e., it is closer to the vertical takeoff case. As a result, the power at the
+beginning of takeoff is slightly higher compared to the scenario without obstacles. No
+stalling occurred and the acceleration remained below 0.3 g. Figure 8 shows the comparison
+between the initial trajectory and the obstacle avoidance trajectory, clearly demonstrating
+that the new optimized trajectory also successfully avoids collisions with obstacles. This
+further confirms that the method has good robustness in obstacle avoidance scenarios.
+
+===== PAGE 15 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 15 of 18
+World Electr. Veh. J. 2024, 15, 300 14 of 17 
+ 
+wing angle to the vertical, angle of a ttack, lift, drag, and total thrust on the wing are not 
+very diﬀerent. In comparing the accelerations, it  can be seen that the scenario without 
+obstacles was relatively more stable. In the presence of obstacles, the ba ttery power was 
+higher than the scenario without obstacles before 13 s but lower after 13 s. 
+To ensure the robustness of the method in the obstacle avoidance situation, diﬀerent 
+terrain obstacles are changed to verify the obstacle avoidance performance. The simula-
+tion parameters are the same as in Table 2, the initial state is the stationary state, and the 
+ﬁnal state is to reach the height of 305 m an d the speed reaches 67 m/s. The results of the 
+simulation are shown in Figures 8 and 9. 
+ 
+Figure 8. State parameters aﬀected by obstacle 2. 
+ 
+Figure 9. Takeoﬀ trajectory aﬀected by obstacle 2. 
+Under the inﬂuence of this obstacle, the whole takeo ﬀ process takes 28.88 s and the 
+energy consumption is 1902 .55 W·h. As the obstacle is closer to the takeo ﬀ point in this 
+case and has a greater inﬂuence on the trajectory at the beginning of the takeoﬀ, the wing 
+angle to the vertical at the beginning of the takeo ﬀ is slightly smaller than in the case 
+without obstacles, i.e., it is closer to the vertical takeo ﬀ case. As a result, the power at the 
+beginning of takeo ﬀ is slightly higher compared to the scenario without obstacles. No 
+Figure 9. Takeoff trajectory affected by obstacle 2.
+5. Conclusions
+The aim of this article is to address the high energy consumption and obstacle inter-
+ference problems faced by eVTOL during the takeoff phase. Specifically, the high energy
+consumption and the presence of obstacles during the takeoff phase make flight path
+planning complex and difficult. This study not only provides a new approach for eVTOL
+takeoff obstacle avoidance in complex urban environments but also provides substantial
+technical references and solution ideas for future path planning problems similar to those
+of flying cars.
+By considering energy optimization, obstacle avoidance, and trajectory planning
+comprehensively, the inherent connections between them are explored to establish an
+optimization model for the takeoff trajectory with obstacle avoidance. Based on the opti-
+mization principles of the SLSQP algorithm, the search model and state iteration formula
+are derived. The effectiveness, stability, and robustness of the model and algorithm were
+verified through the design of various operating conditions, leading to the following
+conclusions:
+(1) When modelling the trajectory planning problem for tilt-wing eVTOL with obstacle
+avoidance, common issues such as downwash and wake effects of airflow, as well
+as the coupling effect between thrust and induced velocity, were considered. A
+parameterized energy calculation model and dynamic model were established to give
+the model in this paper generality and good versatility.
+(2) The continuous process of energy accumulation and dynamic state change is dis-
+cretized.
+(3) The optimization model and the gradient descent search and state iteration processes
+of the SLSQP algorithm were integrated to design a general solution algorithm for the
+trajectory planning problem of tilt-wing eVTOL with obstacle avoidance.
+(4) An example of trajectory planning for takeoff and obstacle avoidance of the Airbus
+Vahana A3 demonstrates that the model and optimization algorithm developed in
+this paper exhibit good stability and robustness. They can provide a certain reference
+for the three-dimensional obstacle avoidance trajectory planning of Airbus Vahana A3
+and other tilt-wing eVTOL trajectory planning problems.
+Autonomous takeoff and landing functionality, as a crucial feature of eVTOL au-
+tonomous flight control systems, is essential for enabling other complex flight capabilities.
+The landing phase faces similar challenges as the takeoff phase. Due to the characteristics of
+low-density obstacles and multiple co-linear aircraft in the Urban Air Mobility environment,
+dynamic collision avoidance with moving objects such as other eVTOL, birds, and balloons
+needs to be considered. Therefore, future research needs to break through in the following
+two aspects:
+
+===== PAGE 16 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 16 of 18
+(1) Landing is one of the most challenging parts of the eVTOL flight process, especially
+under adverse weather or complex terrain conditions. Precisely planning the landing
+trajectory ensures that the eVTOL safely reaches its destination, avoiding potential col-
+lision risks. Takeoff and landing are prerequisites for enabling the autonomous flight
+of eVTOLs. The proper planning of takeoff and landing trajectories can fully leverage
+the significant advantage of eVTOLs in flexible takeoff and landing operations in the
+UAM environment.
+(2) Dynamic collision avoidance involves responding to unplanned flight conflicts swiftly.
+Algorithms for this type of collision avoidance generally provide rapid responses
+to unexpected flight conflicts. Compared to static collision avoidance algorithms,
+dynamic collision avoidance algorithms offer higher flexibility and responsiveness.
+In the more flexible and complex UAM environment, the probability of airspace
+emergencies will increase significantly, necessitating more flexible and rapid collision
+avoidance measures.
+During the optimization process of takeoff trajectories, it was found that SLSQP is
+sensitive to initial values. The selection of initial values significantly affects the optimization
+time and results. Therefore, further improvements can be made to the algorithm to enhance
+its performance.
+Author Contributions: Conceptualization, P .L.; methodology, G.Z. writing—original draft prepara-
+tion, G.Z.; writing—review and editing, P .L.; writing—review and editing, D.W.; supervision, P .L. All
+authors have read and agreed to the published version of the manuscript.
+Funding: This research was funded by the China Scholarship Council, grant number 202308320187.
+Data Availability Statement: The original contributions presented in this study are included in the
+article; further inquiries can be directed to the corresponding author.
+Conflicts of Interest: The authors declare no conflicts of interest.
+Nomenclature
+Roman Symbols
+FA the aerodynamic force
+FP the propulsion force
+FG the force of gravity
+m the mass of the eVTOL
+.
+v the derivative of velocity
+v the velocity vector
+.
+r the derivative of a displacement
+r the position vector
+x the displacement in the horizontal direction
+y the displacement in the vertical direction
+T total thrust
+L the lift of the wing
+D1 the drag of the wing
+D2 the drag of the fuselage
+S the wing area
+CL the lift coefficient of the wing
+CD the drag coefficient of the wing
+vi the induced velocity
+V∞⊥ the component of the free-stream velocity
+SP the area of the propeller
+S f the reference area of the fuselage
+CD f the drag coefficient of the fuselage
+P the battery power
+PP the propeller power
+
+===== PAGE 17 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 17 of 18
+t flight time
+a acceleration
+E energy
+α the wing angle of attack
+αEFF the effective free-stream angle of attack
+Np number of propellers
+R propeller radius
+Nb number of propeller blades
+Lb fuselage length
+Wb fuselage width
+M takeoff weight
+c propeller blade chord length
+s correction factors
+q correction factors
+k iterations
+Greek Symbols
+ρ the air density
+θ the wing angle to the vertical
+λ Lagrange multipliers for the equality constraints
+µ Lagrange multipliers for the inequality constraints
+δ learning rate
+References
+1. National Academies of Sciences; Division on Engineering; Physical Sciences, Aeronautics; Space Engineering Board; Committee
+on Enhancing Air Mobilityâ. Advancing Aerial Mobility: A National Blueprint ; National Academies Press: Washington, DC, USA,
+2020.
+2. Eker, U.; Fountas, G.; Anastasopoulos, P .C.; Still, S.E. An exploratory investigation of public perceptions towards key benefits and
+concerns from the future use of flying cars. T ravel Behav. Soc.2020, 19, 54–66. [CrossRef]
+3. Urban Air Mobility (UAM) Concept of Operations v2.0 ; Federal Aviation Admin.: Washington, DC, USA, 2023.
+4. Zhang, J.; Liu, Y.; Zheng, Y. Overall eVTOL aircraft design for urban air mobility. Green Energy Intell. T ransp. 2024, 3, 100150.
+[CrossRef]
+5. Misra, A.; Jayachandran, S.; Kenche, S.; Katoch, A.; Suresh, A.; Gundabattini, E.; Legesse, A.A. A Review on Vertical Take-Off and
+Landing (VTOL) Tilt-Rotor and Tilt Wing Unmanned Aerial Vehicles (UAVs).J. Eng. 2022, 2022, 1803638. [CrossRef]
+6. Al-Rubaye, S.; Tsourdos, A.; Namuduri, K. Advanced air mobility operation and infrastructure for sustainable connected evtol
+vehicle. Drones 2023, 7, 319. [CrossRef]
+7. Zaid, A.A.; Belmekki, B.E.Y.; Alouini, M.S. eVTOL communications and networking in UAM: Requirements, key enablers, and
+challenges. IEEE Commun. Mag. 2023, 61, 154–160.
+8. Zhou, Y.; Zhao, H.; Liu, Y. An evaluative review of the VTOL technologies for unmanned and manned aerial vehicles.Comput.
+Commun. 2020, 149, 356–369. [CrossRef]
+9. Ugwueze, O.; Statheros, T.; Bromfield, M.A.; Horri, N. Trends in eVTOL aircraft development: The concepts, enablers and
+challenges. In Proceedings of the AIAA Scitech 2023 Forum, National Harbor, MD, USA, 23–27 January 2023; p. 2096.
+10. Vieira, D.R.; Silva, D.; Bravo, A. Electric VTOL aircraft: The future of urban air mobility (background, advantages and challenges).
+Int. J. Sustain. Aviat. 2019, 5, 101–118. [CrossRef]
+11. Duan, H.; Yu, Y.; Zhang, X. Three-dimension path planning for UCAV using hybrid meta-heuristic ACO-DE algorithm.Simul.
+Model. Pract. Theory 2010, 18, 1104–1115. [CrossRef]
+12. Gutierrez-Martinez, M.A.; Rojo-Rodriguez, E.G.; Cabriales-Ramirez, L.E.; Reyes-Osorio, L.A.; Castillo, P .; Garcia-Salazar, O.
+Collision-free path planning based on a genetic algorithm for quadrotor UAVs. In Proceedings of the 2020 International Conference
+on Unmanned Aircraft Systems (ICUAS), Athens, Greece, 1–4 September 2020; pp. 948–957.
+13. Karahan, M.; Kasnakoglu, C. Path planning and collision avoidance with artificial intelligence for a quadrotor UAV . In Proceedings
+of the 2021 International Conference Automatics and Informatics (ICAI), Varna, Bulgaria, 30 September–2 October 2021; pp. 163–
+166.
+14. Pradeep, P .; Lauderdale, T.A.; Chatterji, G.B.; Sheth, K.; Lai, C.F.; Sridhar, B.; Erzberger, H. Wind-optimal trajectories for multirotor
+eVTOL aircraft on UAM missions. In Proceedings of the Aiaa Aviation 2020 Forum, Virtual Event, 15–19 June 2020; p. 3271.
+15. Wang, Z.; Wei, P .; Sun, L. Optimal cruise, descent, and landing of eVTOL vehicles for urban air mobility using convex optimization.
+In Proceedings of the AIAA Scitech 2021 Forum, Virtual Event, 1–21 January 2021; p. 577.
+16. Yan, X.F.; Chen, R.L. Trajectory optimization for short takeoff and single-engine failure landing of tiltrotor aircraft.J. Harbin Inst.
+T echnol.2017, 49, 38–44.
+17. Pradeep, P .; Wei, P . Energy efficient arrival with RTA constraint for urban eVTOL operations. In Proceedings of the 2018 AIAA
+Aerospace Sciences Meeting, Kissimmee, FL, USA, 8–12 January 2018; p. 2008.
+
+===== PAGE 18 / 18 =====
+World Electr. Veh. J. 2024, 15, 300 18 of 18
+18. Chauhan, S.S.; Martins, J.R.R.A. Tilt-wing eVTOL takeoff trajectory optimization. J. Aircr. 2020, 57, 93–112. [CrossRef]
+19. Ma, Y.; Gao, X.; Liu, C.; Li, J. Improved SQP and SLSQP Algorithms for Feasible Path-based Process Optimization.arXiv 2024,
+arXiv:2402.10396.
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.

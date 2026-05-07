@@ -1,0 +1,2 @@
+scenario_name,run_count,wall_time_s,generated_missions_total,completed_within_duration_total,completed_after_duration_total,collision_risk_count_total,building_collision_count_total,aircraft_collision_count_total,avg_pad_delay_s_mean,max_pad_delay_s_max,avg_flight_time_s_mean,models
+S4,55,3812.369708625,59400,58181,1219,37079,23330,13749,91.07039146406302,2701.9688917307394,141.80031512220572,"A,B,C,D,E"

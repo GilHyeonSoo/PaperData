@@ -1,0 +1,13 @@
+scenario_name: S3
+run_count: 30
+wall_time_s: 3760.716047208
+generated_missions_total: 32400
+completed_within_duration_total: 30619
+completed_after_duration_total: 1781
+collision_risk_count_total: 33744
+building_collision_count_total: 16574
+aircraft_collision_count_total: 17170
+avg_pad_delay_s_mean: 280.9441884851741
+max_pad_delay_s_max: 4123.126319652185
+avg_flight_time_s_mean: 200.63018868880474
+models: A,B,C,D,E

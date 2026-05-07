@@ -1,0 +1,1845 @@
+SOURCE: references/AssistancePaper/drones-08-00702-v2.pdf
+PAGES: 28
+
+
+
+===== PAGE 1 / 28 =====
+Citation: Arafat, M.Y.; Pan, S. Urban
+Air Mobility Communications and
+Networking: Recent Advances,
+Techniques, and Challenges. Drones
+2024, 8, 702. https://doi.org/
+10.3390/drones8120702
+Academic Editor: Pablo
+Rodríguez-Gonzálvez
+Received: 20 September 2024
+Revised: 19 November 2024
+Accepted: 21 November 2024
+Published: 24 November 2024
+Copyright: © 2024 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license (https://
+creativecommons.org/licenses/by/
+4.0/).
+Review
+Urban Air Mobility Communications and Networking: Recent
+Advances, Techniques, and Challenges
+Muhammad Yeasir Arafat
+ and Sungbum Pan *
+IT Research Institute, Chosun University, Gwangju 61452, Republic of Korea; myarafat@chosun.ac.kr
+* Correspondence: sbpan@chosun.ac.kr; Tel.: +82-62-230-6158
+Abstract: Over the past few years, our traditional ground-based transportation system has encoun-
+tered various challenges, including overuse, traffic congestion, growing urban populations, high
+infrastructure costs, and disorganization. Unmanned aerial vehicles, commonly referred to as drones,
+have significantly impacted aerial communication in both the academic and industrial sectors. There-
+fore, researchers and scientists from the aviation and automotive industries have collaborated to
+create an innovative air transport system that solves traditional transport problems. In the coming
+years, urban air mobility (UAM) is expected to become an emerging air transportation system that
+enables on-demand air travel. UAM is also anticipated to offer more environmentally friendly, cost-
+effective, and faster modes of transportation than ground-based alternatives. Owing to the unique
+characteristics of personal air vehicles, ensuring reliable communication and maintaining proper
+safety and security, air traffic management, collision detection, path planning, and highly accurate
+localization and navigation have become increasingly complex. This article provides an extensive
+literature review of recent technologies to address the challenges UAM faces. First, we present UAM
+communication requirements in terms of coverage, data rate, latency, spectrum efficiency, networking,
+and computing capabilities. Subsequently, we identify the potential key technological enablers to
+meet these requirements and overcome their challenges. Finally, we discuss open research issues,
+challenges, and future research directions for UAM deployment.
+Keywords: advanced air mobility (AAM); drones; eVTOL; flying vehicles; future mobility; personal
+air vehicles (PAVs); urban air mobility (UAM); unmanned aerial vehicles (UAVs); vertical takeoff
+and landing
+1. Introduction
+As urban population density has increased in recent decades, traffic congestion and
+commuter delays have risen unprecedentedly. By 2050, approximately 80% of the European
+and North American populations are estimated to live in metropolitan regions [ 1]. As
+a result of this phenomenal growth, major cities worldwide continue to face escalating
+infrastructure and mobility issues. Additionally, urbanization leads to conflict, pollution,
+and congestion, negatively affecting both human and environmental health [2]. According
+to the European Institute of Innovation and Technology, congestion costs 130 billion euros
+annually in Europe [3]. Therefore, it is necessary to investigate new mobility concepts and
+paradigms to reduce commuting times, avoid ground traffic, and enable point-to-point
+flight between cities. A revolutionary air transportation method called urban air mobility
+(UAM) has emerged to alleviate ground traffic saturation by providing an alternative mode
+of transport for both intercity and intracity travel. In this scenario, UAM offers a new dimen-
+sion to city commuting by extending transportation into the urban airspace. With UAM,
+intercity connections are enhanced through vertical mobility, thus offering efficient and
+environmentally friendly alternatives to traditional ground transport. Transport authorities
+expect UAM to be a crucial part of the smart city initiative. In particular, municipalities
+anticipate that UAM will deliver a variety of services, including medical assistance, rescue
+Drones 2024, 8, 702. https://doi.org/10.3390/drones8120702 https://www.mdpi.com/journal/drones
+
+===== PAGE 2 / 28 =====
+Drones 2024, 8, 702 2 of 28
+missions, and parcel delivery, as part of a smart city initiative [4]. As shown in Figure 1,
+UAM has a wide range of applications in both the military and civil sectors.
+Drones 2024, 8, 702 2 of 28 
+ 
+particular, municipalities anticipate that UAM will deliver a variety of services, including 
+medical assistance, rescue missions, and parcel delivery, as part of a smart city initiative 
+[4]. As shown in Figure 1, UAM has a wide range of applications in both the military and 
+civil sectors. 
+With the advent of UAM, the aviation in dustry has revolutionized and disrupted 
+traditional mobility systems and urban planning. Leading aviation companies are com-
+peting to advance the vertical takeo ﬀ and landing (VTOL) technologies and prototypes 
+and the mass-production of VTOL vehicles that air taxi services will use in the future [5]. 
+An air taxi is a small electric aircraft with an average seating capacity of four that can be 
+used on demand to transport passengers in metropolitan areas. In addition, several com-
+panies have already conducted extensive test ﬂights using their electrical vertical takeoﬀ 
+and landing (eVTOL) technology, which has been demonstrated in several countries 
+worldwide [6]. In a large city, air taxis can take oﬀ and land vertically using eVTOL tech-
+nology, which is similar to the technology used by helicopters. UAM primarily utilizes 
+VTOL technology to develop aircraft, providing an eco-friendly solution in terms of pol-
+lution, economic viability, enhanced safety, and improved fault tolerance. Most VTOL air-
+craft are likely to be powered by eVTOL technology, enabling operations without a run-
+way, thereby providing signiﬁcant savings in both space and time [7]. UAM still needs to 
+be available and usable on demand because many challenges remain to be overcome [8]. 
+UAM operation and connectivity are challenging issues. Owing to its low-altitude ﬂight 
+characteristics, UAM experiences interference  and disturbances in communication with 
+base stations [9]. Security is of paramount importance in the communication and control 
+paradigms. During takeo ﬀ and landing, UAM requires congestion management and air 
+traﬃc routing, which are far more complex and prone to accidents than the traditional 
+high-altitude ﬂights [10]. Moreover, multi-eVTOL swarms present signiﬁcant challenges 
+in terms of collision avoidance, topology control, and task scheduling [11]. The e ﬀective 
+and robust use of UAM requires a robust and scalable infrastructure, particularly in highly 
+congested urban environments [12]. 
+ 
+Figure 1. Applications of UAM in the military and civil domains. 
+Figure 1. Applications of UAM in the military and civil domains.
+With the advent of UAM, the aviation industry has revolutionized and disrupted tra-
+ditional mobility systems and urban planning. Leading aviation companies are competing
+to advance the vertical takeoff and landing (VTOL) technologies and prototypes and the
+mass-production of VTOL vehicles that air taxi services will use in the future [5]. An air
+taxi is a small electric aircraft with an average seating capacity of four that can be used
+on demand to transport passengers in metropolitan areas. In addition, several companies
+have already conducted extensive test flights using their electrical vertical takeoff and
+landing (eVTOL) technology, which has been demonstrated in several countries world-
+wide [6]. In a large city, air taxis can take off and land vertically using eVTOL technology,
+which is similar to the technology used by helicopters. UAM primarily utilizes VTOL
+technology to develop aircraft, providing an eco-friendly solution in terms of pollution,
+economic viability, enhanced safety, and improved fault tolerance. Most VTOL aircraft
+are likely to be powered by eVTOL technology, enabling operations without a runway,
+thereby providing significant savings in both space and time [ 7]. UAM still needs to be
+available and usable on demand because many challenges remain to be overcome [ 8].
+UAM operation and connectivity are challenging issues. Owing to its low-altitude flight
+characteristics, UAM experiences interference and disturbances in communication with
+base stations [9]. Security is of paramount importance in the communication and control
+paradigms. During takeoff and landing, UAM requires congestion management and air
+traffic routing, which are far more complex and prone to accidents than the traditional
+high-altitude flights [10]. Moreover, multi-eVTOL swarms present significant challenges
+in terms of collision avoidance, topology control, and task scheduling [11]. The effective
+and robust use of UAM requires a robust and scalable infrastructure, particularly in highly
+congested urban environments [12].
+UAM represents a disruptive technology that has revolutionized the entire transporta-
+tion industry. We provide a comparative analysis between UAM and existing transporta-
+tion systems to better understand its feasibility. In recent years, unmanned aerial vehicles
+
+===== PAGE 3 / 28 =====
+Drones 2024, 8, 702 3 of 28
+(UAVs), commonly known as drones, have been operated with radio remote-control equip-
+ment and self-contained programmed controls, or with onboard computers that operate
+fully autonomously or intermittently [13]. A flying ad hoc network (FANET) consists of
+a variety of aerial nodes such as drones or flying vehicles, operating in the on-demand
+ad hoc mode [14]. A FANET can be utilized in a wide variety of applications, including
+search and rescue in remote areas, damage assessment, wildlife monitoring, the detection
+of forest fires, pollution or crowd monitoring, surveillance, and public safety [15]. UAV or
+drone networks are organized similarly to FANET [16]. However, the nodes consist solely
+of UAVs that are remotely controlled or have predetermined trajectories. The deployment
+of a drone- or UAV-based network requires precise orchestration of the UAVs’ mobility and
+trajectory, which are essential characteristics of these networks [17]. The versatility, mobility,
+and flexibility of UAV or drone networks make them increasingly useful across various
+industries and fields. There is a wide range of applications, such as logistics delivery,
+agriculture, crop monitoring, border patrolling, planting and spraying, and temporary
+network deployment [18]. A UAM is a self-organizing architecture model divided into
+two main layers: aerial and ground. In urban environments, UAM refers to both manned
+and unmanned air vehicle systems used for the transportation of people and goods. With
+UAM, a new way of traveling within urban areas will be introduced, which will, in turn,
+help reduce congestion [ 19]. Table 1 summarizes the major characteristics of FANETs,
+UAV/drone networks, and UAM.
+Table 1. Comparison of the main characteristics of FANETs, UAV/drone networks, and UAM.
+Criteria FANETs UA V/Drone Networks UAM
+Domain Temporary ad hoc network Single- or multiuser
+operations Specific missions
+Autonomy level Unmanned and fully
+autonomous Unmanned
+Manned (human-controlled)
+and unmanned (fully
+autonomous)
+Control Distributed Distributed and centralized Mostly centralized
+Communication and
+navigation technology
+Wi-Fi, GPS, and radio
+frequency (RF) Wi-Fi, GPS, and RF
+Fourth-generation wireless
+(4G)/fifth-generation wireless
+(5G), GPS, RF, and visual signal
+Path planning Dynamic and based on the
+applications
+Depends on the remote
+controller
+Pre-planned path for specific
+mission
+Communication distance Short range Short and medium range Long range
+Flying altitude Low to medium Low Low to medium
+Propulsion technology Battery power Battery power Battery power and fuel
+Network integration Satellites and high-altitude
+platform stations (HAPs).
+Aerial-to-ground (A2G)
+station
+Air traffic control on a ground
+station
+UAM technology includes advanced aircraft, upgraded airspace management systems,
+and autonomous navigation systems. UAM is also supported by a range of advanced
+technologies such as electric propulsion, high-tech materials, and sensors for navigation
+and safety [20]. These technologies are used to develop quieter, safer, and more efficient
+vehicles than traditional aircraft. The most prominent UAM projects include eVTOL aircraft,
+which take off vertically and fly horizontally [21]. These aircraft are designed to use electric
+propulsion and batteries, allowing them to be more efficient and quieter than traditional
+aircraft [22]. They will also be able to fly at lower altitudes, allowing them to access
+airspaces not currently used by commercial aircraft [ 23]. One of the key challenges for
+achieving success in UAM is maintaining safe flight in a highly dynamic environment.
+At present, most UAM research is focused on the structural aspect, and is similar to
+current air traffic management (ATM) techniques [24]. However, significant attention must
+
+===== PAGE 4 / 28 =====
+Drones 2024, 8, 702 4 of 28
+be paid to UAM safety management. One major concern is the uncertainty of aircraft
+location. Due to positioning errors caused by the global positioning system (GPS), aircraft
+may not be able to accurately obtain the location information of other aircraft, leading to
+potential safety risks [25]. Furthermore, these issues can arise from inaccurate sensor data,
+performance variance caused by the dynamic nature of the environment, and environmental
+factors, such as winds, low-altitude birds, and high-rise buildings [26]. Therefore, more
+real-life constraints must be considered when designing a collision avoidance approach
+for UAM [ 27]. Although UAM is still in its early stages of development, its potential
+is immense. As technology continues to evolve, it could have a significant impact on
+urban transportation.
+1.1. Contributions of This Study
+A brief overview of UAM operations is provided in this article along with a discussion
+of their key features. These aspects include power consumption, vertical takeoff and
+landing systems, autonomy level, UAM integration with existing networks, and ATM.
+Subsequently, we review existing communication techniques in UAM. These techniques
+include communication data types, spectrum and frequency management, communication
+reliability, security issues, navigation, route networks, trajectory, collision avoidance, and
+flight scheduling. Finally, a discussion is presented on the opportunities and challenges
+associated with UAM development and its potential impact on society. Table 2 provides a
+list of acronyms for ease of reading and understanding.
+Table 2. List of acronyms.
+UAM—Urban air mobility VTOL—Vertical takeoff and landing
+eVTOL—Electrical vertical takeoff and landing FANET—Flying ad hoc network
+UAV—Unmanned aerial vehicle ATM—Air traffic management
+HAPs—High-altitude platform stations A2G—Air-to-ground
+A2A—Air-to-air U2I—UAV-to-infrastructure
+DEP—Distributed electric propulsion UAS—Unmanned aerial aircraft
+LOS—Line-of-sight NLOS—Non-line-of-sight
+BLOS—Blind-line-of-sight CNPC—Control and non-payload communication
+C2—Control and command ATC—Air traffic control
+UTM—Unmanned aircraft traffic management GS—Ground station
+LEO—Low-Earth orbit GEO—Geostationary equatorial orbit
+CDAA—Collision detect-and-avoid systems CNS—Communication, navigation, and surveillance
+D2D—Device-to-device FAA—Federal aviation administration
+EASA—European aviation safety agency PAV—Personal air vehicle
+SESAR—Single European Sky ATM research NASA—National aeronautics and space administration
+ACAS—Airborne collision avoidance system TCAS—Traffic collision avoidance system
+In this study, we aim to gain insight into UAM communication and networking tech-
+niques from the existing literature. The papers were retrieved from large online databases
+rather than being handpicked by specific publishers. As a part of our literature review,
+we searched for articles that address any aspect of UAM communication and networking.
+The most significant technical publishers, such as the association for computing machin-
+ery (ACM), Elsevier, IEEE Explore, Springer, Frontiers, Google Scholar, and arXiV , were
+searched for relevant publications. In this study, we gathered articles published in 2015 as
+well as the most recent papers published in 2024. To accommodate the varying capabilities
+
+===== PAGE 5 / 28 =====
+Drones 2024, 8, 702 5 of 28
+of the search functions of each database, we made necessary adjustments to the search
+string. Since UAM is a relatively new technology, most of the references are current.
+1.2. Outline of the Paper
+This review is organized into five sections, as shown in Figure 2. The remainder of
+the paper is outlined below. In the next section, we present the different aspects of UAM
+operating concepts, including the power source, takeoff and landing, level of autonomy,
+integration with existing networks, and energy consumption. Afterward, we reviewed
+recent communication techniques in UAM. Following this, we present open research issues,
+challenges, and future research directions. Finally, we conclude the study in the next section.
+Drones 2024, 8, 702 5 of 28 
+of the search functions of each database, we  made necessary adjustments to the search 
+string. Since UAM is a relatively new technology, most of the references are current. 
+1.2. Outline of the Paper 
+This review is organized into ﬁve sections, as shown in Figure 2. The remainder of 
+the paper is outlined below. In the next section, we present the di ﬀerent aspects of UAM 
+operating concepts, including the power source, takeo ﬀ and landing, level of autonomy, 
+integration with existing networks, and energy consumption. Afterward, we reviewed re-
+cent communication techniques in UAM. Following this, we present open research issues, 
+challenges, and future research directions. Finally, we conclude the study in the next sec-
+tion. 
+ 
+Figure 2. Outline of the paper. 
+2. Operational Concepts of UAM
+Generally, UAM specializes in transportation within urban areas or intercity within 
+short and medium distances (3–100 km), ﬂying at ultralow altitudes below 100 m, and in 
+low-altitude airspace between 100 m and 1000 m [28]. With the current technology, 
+manned aerial vehicles are capable of carrying up to ﬁve passengers. In urban ﬂights, bat-
+teries (lithium or hydrogen fuel cells) provide power, whereas in intercity ﬂights, hybrid-
+electric propulsion may be employed [29]. Re cent technological advancements in electri-
+ﬁcation, automation, and VTOL have made it possible to develop new aircraft designs, 
+services, and business models. The combination of these factors provides new opportuni-
+ties for the on-demand use of UAM aircraft in the transportation of commodities. UAM 
+vehicles have many diﬀerent requirements and boundary conditions compared with con-
+ventional aircraft designs [30]. In Figure 3, the fundamental design factors that in ﬂuence 
+the selection of aircraft type and the ensuing design speciﬁcations are described. 
+Figure 2. Outline of the paper.
+2. Operational Concepts of UAM
+Generally, UAM specializes in transportation within urban areas or intercity within
+short and medium distances (3–100 km), flying at ultralow altitudes below 100 m, and in
+low-altitude airspace between 100 m and 1000 m [28]. With the current technology, manned
+aerial vehicles are capable of carrying up to five passengers. In urban flights, batteries
+(lithium or hydrogen fuel cells) provide power, whereas in intercity flights, hybrid-electric
+propulsion may be employed [29]. Recent technological advancements in electrification,
+automation, and VTOL have made it possible to develop new aircraft designs, services,
+and business models. The combination of these factors provides new opportunities for
+the on-demand use of UAM aircraft in the transportation of commodities. UAM vehicles
+have many different requirements and boundary conditions compared with conventional
+aircraft designs [30]. In Figure 3, the fundamental design factors that influence the selection
+of aircraft type and the ensuing design specifications are described.
+
+===== PAGE 6 / 28 =====
+Drones 2024, 8, 702 6 of 28
+Drones 2024, 8, 702 6 of 28 
+ 
+ 
+Figure 3. Taxonomy of various aspects of UAM. 
+2.1. Power Source 
+Recent developments in distributed electric propulsion (DEP) and advanced electric 
+technology have led to an increase in the popularity of UAM aerial vehicles [31]. With the 
+help of these technologies, we have been able to combine strongly divergent and under-
+lying operational needs to design di ﬀerent aircraft types. As shown in Figure 3, UAMs 
+can be divided into two categories based on the mechanism that allows VTOL and lift 
+generation during a ﬂight. Through the development and use of DEP, academics and in-
+dustry specialists have been able to design aircraft with acceptable levels of system com-
+plexity and weight for both rotary-wing and ﬁxed-wing cruise aircraft [32]. Fuel combus-
+tion engines, particularly diesel engines, oﬀer a much higher energy density than the cur-
+rent battery technologies. With diesel fuel providing several times more energy per kilo-
+gram than lithium-ion batteries, UAVs can carry heavier payloads or ﬂy longer distances 
+without refueling or recharging. However, hybrid powertrains use a combustion engine 
+to produce electricity, which is subsequently used to drive electric motors. Electric motors 
+provide the beneﬁts of combustion engines in terms of range and endurance, while gen-
+erating less noise and lower emissions. 
+2.2. Takeoﬀ and Landing 
+According to Table 3, UAVs are generally classiﬁed according to their physical struc-
+ture, such as ﬁxed and rotary wings. During ﬂight, rotary-wing ﬂight vehicles produce lift 
+from spinning wings. In cruise ﬂight, they are often limited by the e ﬃciency of cruise 
+speed and, therefore, have a limited range [33]. However, rotary-wing vehicles exhibit 
+excellent hovering and vertical takeoﬀ and landing capabilities. Along with standard hel-
+icopters, rotary-wing vehicles also adopt multicopter designs. Rotors are often assembled 
+in stacks at the expense of aerodynamic performance to combat the large footprint caused 
+by the large rotor surfaces [34]. Lift-fan vehicles have compact dimensions. Under hover-
+ing conditions, lift-fan vehicles are substantially less e ﬀective than rotary-wing vehicles. 
+However, the compact dimensions of lift-fan vehicles allow them to be designed to be the 
+same size as automobiles. As lift-fan vehicles have a small cross-sectional area, they pro-
+duce high downward velocities to generate suﬃcient thrust, which produces a signiﬁcant 
+amount of noise. Despite the advantages of enclosed fans in ground-handling safety, re-
+ducing noise is a signi ﬁcant challenge for this type of vehicle. Fixed-wing ﬂight vehicles 
+are substantially faster and more e ﬃcient than rotary-wing vehicles during cruise ﬂight. 
+Figure 3. Taxonomy of various aspects of UAM.
+2.1. Power Source
+Recent developments in distributed electric propulsion (DEP) and advanced electric
+technology have led to an increase in the popularity of UAM aerial vehicles [ 31]. With
+the help of these technologies, we have been able to combine strongly divergent and
+underlying operational needs to design different aircraft types. As shown in Figure 3,
+UAMs can be divided into two categories based on the mechanism that allows VTOL
+and lift generation during a flight. Through the development and use of DEP , academics
+and industry specialists have been able to design aircraft with acceptable levels of system
+complexity and weight for both rotary-wing and fixed-wing cruise aircraft [ 32]. Fuel
+combustion engines, particularly diesel engines, offer a much higher energy density than
+the current battery technologies. With diesel fuel providing several times more energy
+per kilogram than lithium-ion batteries, UAVs can carry heavier payloads or fly longer
+distances without refueling or recharging. However, hybrid powertrains use a combustion
+engine to produce electricity, which is subsequently used to drive electric motors. Electric
+motors provide the benefits of combustion engines in terms of range and endurance, while
+generating less noise and lower emissions.
+2.2. Takeoff and Landing
+According to Table 3, UAVs are generally classified according to their physical struc-
+ture, such as fixed and rotary wings. During flight, rotary-wing flight vehicles produce lift
+from spinning wings. In cruise flight, they are often limited by the efficiency of cruise speed
+and, therefore, have a limited range [33]. However, rotary-wing vehicles exhibit excellent
+hovering and vertical takeoff and landing capabilities. Along with standard helicopters,
+rotary-wing vehicles also adopt multicopter designs. Rotors are often assembled in stacks at
+the expense of aerodynamic performance to combat the large footprint caused by the large
+rotor surfaces [34]. Lift-fan vehicles have compact dimensions. Under hovering conditions,
+lift-fan vehicles are substantially less effective than rotary-wing vehicles. However, the
+compact dimensions of lift-fan vehicles allow them to be designed to be the same size
+as automobiles. As lift-fan vehicles have a small cross-sectional area, they produce high
+downward velocities to generate sufficient thrust, which produces a significant amount of
+noise. Despite the advantages of enclosed fans in ground-handling safety, reducing noise is
+a significant challenge for this type of vehicle. Fixed-wing flight vehicles are substantially
+faster and more efficient than rotary-wing vehicles during cruise flight. While extending
+
+===== PAGE 7 / 28 =====
+Drones 2024, 8, 702 7 of 28
+travel distances, this structure may reduce the hovering flight features and VTOL [35]. The
+deployment of large rotor areas necessary for effective hovering flight is also constrained
+by integration issues and the desire to increase cruise efficiency [36]. Figure 4 illustrates the
+eVTOL horizontal and vertical landing approaches.
+Table 3. Advantages and limitations of aerial vehicle types.
+Category Advantages Limitations
+Single rotor
+VTOL and hover flight supported Costly
+Long endurance and large coverage Require more training
+High payload capability High risk
+Multi-rotor
+VTOL and hover flight supported Low area coverage
+Support both indoor and outdoor Limited payload
+Accessibility and easy to deploy Short flight time
+Small and cluttered areas of coverage Low stability in wind
+Fixed-wing
+Long endurance and large coverage No VTOL and hover
+High mobility Require more training
+Great stability High price
+Hybrid
+Long endurance and large coverage Extra weight
+VTOL supported High cruise drag forces
+Easy to take off and land Under development
+Drones 2024, 8, 702 7 of 28 
+ 
+While extending travel distances, this  structure may reduce the hovering ﬂight features 
+and VTOL [35]. The deployment of large rotor areas necessary for eﬀective hovering ﬂight 
+is also constrained by integration issues and the desire to increase cruise e ﬃciency [36]. 
+Figure 4 illustrates the eVTOL horizontal and vertical landing approaches. 
+ 
+Figure 4. (a) Horizontal and (b) vertical landing approaches of eVTOL aircraft. 
+Lift and cruise vehicles use two dist inct power tracks/trains for VTOL and ﬂight. 
+There is no need for tilting mechanisms because all components for thrust generation are 
+placed such that they provide thrust in the direction opposite to that of the desired motion. 
+This reduces system complexity and enables the design of all rotors and propellers to their 
+maximum potential. The tilt-wing aircraft and tail-si tters employ the same propulsion 
+techniques during all ﬂight phases. Therefore, it is necessary to modify the propulsion 
+system design. However, eﬃciency losses can be minimized by tuning specialized cruise 
+propellers for di ﬀerent circumstances and turning o ﬀ VTOL propellers during ﬂight. In 
+these systems, e ﬃcient aerodynamic and cruise ﬂight con ﬁgurations are possible by 
+shrouding or folding unnecessary propulsors [37]. However, in a tilt-wing conﬁguration, 
+tilting is mandatory, resulting in a heavier and more complex system. Tail-sitter arrange-
+ments turn the entire vehicle by 90° for VTOL; in conjunction with e ﬀective ﬁxed-wing 
+cruising. The airplane stands straight, with its front facing towards the sky during takeoﬀ. 
+The vehicle gradually tilts to a horizontal ﬂight position after takeo ﬀ until it reaches a 
+cruise ﬂight altitude. Although tilting mechanisms are not necessary, passenger comfort 
+is a crucial component of tail-sitter UAM vehicles [38]. Reasonable solutions are required 
+for a complete tilt-over to be safe and comfortable for passengers. For a comprehensive 
+understanding of UAM vehicle types and their in ﬂuence on urban aerial transportation, 
+detailed aerial vehicular systems and diﬀerent vehicle types are required. Communication 
+techniques, navigation, geographical location, route, network, and ﬂight scheduling are 
+necessary to study the relationship between certain aircraft characteristics and transport 
+systems. 
+Table 3. Advantages and limitations of aerial vehicle types. 
+Category Advantages Limitations 
+Single rotor 
+VTOL and hover flight supported Costly 
+Long endurance and large coverage Require more training 
+High payload capability High risk 
+Multi-rotor 
+VTOL and hover flight supported Low area coverage 
+Support both indoor and outdoor Limited payload 
+Accessibility and easy to deploy Short flight time 
+Figure 4. (a) Horizontal and (b) vertical landing approaches of eVTOL aircraft.
+Lift and cruise vehicles use two distinct power tracks/trains for VTOL and flight.
+There is no need for tilting mechanisms because all components for thrust generation are
+placed such that they provide thrust in the direction opposite to that of the desired motion.
+This reduces system complexity and enables the design of all rotors and propellers to their
+maximum potential. The tilt-wing aircraft and tail-sitters employ the same propulsion tech-
+niques during all flight phases. Therefore, it is necessary to modify the propulsion system
+design. However, efficiency losses can be minimized by tuning specialized cruise propellers
+for different circumstances and turning off VTOL propellers during flight. In these systems,
+efficient aerodynamic and cruise flight configurations are possible by shrouding or folding
+unnecessary propulsors [37]. However, in a tilt-wing configuration, tilting is mandatory,
+resulting in a heavier and more complex system. Tail-sitter arrangements turn the entire
+vehicle by 90◦ for VTOL; in conjunction with effective fixed-wing cruising. The airplane
+stands straight, with its front facing towards the sky during takeoff. The vehicle gradually
+
+===== PAGE 8 / 28 =====
+Drones 2024, 8, 702 8 of 28
+tilts to a horizontal flight position after takeoff until it reaches a cruise flight altitude. Al-
+though tilting mechanisms are not necessary, passenger comfort is a crucial component of
+tail-sitter UAM vehicles [38]. Reasonable solutions are required for a complete tilt-over
+to be safe and comfortable for passengers. For a comprehensive understanding of UAM
+vehicle types and their influence on urban aerial transportation, detailed aerial vehicular
+systems and different vehicle types are required. Communication techniques, navigation,
+geographical location, route, network, and flight scheduling are necessary to study the
+relationship between certain aircraft characteristics and transport systems.
+2.3. Level of Autonomy
+UAM aerial vehicles can be operated in many different ways, including autonomously,
+piloted by a human, or by a combination of both [39]. The level of autonomy and the need
+for a human pilot may differ depending on the type of aerial vehicle and the regulatory
+environment. Taking advantage of sensors and navigation systems, fully autonomous
+aerial vehicles can operate without the involvement of a human pilot, make independent
+decisions, and operate without guidance from a human. These systems can offer increased
+efficiency, reliability, and safety benefits. In addition, fully autonomous vehicles can
+operate in hazardous or complex environments that humans cannot access. However,
+fully autonomous vehicles also present their own challenges, such as the need for robust
+and reliable sensors, navigational systems, and communication systems, as well as the
+possibility of technical malfunctions [ 40]. Remote controls or other interfaces control
+human-piloted aerial vehicles. These systems offer the benefits of human judgment and
+decision-making, but they may be less efficient and less safe than fully autonomous systems,
+especially in complex or dynamic environments. There are also hybrid systems that
+combine autonomous and human-piloted operations, such as systems that allow the pilot
+to take control of the UAV in an emergency or when the UAV encounters unexpected
+situations [41]. Overall, UAV autonomy is crucial in designing and operating these systems.
+UAV control plays a crucial role in urban airspace development and UAV integration in
+traffic management.
+UAM autonomy levels can be classified based on human–technology collaboration.
+The authors of [42] and the SESAR framework [43] classified UAM autonomy levels from
+level 0, indicating no automation, to level 5, signifying full automation with swarm capa-
+bilities. Gradations of levels enable an evolving UAM automation system that keeps pace
+with ongoing technological advancements. Level 0 indicates no automation, where the
+UAM fully operates under human control and pilots handle navigation, system monitoring,
+takeoff, and landing. Level 1 indicates assisted automation, where the pilot controls the
+vehicle, but automated assistance is involved, such as stability control, altitude holding,
+and basic navigation. Level 2 represents enhanced automation, where major UAM flight
+operations are performed by an autopilot but require pilot supervision. The autopilot
+handles flight cruising, takeoff, and landing on a predefined path. Level 3 represents a high
+degree of automation, where the UAM system autonomously handles all flight aspects,
+such as navigation, obstacle avoidance, and real-time decision-making during flight. Level
+4 is fully automated, where the UAM can operate autonomously without a pilot during
+flight. Level 5 is swarm automation of UAM, in which UAM can be deployed on a large
+scale. Using swarm automation, UAM can operate autonomously and self-organize with
+advanced artificial intelligence and machine learning to adapt to various scenarios.
+2.4. Integration with Existing Networks
+The integration of UAM systems into existing transportation networks is an important
+consideration. UAM systems, such as urban air taxis and delivery drones, have the potential
+to revolutionize human transportation and goods delivery [44]. Compared with traditional
+modes of transportation, UAM provides a convenient and efficient alternative. UAM
+systems may be integrated into existing transportation networks to provide users with a
+seamless and convenient travel experience. Public transit or ride-sharing services [45] can
+
+===== PAGE 9 / 28 =====
+Drones 2024, 8, 702 9 of 28
+allow users to easily book a UAM ride or delivery through a single platform or app. They
+can minimize the need for additional infrastructure, such as dedicated landing zones or
+charging stations. Integrating UAM systems with existing transportation networks can
+also reduce ground congestion and improve air quality by reducing the number of vehicles
+on the road.
+2.5. ATM
+UAM poses several challenges that cannot be addressed using conventional ATM
+techniques [46]. All types of aircraft, including commercial and military flying vehicles,
+are controlled by ATM services, both in current and next-generation ATM systems. Unlike
+commercial flights, which are intended to ensure the safe transportation of passengers and
+containers between well-known airports, military planes protect the country’s airspace
+from enemy attack and support ground troops. Increasingly, UAM will require a separate
+ATM system or an adapted system that can accommodate on-demand, high-volume, and
+short-range flights near urban areas [47]. Because these autonomous aircraft will provide
+their services in densely populated urban airspaces, they are expected to operate under
+tighter and more stringent rules than the present ATM system. Any UAM traffic manage-
+ment system must also handle unusual occurrences safely without jeopardizing overall
+performance [48]. A comparison of traditional ATM with UAM ATM is shown in Figure 5.
+The UAM ATM framework requires collaboration between air and ground collaboration
+systems, which combines the planning of urban airspace, traffic rules, and the management
+of ground facilities.
+Drones 2024, 8, 702 9 of 28 
+ 
+users with a seamless and convenient travel experience. Public transit or ride-sharing ser-
+vices [45] can allow users to easily book a UAM ride or delivery through a single platform 
+or app. They can minimize the need for additional infrastructure, such as dedicated land-
+ing zones or charging stations. Integrating UAM systems with existing transportation net-
+works can also reduce ground congestion and improve air quality by reducing the number 
+of vehicles on the road. 
+2.5. ATM 
+UAM poses several challenges that cannot be addressed using conventional ATM 
+techniques [46]. All types of aircraft, including commercial and military ﬂying vehicles, 
+are controlled by ATM services, both in current and next-generation ATM systems. Unlike 
+commercial ﬂights, which are intended to ensure th e safe transportation of passengers 
+and containers between well-known airports, military planes protect the country’s air-
+space from enemy a ttack and support ground troops. Increasingly, UAM will require a 
+separate ATM system or an adapted system that can accommodate on-demand, high-vol-
+ume, and short-range ﬂights near urban areas [47]. Because these autonomous aircraft will 
+provide their services in densely populated urban airspaces, they are expected to operate 
+under tighter and more stringent rules than the present ATM system. Any UAM tra ﬃc 
+management system must also handle unusua l occurrences safely without jeopardizing 
+overall performance [48]. A comparison of traditional ATM with UAM ATM is shown in 
+Figure 5. The UAM ATM framework requires collaboration between air and ground col-
+laboration systems, which combines the planning of urban airspace, traﬃc rules, and the 
+management of ground facilities. 
+ 
+Figure 5. Comparison between traditional ATM and UAM ATM. 
+Unmanned aerial aircraft (UAS) tra ﬃc management is a proposed tra ﬃc manage-
+ment system for tiny UAS that adopt a federated approach to maintaining airspace access 
+[49]. Various safety-oriented services, including aircraft separation [50] and geofencing 
+[51], are widely utilized in ATM. However, when using this strategy, there may be prob-
+lems with scalability, both in terms of the size of the UAM vehicles and the density of 
+UAM traﬃc. There is an increasing need to investigate the architecture of a well-devel-
+oped ATM system capable of securely and e ﬀectively controlling UAM tra ﬃc. Figure 6 
+shows the basic framework of UAM ATM. UAM tra ﬃc management issues for eVTOL 
+vehicles are divided into three categories: airspace planning, traﬃc rules and operational 
+control, and ground infrastructure management [52]. 
+UAM needs to reﬁne the airspace planning and management of existing low-altitude 
+uncontrolled airspaces. A ﬂight-level airspace structure can provide a be tter balance be-
+tween operational safety and airspace capaci ty. To plan ground infrastructure, urban 
+Figure 5. Comparison between traditional ATM and UAM ATM.
+Unmanned aerial aircraft (UAS) traffic management is a proposed traffic management
+system for tiny UAS that adopt a federated approach to maintaining airspace access [49].
+Various safety-oriented services, including aircraft separation [ 50] and geofencing [ 51],
+are widely utilized in ATM. However, when using this strategy, there may be problems
+with scalability, both in terms of the size of the UAM vehicles and the density of UAM
+traffic. There is an increasing need to investigate the architecture of a well-developed ATM
+system capable of securely and effectively controlling UAM traffic. Figure 6 shows the
+basic framework of UAM ATM. UAM traffic management issues for eVTOL vehicles are
+divided into three categories: airspace planning, traffic rules and operational control, and
+ground infrastructure management [52].
+
+===== PAGE 10 / 28 =====
+Drones 2024, 8, 702 10 of 28
+Drones 2024, 8, 702 10 of 28 
+ 
+origin–destination data can be used to predict the tra ﬃc demand of UAM. The manage-
+ment of vertiports will have a signi ﬁcant impact on the air route network as well as the 
+layout of communication, navigation, and moni toring stations. UAM will be faced with 
+more complex integrated operation scenarios involving manned and unmanned vehicles 
+in terms of traﬃc rules and operational control. UAM traﬃc rules must be innovated and 
+remain compatible with existing air traﬃc regulations [53]. A high-bandwidth communi-
+cation system will allow UAM operational control to move in the direction of autonomous 
+decision-making and self-piloting based on air–ground coordinates. 
+ 
+Figure 6. UAM ATM framework. 
+Furthermore, the SESAR automation roadmap [43] provides a vision for the future 
+of ATM and identiﬁes key phases for integrating automation technologies, particularly in 
+light of the increasing complexity of airspace usage, as well as the integration of new air-
+craft types into UAM, including unmanned aerial vehicles and air taxis. The roadmap 
+focuses on improving the safety, e ﬃciency, and capacity of air tra ﬃc systems through 
+automation. According to SESAR, there are di ﬀerent levels of automation across various 
+aspects of ATM, ranging from ﬂight planning and departure sequencing to conﬂict detec-
+tion and resolution, in-ﬂight automation, and landing coordination. 
+Currently, both the FAA and EASA are heavily investing in the integration of UAM 
+and UAVs into existing ATM systems. Their work focuses on developing air traﬃc control 
+systems (e.g., UTM in the U.S. and U-Space in Europe), airspace integration, safety stand-
+ards, and certiﬁcation processes for new aircraft types, such as eVTOL aircraft. Key eﬀorts 
+include ensuring the safe use of airspace, support for multi-vehicle operations, and the 
+development of regulatory frameworks to accommodate the growing volume of low-alti-
+tude aviation in urban areas. A new airspace management system is being developed by 
+the FAA to support UAM operations, which require coordination between manned and 
+unmanned vehicles, particularly at low altitudes in urban areas. An important aspect of 
+this process is the development of UAM corridors and vertiports (takeo ﬀ and landing 
+zones). As part of its studies on the integration of UAM vehicles into the national airspace, 
+the FAA will focus on how eVTOL aircraft and drones interact with traditional aircraft. 
+Both tra ﬃc management and collision avoidance te chnologies are used to ensure that 
+UAM operations do not interfere with existing air tra ﬃc. The U-Space concept, which is 
+similar to the FAA’s UTM initiative, is one of the EASA’s key initiatives for the integration 
+of UAM into the European airspace. It consists  of a set of services and procedures that 
+facilitate the safe integration of drones and electric VTOL aircraft into the European air-
+space. This framework supports automated ﬂight management such as conﬂict detection 
+and resolution, real-time ﬂight tracking, and dynamic ai rspace management, which are 
+essential for managing the high volume of UAM vehicles in cities. 
+Figure 6. UAM ATM framework.
+UAM needs to refine the airspace planning and management of existing low-altitude
+uncontrolled airspaces. A flight-level airspace structure can provide a better balance be-
+tween operational safety and airspace capacity. To plan ground infrastructure, urban
+origin–destination data can be used to predict the traffic demand of UAM. The manage-
+ment of vertiports will have a significant impact on the air route network as well as the
+layout of communication, navigation, and monitoring stations. UAM will be faced with
+more complex integrated operation scenarios involving manned and unmanned vehicles
+in terms of traffic rules and operational control. UAM traffic rules must be innovated and
+remain compatible with existing air traffic regulations [53]. A high-bandwidth communica-
+tion system will allow UAM operational control to move in the direction of autonomous
+decision-making and self-piloting based on air–ground coordinates.
+Furthermore, the SESAR automation roadmap [43] provides a vision for the future of
+ATM and identifies key phases for integrating automation technologies, particularly in light
+of the increasing complexity of airspace usage, as well as the integration of new aircraft
+types into UAM, including unmanned aerial vehicles and air taxis. The roadmap focuses
+on improving the safety, efficiency, and capacity of air traffic systems through automation.
+According to SESAR, there are different levels of automation across various aspects of ATM,
+ranging from flight planning and departure sequencing to conflict detection and resolution,
+in-flight automation, and landing coordination.
+Currently, both the FAA and EASA are heavily investing in the integration of UAM
+and UAVs into existing ATM systems. Their work focuses on developing air traffic con-
+trol systems (e.g., UTM in the U.S. and U-Space in Europe), airspace integration, safety
+standards, and certification processes for new aircraft types, such as eVTOL aircraft. Key
+efforts include ensuring the safe use of airspace, support for multi-vehicle operations, and
+the development of regulatory frameworks to accommodate the growing volume of low-
+altitude aviation in urban areas. A new airspace management system is being developed
+by the FAA to support UAM operations, which require coordination between manned and
+unmanned vehicles, particularly at low altitudes in urban areas. An important aspect of this
+process is the development of UAM corridors and vertiports (takeoff and landing zones).
+As part of its studies on the integration of UAM vehicles into the national airspace, the FAA
+will focus on how eVTOL aircraft and drones interact with traditional aircraft. Both traffic
+management and collision avoidance technologies are used to ensure that UAM operations
+do not interfere with existing air traffic. The U-Space concept, which is similar to the FAA’s
+UTM initiative, is one of the EASA’s key initiatives for the integration of UAM into the
+European airspace. It consists of a set of services and procedures that facilitate the safe
+integration of drones and electric VTOL aircraft into the European airspace. This framework
+supports automated flight management such as conflict detection and resolution, real-time
+
+===== PAGE 11 / 28 =====
+Drones 2024, 8, 702 11 of 28
+flight tracking, and dynamic airspace management, which are essential for managing the
+high volume of UAM vehicles in cities.
+2.6. Energy Efficiency
+Battery endurance is a significant challenge for electric UAVs and drones because it
+imposes severe constraints on their operational time. There are several solutions to improve
+the endurance of electric UAVs, such as more efficient rotor configurations, lightweight
+materials, and trajectory planning to minimize energy consumption [54]. One of the most
+promising approaches to improving electric UAV endurance is carefully planning their
+trajectories to minimize energy consumption. This approach can involve flying at lower
+altitudes, taking shallower descents, and avoiding obstacles or other sources of drag.
+Studies have shown that energy efficiency drops with increased cruise altitude, so flying at
+lower altitudes can improve electric UAV endurance [55]. However, it is imperative to note
+that optimizing a single factor, such as energy consumption, may result in a suboptimal
+solution when other factors, such as safety and community acceptance, are also considered.
+Therefore, the design of airspace structures and routes for UAVs should consider the trade-
+offs among energy consumption, efficiency, safety, and community acceptance [56]. The
+impact of UAM vehicle type on urban aerial transportation requires a thorough assessment
+of aerial vehicular systems and different types of vehicles [57]. Generally, all aviation modes
+that permit individual or personal mobility are defined as personal aerial vehicles (PAVs).
+Some documents refer to PAVs as flying cars or roadable aircrafts. NASA first explicitly
+mentioned PAVs within its NASA/LANGLEY projects relating to personal air vehicles
+(PAVs) and dual air/road transportation systems (DARTSs) [57]. These vehicles aim to
+provide a breakthrough in personal air mobility by reducing travel times and increasing
+reach, thereby enhancing the quality of life.
+3. Communication Techniques in UAM
+Effectively managing multiple aircraft movements in a complex urban environment is
+a key challenge in UAM. To address this challenge, it is crucial to develop communication
+systems that can facilitate the exchange of information between UAM vehicles, air traffic
+control, and ground-based infrastructure, as shown in Figure 7. These systems must
+be capable of managing high data volumes, supporting real-time communication, and
+remaining resilient to interference and disruptions. A successful UAM solution must
+take into account the challenges and differences between various environments, such as
+water bodies, rural locations, and urban centers. Line-of-sight (LOS), non-line-of-sight
+(NLOS), and blind-line-of-sight (BLOS) links, which experience sporadic obstructions, pose
+a greater threat than the current aviation environment [ 58]. Furthermore, accuracy and
+latency are key in navigation signaling. The recent surge in interest in air taxis, driven
+by ride-sharing services like UBER and Lyft, underscores the need for system robustness,
+safety, and connectivity in realizing such services [59].
+UAM communication systems must be extremely reliable, secure, accessible, and
+satisfy high data integrity standards. While UAM systems exist independently of current
+communication systems, commercial objectives require low-cost, lightweight, and power-
+efficient customization. Researchers have attempted to improve flight safety and security
+with the help of machine learning and artificial intelligence. Services hosted in the cloud are
+being studied to ease the cargo delivery process, such as various types of communication
+links for essential telemetry data and connectivity, obstacle avoidance systems, and related
+sensors [ 60]. Other communication systems include flight control, propulsion, quick
+navigation, surveillance, terrain mapping, and emergency landing systems.
+
+===== PAGE 12 / 28 =====
+Drones 2024, 8, 702 12 of 28
+Drones 2024, 8, 702 12 of 28 
+ 
+ 
+Figure 7. UAM communication and information ﬂows. 
+3.1. Data Type 
+A key aspect of the operation of eVTOLs is their connection to communication net-
+works. To achieve high data rates, communica tion should be ultra-reliable, secure, and 
+low in latency. In addition, passengers should be able to access voice and data networks 
+with a stable connection that provides satisfactory quality of service (QoS) [61]. The au-
+tonomy of eVTOL communication is another aspect that contributes to its reliability and 
+robustness. UAM vehicles have two types of  data: command and control (C2) and non-
+C2. As shown in Figure 8, C2 contains information related to ﬂight control, safety systems, 
+navigation, and communication. C2 links ensure the safe operation of an eVTOL aircraft 
+when it is unmanned [62]. 
+ 
+Figure 8. C2 link in UAM communication. 
+This data type is constantly changing because the real-time evaluation of ﬂight oper-
+ations for potential aborts will require a signi ﬁcant amount of data from ﬂight system 
+diagnostics. The handling and oper ation of aerial vehicles may bene ﬁt from live visuals, 
+as they facilitate remote operat ions, for example, through arti ﬁcial intelligence applica-
+tions across cloud services. The non-C2 category includes all additional data such as post-
+Figure 7. UAM communication and information flows.
+3.1. Data Type
+A key aspect of the operation of eVTOLs is their connection to communication net-
+works. To achieve high data rates, communication should be ultra-reliable, secure, and low
+in latency. In addition, passengers should be able to access voice and data networks with a
+stable connection that provides satisfactory quality of service (QoS) [61]. The autonomy of
+eVTOL communication is another aspect that contributes to its reliability and robustness.
+UAM vehicles have two types of data: command and control (C2) and non-C2. As shown
+in Figure 8, C2 contains information related to flight control, safety systems, navigation,
+and communication. C2 links ensure the safe operation of an eVTOL aircraft when it is
+unmanned [62].
+Drones 2024, 8, 702 12 of 28 
+ 
+ 
+Figure 7. UAM communication and information ﬂows. 
+3.1. Data Type 
+A key aspect of the operation of eVTOLs is their connection to communication net-
+works. To achieve high data rates, communica tion should be ultra-reliable, secure, and 
+low in latency. In addition, passengers should be able to access voice and data networks 
+with a stable connection that provides satisfactory quality of service (QoS) [61]. The au-
+tonomy of eVTOL communication is another aspect that contributes to its reliability and 
+robustness. UAM vehicles have two types of  data: command and control (C2) and non-
+C2. As shown in Figure 8, C2 contains information related to ﬂight control, safety systems, 
+navigation, and communication. C2 links ensure the safe operation of an eVTOL aircraft 
+when it is unmanned [62]. 
+ 
+Figure 8. C2 link in UAM communication. 
+This data type is constantly changing because the real-time evaluation of ﬂight oper-
+ations for potential aborts will require a signi ﬁcant amount of data from ﬂight system 
+diagnostics. The handling and oper ation of aerial vehicles may bene ﬁt from live visuals, 
+as they facilitate remote operat ions, for example, through arti ﬁcial intelligence applica-
+tions across cloud services. The non-C2 category includes all additional data such as post-
+Figure 8. C2 link in UAM communication.
+This data type is constantly changing because the real-time evaluation of flight op-
+erations for potential aborts will require a significant amount of data from flight system
+diagnostics. The handling and operation of aerial vehicles may benefit from live visuals, as
+they facilitate remote operations, for example, through artificial intelligence applications
+across cloud services. The non-C2 category includes all additional data such as post-flight
+data or passenger information [63]. System design and requirements must consider these
+difficulties to offer such a connection for control and non-payload communication (CNPC).
+
+===== PAGE 13 / 28 =====
+Drones 2024, 8, 702 13 of 28
+The capabilities of the CNPC system are also extended to handle various informational
+types, including command messages, target track data, non-payload data, air traffic control
+(ATC) voice relay navigation aids, non-payload video downlink (DL) data, air traffic data
+relay, and airborne weather radar DL data. The C2 communication connection should also
+support secure communication between the aerial vehicle and the control center to provide
+secure and dependable UAV flight operations [64].
+3.2. Spectrum and Carrier Frequencies
+With high-density UAM, the number of devices accessing the spectrum is predicted to
+increase significantly in the near future. Furthermore, the RF spectrum capacity approaches
+its limits, further exacerbating the issue of spectrum scarcity [65]. Owing to the limited suit-
+ability of existing orthogonal multipoint access schemes for future eVTOL networks, several
+studies have been conducted on the coexistence of terrestrial and aerial devices such as
+UAVs in three-dimensional environments, which can be easily generalized to UAM. There
+are two promising multiple-access schemes for UAM communication: non-orthogonal
+multiple access (NOMA) and rate-splitting multiple access (RSMA) [66]. Communication
+systems experience congestion in their bandwidth and transmission spectrum. For this
+reason, UAM communication systems must also utilize modern frequency bands such as
+sub-6 GHz, 3GPP bands, millimeter wave (mmWave) bands (24–86 GHz), and aviation
+and low-Earth orbit (LEO) bands. Owing to open space and extremely high tropospheric
+attenuation, the radio signal range must be reduced to increase the frequency. The highest
+bandwidth efficiency and data rates are offered by 5G mmWave systems. However, they
+are mostly LOS and have short ranges, making them suitable only for metropolitan areas.
+UAM systems must use low data rates in both rural and outlying areas.
+3.3. Reliable Communications
+Due to their low altitude, aerial vehicles and standard aviation systems, such as heli-
+copters, differ significantly in their proximity to structures and barriers on the ground. This
+difference creates a communication challenge known as shadowing and obstruction [67].
+Because of these effects, a connection may be attenuated to the point of failure. As a result,
+several links are required to connect the aircraft to command-and-control stations. Since
+air-to-ground communications are more power-efficient and less time-consuming than
+satellites and HAPs, they are generally preferred for LOS links [68]. BLOS refers to a link
+that can only be accessed using methods other than a ground station (GS), such as other
+aerial vehicles, platforms, or satellites. The NLOS scenario is often the most difficult in
+terms of power and channel degradation because of multipath components in the envi-
+ronment. Although NLOS is an uncommon scenario in UAM, it should be considered
+once the UAM is completely distributed. In short, the control and command connections
+should be incredibly robust in the face of interference and should recover quickly after a
+breakdown. eVTOL aircraft face a number of challenges in terms of connectivity because
+of the highly dynamic UAM environment and the large number of obstacles present in
+cities. For continuous connectivity, the technology must be able to achieve BLOS com-
+munication. Reliable coverage ensures the continuous flow of information needed for
+navigation and surveillance [69], paramount for safe operations. Several opportunities exist
+for high-coverage and high-reliability communication, such as next-generation cellular
+networks, aerial platforms, satellites, RF, and reconfigurable intelligent surfaces (RISs).
+A comprehensive analysis of the communication technologies used by UAM is pre-
+sented in Table 4. In the table, we provide an explanation of the application scenario for
+each communication technology as well as the advantages and limitations associated with
+that technology.
+
+===== PAGE 14 / 28 =====
+Drones 2024, 8, 702 14 of 28
+Table 4. Comparison of communication technologies for UAM.
+Category Communication
+Technology Link Types Applications Advantages Limitations
+Ad hoc networks FANET Aerial-to-aerial (A2A)
+and A2G
+FANET-based UAM
+for communication
+and collision
+avoidance
+Used for inter-vehicle
+communication and
+localization
+Risk of link
+disconnection
+Cellular networks
+Long-term evolution
+(LTE)
+UAV-to-
+infrastructure (U2I)
+and A2G
+Surveillance and
+awareness messages
+Low-cost
+deployment and
+large area coverage
+Inter-cell interference
+problem and not
+suitable for high
+density of aerial
+vehicles
+4G A2G and C2
+Surveillance and
+communication
+between pilot and
+unmanned aircraft
+system traffic
+management (UTM)
+Low-cost, reliable,
+and allows
+connectivity for
+beyond visual line of
+sight (BVLOS)
+situations
+Link availability
+problem in rural
+areas
+5G A2G and C2
+Suitable for the
+large-scale UAM
+operation including
+control, tracking, and
+communication
+Low latency, wide
+area coverage,
+limitless connectivity,
+and multi-access
+edge
+computing-enabled
+services
+Lack of
+short-distance
+connections and
+limited coverage
+6G U2I, A2A, and A2G
+Monitoring,
+surveillance, and
+emergency
+management
+High-precision
+localization and wide
+area coverage
+Still not tested in real
+environment
+Wireless
+local
+area
+network
+(WLAN)
+Wi-Fi (IEEE 802.11
+series and 2.4 and
+5 GHz frequency
+brand)
+A2A and A2G
+Real-time
+information
+exchange between
+aerial vehicles
+Cost-effective, high
+availability, high
+bandwidth, and high
+hardware availability
+Limited range,
+interference, and
+high energy
+consumption
+X-Bee (IEEE 802.15.4
+and 2.4 GHz
+frequency band)
+A2G
+Surveillance data
+transmission to the
+ground station
+Longer distance
+compared to Wi-Fi Limited data rate
+Satellite networks
+LEO and
+geostationary
+equatorial orbit
+(GEO)
+A2G Useful for BVLOS
+situations
+Real-time reliable
+connectivity, high
+area coverage, robust
+communication, and
+high capacity
+Low data rate, not
+suitable for
+delay-sensitive
+applications, and
+high complexity
+Other networks
+Long range (LoRa) A2G and A2A
+Pee-to-peer
+communication and
+surveillance
+Mid-level
+transmission range
+with high throughput
+Packet loss happened
+when transmission
+distance crossed
+more than 1 Km
+Automatic packet
+reporting system
+(APRS)
+A2G Transmission of
+surveillance data
+Supports higher
+altitudes compared
+to 4G and 5G
+Low data rate and
+congestion may
+happen in
+high-density aerial
+environments
+Automatic
+dependent
+surveillance—
+broadcast (ADS-B)
+A2G Surveillance and
+tracking
+Acceptable range and
+accuracy Security concern
+3.4. Data Rate and Latency
+To facilitate rapid data transmission, eVTOL aircraft require high data rates and low-
+latency communication links. UAM communications have varying data rate requirements
+depending on the application. Low data rates can be used for voice applications and
+simple C2 messages. Remote pilot operation (RPO) via video streaming and autonomous
+technology has more stringent requirements, exceeding 100 Mb/s [ 70]. Moreover, high
+rates are expected for passenger infotainment systems. City bandwidth shortages are
+
+===== PAGE 15 / 28 =====
+Drones 2024, 8, 702 15 of 28
+the primary obstacle to enabling high data rates. Different frequency ranges, such as
+mmWave and terahertz (THz), can be a good solution for achieving high-throughput
+communications. UAM requires low latency demands due to eVTOL operations in crowded
+cities. To enable RPO and autonomous navigation, latency as low as 10 ms is required [71].
+Reducing communication distances and eliminating relays is the key to achieving low-
+latency communication. A low-latency connection can be achieved by decentralizing the
+communication using sidelink or device-to-device (D2D) technology. In addition, eVTOL
+vehicles can fly at very high speeds (300 km/h) and may be partially or entirely autonomous.
+The position of an eVTOL must be continuously shared while receiving the positions of
+other eVTOLs and other flying platforms, such as drones [72]. Moreover, they should be
+continually informed of air traffic, weather, and unexpected occurrences. Thus, a new
+air interface technology is required to allow eVTOLs to operate at the required data rate
+and latency.
+3.5. Communication Zone
+Future aviation communication systems will require links with higher throughput
+and longer communication distances, which opens up future study areas. Compared
+with terrestrial communications, power and spectral efficiency are not important in UAM
+settings [73]. To cover long distances, aerial communication regions are often larger than
+those of terrestrial communication systems. Since all of the power must be conserved in
+aviation stations, as it needs to be distributed among numerous power-consuming systems,
+aviation channels are frequently modeled as Rician fading channels, where the Rice factor,
+also known as the K-factor, can range from simple additive white Gaussian noise (AWGN)
+to a more complex and distortive Rayleigh fading channel [74].
+3.6. Secure Communications
+UAM safety and security are among the main concerns in the design of communication
+protocols. Because eVTOL aircraft are most likely to operate in urban areas and among
+pedestrian traffic, they must be safe not only for people on the ground but also for pilots
+and passengers. Secure communication is crucial for UAM operations to prevent the
+hacking and jamming of eVTOL aircraft. Malicious hackers can cause disastrous damage
+if they gain control over one or more eVTOL aircraft. These consequences could be fatal
+for pedestrians, eVTOL vehicles, passengers, and buildings. Various recent technologies,
+such as blockchains, machine-learning security algorithms, and quantum computing, can
+be used to secure communication [75].
+3.7. Network Topology
+Multipoint receiver and transmitter schemes can be employed in UAM networks using
+centralized or decentralized 5G techniques. Multiple links can also be offered by FANETs,
+which often require more sophisticated network-level techniques such as adaptive rout-
+ing [76]. The use of high-altitude platforms and satellite communications provides several
+connectivity options. C2 connections are expected to have low data rates and bandwidth
+due to the type of communication, such as 300 kbps for compressed videos [77]. On the
+other hand, non-C2 is often used for complex applications and high-data-rate requirements.
+In UAM vehicles, passengers require a throughput equivalent to that of terrestrial networks.
+UAM vehicles communicate at 300–600 m via an aerial network hierarchy that includes
+geostationary and low-orbit satellites. The altitude of satellites is much higher than that of
+HAPs, varying from a few hundred kilometers for LEO to a few thousand kilometers for
+GEO. In contrast to HAPs, satellites are located at higher altitudes and their path lengths
+are significantly longer. Moreover, the satellite-to-eVTOL link experiences additional losses
+related to atmospheric loss, antenna misalignment, and polarization [ 78]. Furthermore,
+the altitude of the satellite and the angle between the satellite and the eVTOL also play a
+critical role in the design of the satellite-to-eVTOL link. Figure 9 illustrates multi-layered
+network topology management and communication. Future UAM networks should be
+
+===== PAGE 16 / 28 =====
+Drones 2024, 8, 702 16 of 28
+able to adapt to changes in the network topology, environmental dynamics, and evolving
+user requirements. Software-defined networks (SDNs) are an effective strategy for coping
+with rapid topology changes caused by UAM [79].
+Drones 2024, 8, 702 16 of 28 
+ 
+provides several connectivity options. C2 connections are expected to have low data rates 
+and bandwidth due to the type of communication, such as 300 kbps for compressed videos 
+[77]. On the other hand, non-C2 is often used for complex applications and high-data-rate 
+requirements. In UAM vehicles, passengers require a throughput equivalent to that of ter-
+restrial networks. UAM vehicles communicate at 300–600 m via an aerial network hierar-
+chy that includes geostationary and low-orbit satellites. The altitude of satellites is much 
+higher than that of HAPs, varying from a few hundred kilometers for LEO to a few thou-
+sand kilometers for GEO. In contrast to HAPs, satellites are located at higher altitudes and 
+their path lengths are signi ﬁcantly longer. Moreover, the satellite-to-eVTOL link experi-
+ences additional losses related to atmosphe ric loss, antenna misalignment, and polariza-
+tion [78]. Furthermore, the altitude of the satellite and the angle between the satellite and 
+the eVTOL also play a critical role in the de sign of the satellite-to -eVTOL link. Figure 9 
+illustrates multi-layered network topology  management and co mmunication. Future 
+UAM networks should be able to adapt to changes in the network topology, environmen-
+tal dynamics, and evolving user requirements. Software-deﬁned networks (SDNs) are an 
+eﬀective strategy for coping with rapid topology changes caused by UAM [79]. 
+ 
+Figure 9. Multi-layer aerial communication networks. 
+3.8. Navigation and Localization 
+With an increase in the number of UAM nodes, a high-accuracy positioning system 
+is necessary for situational awareness and self-awareness. UAM operations require robust 
+tracking algorithms and fusion sensors, which provide accurate information and posi-
+tional awareness. The authors of [80] pointed out that current global navigation satellite 
+systems (GNSSs), including GPS, Galileo, the quasi-zenith satellite system (QZSS), and 
+the global navigation satellite system (GLONASS), can be improved to improve the accu-
+racy of UAM navigation systems. Since GNSS s were created for LOS situations, they are 
+better suited to moderately populated metrop olitan regions. According to [81], the 
+Figure 9. Multi-layer aerial communication networks.
+3.8. Navigation and Localization
+With an increase in the number of UAM nodes, a high-accuracy positioning system is
+necessary for situational awareness and self-awareness. UAM operations require robust
+tracking algorithms and fusion sensors, which provide accurate information and positional
+awareness. The authors of [80] pointed out that current global navigation satellite systems
+(GNSSs), including GPS, Galileo, the quasi-zenith satellite system (QZSS), and the global
+navigation satellite system (GLONASS), can be improved to improve the accuracy of UAM
+navigation systems. Since GNSSs were created for LOS situations, they are better suited to
+moderately populated metropolitan regions. According to [81], the combination of all the
+stated technologies will provide multiband, multimode receivers with high accuracy, but
+their price is too high for low-cost commercial applications.
+For challenging environments devoid of LOS, the authors of [82] use 5G new radio
+(NR) at frequencies ranging from 450 to 6000 MHz and 24.25–52.6 GHz to investigate a
+hybrid alternative to GNSS. To achieve positional awareness with high precision even
+in richly distributed NLOS fading channels, the authors of [ 83] assessed six carrierless
+mmWave waveform types using impulse radio (IR) and deduced a comparison of range
+accuracy with multiple carriers. In the experiment, they employed an energy detector
+with a threshold that has low computing complexity and offers decent range accuracy
+rather than outstanding accuracy, such as provided by a correlation detector. The authors
+discussed these waveform options for 5G NR cellular network D2D communications and
+vehicle location. As discussed in [84], none of the systems suggested any implementation
+that ensures 99.99% uptime anywhere under any condition; therefore, hybrid techniques
+are considered the most effective navigation solution.
+
+===== PAGE 17 / 28 =====
+Drones 2024, 8, 702 17 of 28
+Communication, navigation, and surveillance (CNS) facilities on the ground are
+important components of UAM. CNS provides technical support for UAM traffic operations.
+Compared with transport aviation, UAM requires vehicles to operate at a higher traffic
+density. The emergence of 5G communication technology may be crucial for solving
+CNS problems, as indicated in Table 5. There is insufficient airspace coverage from the
+base stations on the ground. UAM transport requires improvements in the selection of
+ground base stations and antenna layout (such as adjusting antenna radiation direction,
+transmission power, and signal gain) to achieve comprehensive coverage of urban low-
+altitude airspace. Table 5 compares CNS requirements for traditional air transportation and
+UAM. Various sensors and techniques can be used for localization, often in combination, to
+improve accuracy and robustness. A few common technologies used for localization are
+inertial measurement units (IMUs), light detection and ranging (LIDAR) systems, and GPS.
+Some commonly used localization techniques are visual odometry (VO), simultaneous
+localization and mapping (SLAM), beacon-based localization, RF localization, particle
+filters, and Kalman filters [85]. There is a significant difference between VO and SLAM
+in that VO focuses primarily on local consistency and aims to incrementally estimate the
+path of the camera/UAV position after a change in position, as well as possibly optimize
+local parameters. However, SLAM aims to achieve a globally consistent estimate of the
+camera/UAV trajectory.
+Table 5. Comparison of CNS requirements for traditional air transportation and UAM.
+Service Traditional Air Transportation UAM
+Communication
+Aircraft communication addressing and reporting
+system, very high frequency (VHF) ground-to-air data
+communications link.
+Ground base stations provide 5G communication
+networks and onboard ad hoc network
+communication.
+Navigation
+Very high-frequency omni-range, distance measuring
+equipment, and non-directional beacons are used for
+navigation purposes. The navigation station provides
+radio navigation, and the instrument landing system
+provides landing guidance. GNSS and IMU provide
+combined navigation systems.
+GNSS and IMU-integrated navigation, urban
+domain space high-resolution three-dimensional
+(3D) map service, location-based routing
+services, and online visual recognition-aided
+positioning are used for navigation.
+Monitoring
+There are three types of radar surveillance: primary
+radar, secondary radar, and automatic dependent
+surveillance–broadcast technology.
+Ground-based 5G communication links,
+centralized cooperation related to monitoring,
+and FANET communication.
+Regulatory
+In the radar control station, the process is directed by the
+controller sequence according to the route, approach,
+airport, and area.
+Autonomous flight ground control, centralized
+control scheduling, and manual responsibility
+for emergency response and surveillance.
+Flight information
+Provide air traffic service, automatic information
+broadcast service—communication information includes
+the airport and route meteorological conditions.
+Airspace traffic information, vertical takeoffs and
+landings, airport slot status, detailed
+meteorological information for urban and rural
+areas, and route stream information.
+Emergency system
+When an aircraft is in an emergency situation, the
+control units alert the airspace service, based on a
+secondary-mode answering machine code
+warning system.
+Advertising throughout all airspace via the 5G
+network, on-board equipment takes action when
+a fault is detected.
+3.9. Collision Detect-and-Avoid (CDAA) Systems
+Utilizing terrestrial CDAA for typical UAS terminal area operations is required to
+integrate UAS into urban and near-urban airspaces. The ground station should know all
+planned flights and their paths as well as the current airborne flight locations and flight
+paths. Aerial vehicles should also be able to communicate with the GS and relay the coordi-
+nates of other UAS in the operating vicinity. Advanced driver assistance systems (ADASs)
+with forward-collision warning tools are used in the context of autonomous ground vehi-
+cles. These systems use sensors such as radar, cameras, laser imaging, and LIDAR to enable
+
+===== PAGE 18 / 28 =====
+Drones 2024, 8, 702 18 of 28
+semi-autonomous driving in autonomous mode [ 86]. In the aviation industry, aircraft
+collision avoidance systems are commonly referred to as ACAS or TCAS [87]. An ACAS
+is used in aviation to prevent mid-air collisions between aircraft. It provides real-time
+warnings and instructions to pilots to avoid collisions with other aircraft. TCAS is a specific
+subset of ACAS. In commercial aviation, this system monitors the airspace around the
+aircraft and alerts pilots to potential traffic conflicts, which are followed by maneuvering
+instructions to avoid a collision.
+Frequency-modulated continuous-wave (FMCW) radars are employed in CDAA
+systems on ground vehicles and may be implemented in UAM. The authors of [88] studied
+the ghost target scenario caused by FMCW radar-to-radar interference. ADASs with
+forward collision warning tools are used in new autonomous vehicles to reduce interference.
+This system uses sensors, such as radar, cameras, and LIDAR, to enable semi-autonomous
+driving in automobiles. To reduce interference, the authors of [ 89] suggested altering
+the chirp slope in the time–frequency domain (DTF). These systems are appropriate in
+situations with a high likelihood of a UAV-to-UAV collision, the avoidance of which
+is made possible by cutting-edge interference-mitigation methods. With the goals of
+standard compliance and dual-radar and communication functions for UAM, chirp signals
+are created for DFT-s-orthogonal frequency division multiplexing (OFDM) as frequency–
+domain spectral shaping using Bessel functions and Fresnel integrals.
+The authors of [90] propose a Markov decision process (MDP)-based method called
+FastMDP for collision avoidance in urban air mobility. The authors demonstrated that
+FastMDP outperformed other collision avoidance algorithms in terms of safety and com-
+putational efficiency, even when the aircraft had imperfect knowledge of each other’s
+intentions. In the FastMDP , the initial aircraft state and the limits that must be maintained
+are the states, and the aircraft defines the corresponding action. A reward is defined by
+the reachable states for each action over the time horizon to address the challenge of safely
+managing multiple eVTOL aircraft in congested urban areas for efficient and on-demand
+air transportation. In [91], the authors proposed a computational guidance algorithm with
+collision avoidance capability, formulated as an MDP , and solved it using a Monte Carlo
+tree search algorithm. Their experimental results show that the proposed algorithm per-
+forms better than the optimal reciprocal collision avoidance strategy in reducing conflicts
+and mid-air collisions.
+3.10. Routing
+UAM vehicles move at very high speeds, causing frequent network topology changes,
+as illustrated in Figure 10, which can make routing a challenging task because previously
+available routes may no longer be valid. To address this challenge, researchers have pro-
+posed several routing algorithms and protocols specifically designed for UAM networks.
+Recently proposed algorithms and protocols consider the dynamic nature of the network
+and aim to find the most efficient route from one node to another [92]. Since technology
+has advanced and GPS locations can be tracked, several location-aware dynamic routing
+algorithms have been proposed in recent years. By using location-aware routing models,
+real-time solutions have been developed, including aerial vehicle operation, vehicle loca-
+tion, vehicle charging and maintenance requirements, and customer characteristics (e.g.,
+pick-up/drop-off location, pickup time, willingness to rideshare, and number of passen-
+gers). Moreover, high-performance computing is required to supervise UAM operations
+and provide navigation services to eVTOL vehicles [ 93]. Utilizing modern networking
+technologies, such as cloud/fog computing, edge computing, and digital twins, UAM can
+access large amounts of computing power without onboarding expensive hardware.
+
+===== PAGE 19 / 28 =====
+Drones 2024, 8, 702 19 of 28
+Drones 2024, 8, 702 19 of 28 
+ 
+performs better than the optimal reciprocal collision avoidance strategy in reducing con-
+flicts and mid-air collisions. 
+3.10. Routing 
+UAM vehicles move at very high  speeds, causing frequent network topology 
+changes, as illustrated in Figure 10, which can make routing a challenging task because 
+previously available routes may no longer be valid. To address this challenge, researchers 
+have proposed several routing algorithms and protocols specifically designed for UAM 
+networks. Recently proposed algorithms and protocols consider the dynamic nature of 
+the network and aim to find the most efficient route from one node to another [92]. Since 
+technology has advanced and GPS locati ons can be tracked, several location -aware dy-
+namic routing algorithms have been proposed in recent years. By using location -aware 
+routing models, real-time solutions have been developed, including aerial vehicle opera-
+tion, vehicle location, vehicle chargin g and maintenance requirements, and customer 
+characteristics (e.g., pick-up/drop-off location, pickup time, willingness to rideshare, and 
+number of passengers). Moreover, high-performance computing is required to supervise 
+UAM operations and provide navigation services to eVTOL vehicles [93]. Utilizing mod-
+ern networking technologies, such as cloud/fog computing, edge computing, and digital 
+twins, UAM can access large amounts of computing power without onboarding expensive 
+hardware. 
+ 
+Figure 10. Mobility effect on UAM communication. 
+3.11. Path Planning and Mission Planning 
+In path planning, an algorithm determines the path or trajectory that a flying vehicle 
+should follow from its current position to a specific goal or destination while avoiding 
+obstacles and following certain parameters. A path planning algorithm considers the dy-
+namics of the vehicle; the environment, including obstacles; the terrain; and other relevant 
+factors to determine the most efficient and collision-free route. Path planning aims to de-
+termine a feasible and safe trajectory that guides the vehicle from beginning to end, while 
+optimizing parameters such as time, energy consumption , and smoothness. Three main 
+algorithms are used in UAM path planning: graph-searching algorithms, sampling-based 
+Figure 10. Mobility effect on UAM communication.
+3.11. Path Planning and Mission Planning
+In path planning, an algorithm determines the path or trajectory that a flying vehicle
+should follow from its current position to a specific goal or destination while avoiding
+obstacles and following certain parameters. A path planning algorithm considers the
+dynamics of the vehicle; the environment, including obstacles; the terrain; and other
+relevant factors to determine the most efficient and collision-free route. Path planning
+aims to determine a feasible and safe trajectory that guides the vehicle from beginning
+to end, while optimizing parameters such as time, energy consumption, and smoothness.
+Three main algorithms are used in UAM path planning: graph-searching algorithms,
+sampling-based search algorithms, and meta-heuristic algorithms [ 94,95]. The first are
+foundational algorithms such as Dijkstra and A* algorithms. The second category includes
+probabilistic algorithms, such as the probabilistic roadmap method (PRM), and rapidly
+exploring random trees (RRTs). The third category comprises algorithms derived from
+natural or bioinspired algorithms, such as evolutionary and swarm intelligence.
+Alternatively, mission planning involves defining and organizing a set of tasks or
+objectives that must be accomplished for an autonomous system to accomplish a spe-
+cific objective. To accomplish its mission successfully, the flying vehicle must identify
+the sequence of actions, waypoints, and goals that need to be followed [ 96]. A mission
+plan consists of multiple aspects, including planning for individual segments, allocating
+tasks, managing resources, and coordinating multiple vehicles or agents, as necessary. It
+optimizes the allocation of resources and tasks to achieve the end goal of the mission in
+the shortest possible time. Figure 11 illustrates the various factors that are considered in
+mission planning.
+
+===== PAGE 20 / 28 =====
+Drones 2024, 8, 702 20 of 28
+Drones 2024, 8, 702 20 of 28 
+ 
+search algorithms, and meta-heuristic algorithms [94,95]. The ﬁrst are foundational algo-
+rithms such as Dijkstra and A* algorithms. The second category includes probabilistic al-
+gorithms, such as the probabilistic roadmap method (PRM), and rapidly exploring ran-
+dom trees (RRTs). The third category comprises algorithms derived from natural or bio-
+inspired algorithms, such as evolutionary and swarm intelligence. 
+Alternatively, mission planning involves de ﬁning and organizing a set of tasks or 
+objectives that must be accomplished for an autonomous system to accomplish a speci ﬁc 
+objective. To accomplish its mission successfully, the ﬂying vehicle must identify the se-
+quence of actions, waypoints, and goals that need to be followed [96]. A mission plan con-
+sists of multiple aspects, including planning for individual segments, allocating tasks, 
+managing resources, and coordina ting multiple vehicles or agents, as necessary. It opti-
+mizes the allocation of resources and tasks to achieve the end goal of the mission in the 
+shortest possible time. Figure 11 illustrates the various factors that are considered in mis-
+sion planning. 
+ 
+Figure 11. Overview of UAM mission planning. 
+3.12. Flight Scheduling 
+Unlike traditional aircraft, eVTOLs are constrained by their battery life, which limits 
+their ﬂight time and makes it di ﬃcult to preschedule their arrivals. To address this chal-
+lenge, researchers have proposed several methods for scheduling eVTOL arrivals at verti-
+ports, equivalent to an airport for UAM. Vertiport has facilities for customer pickup or 
+drop-oﬀ, charging, maintenance, and several docking stations for aerial vehicles [97]. 
+Scheduling methods include position shif ting, dynamic progra mming, branch-and-
+bound, branch-and-price, and data spli tting, as well as various heuristic algorithms [98]. 
+However, these methods are not speciﬁcally designed to consider the eVTOL constraints. 
+These constraints include limited battery life, airport capacity, and remaining fuel. There-
+fore, there is a need for further research on this topic to develop models and algorithms 
+tailored explicitly to the scheduling of eVTOL arrivals at vertiports. 
+4. Opportunities and Challenges 
+Although the UAM mission is to provide safe, sustainable, economical, and accessi-
+ble transportation, it faces obstacles such as public acceptance and public safety. The de-
+ployment of UAM can be made easier if there are several lucrative operating criteria, in-
+cluding ﬂying limits over residential areas, nighttime operations, inclement weather, and 
+the development of green technologies. Furthermore, to build infrastructure and scale op-
+erations, both the private sector and the go vernment must cooperate and invest signi ﬁ-
+cantly in the development of VTOL vehicles and UAM. Future research, strategic planning 
+and implementation, and an analysis of UAM implications are necessary to balance eco-
+nomic interests, technological progress, and the public good. 
+Figure 11. Overview of UAM mission planning.
+3.12. Flight Scheduling
+Unlike traditional aircraft, eVTOLs are constrained by their battery life, which limits
+their flight time and makes it difficult to preschedule their arrivals. To address this challenge,
+researchers have proposed several methods for scheduling eVTOL arrivals at vertiports,
+equivalent to an airport for UAM. Vertiport has facilities for customer pickup or drop-off,
+charging, maintenance, and several docking stations for aerial vehicles [97]. Scheduling
+methods include position shifting, dynamic programming, branch-and-bound, branch-
+and-price, and data splitting, as well as various heuristic algorithms [98]. However, these
+methods are not specifically designed to consider the eVTOL constraints. These constraints
+include limited battery life, airport capacity, and remaining fuel. Therefore, there is a need
+for further research on this topic to develop models and algorithms tailored explicitly to
+the scheduling of eVTOL arrivals at vertiports.
+4. Opportunities and Challenges
+Although the UAM mission is to provide safe, sustainable, economical, and acces-
+sible transportation, it faces obstacles such as public acceptance and public safety. The
+deployment of UAM can be made easier if there are several lucrative operating criteria,
+including flying limits over residential areas, nighttime operations, inclement weather, and
+the development of green technologies. Furthermore, to build infrastructure and scale oper-
+ations, both the private sector and the government must cooperate and invest significantly
+in the development of VTOL vehicles and UAM. Future research, strategic planning and
+implementation, and an analysis of UAM implications are necessary to balance economic
+interests, technological progress, and the public good.
+The safety of aircraft and humans must be ensured during UAM operations. Despite
+the considerable advantages of UAM, there are also a number of limitations, such as the
+difficulty of maintaining safe flight at low altitudes, the need to avoid hazards such as colli-
+sions, and the effects of weather. The UAM flight trajectory is also significantly complicated
+in urban areas due to the presence of high-rise buildings. As a result of these factors, UAM
+implementation is very challenging in urban areas. Therefore, collision avoidance in UAM
+may be an exciting area of future research [99]. There are several challenges and obstacles
+to UAM’s development, including those related to safety and air traffic control regulations,
+noise, public acceptance, weather conditions, environmental impacts, infrastructure, and
+security [100,101]. With the help of air traffic services (ATS), future research could focus
+on developing dynamic routing algorithms that balance customer waiting times, vehicle
+idle times, and travel costs. Table 6 addresses many possible roadblocks that could prevent
+widespread UAM adoption, and some solutions to overcome them. Several ongoing re-
+search projects in collaboration with regulatory bodies focus on airspace integration [102].
+There have been limited advancements in infrastructure, thorough city integration analyses,
+
+===== PAGE 21 / 28 =====
+Drones 2024, 8, 702 21 of 28
+and economic evaluations. Operational and infrastructural development requirements are
+also major concerns in the implementation of UAM.
+Table 6. The challenges of a UAM system and potential mitigation strategies.
+Challenges Threats Probable Mitigation Strategy
+ATM
+Ensure safe flight, takeoff, and landing
+with other aerial vehicles.
+Low-level and uncontrolled air space.
+Federal aviation act (FAA) for ATM regulation and policy.
+Concept of operations guidelines by FAA.
+Environmental
+impacts
+Weather hazards pose safety risks and
+sensitivity to passengers and vehicles.
+Decrease in vehicle size poses a
+significant threat to aircraft.
+Vehicles with different capabilities suited for a variety of
+weather conditions and climates.
+Safety procedures and emergency safety protocols.
+Shifting trips from UAM to other modes during travel
+disruption due to weather hazards.
+Infrastructure
+Need for stations for a network of
+vertiports; charging or fueling;
+communications, navigation,
+surveillance, and information technology
+infrastructure.
+Storage of batteries in the ground to manage the power grid.
+Different facilities based on demand and density.
+Water resources for water landing aircraft and reducing
+development of ground infrastructure.
+Privacy
+Non-consensual photos, videos, or
+surveillance of people on the ground
+Privacy of user trip data.
+Legislating for regulations and standards on data handling
+and UAM services protecting consumer data.
+Safety
+Personal safety.
+Operational safety.
+Cyber and physical threats such as
+sabotage and attack.
+Passenger rating system and background checks.
+Individual compartments and emergency response
+protocols for pre-, mid-, and post-flight incidents.
+Develop strategies and standards for communication,
+navigation, and surveillance to provide system redundancy.
+Noise Noise from aircraft and scale operations.
+Flight operations at high altitudes.
+Time restrictions and path deviations to avoid sensitive
+areas such as schools and hospitals.
+4.1. ATM System
+A critical component of UTM and ATM is the exchange of information. However,
+ATC, ATM, and UTM are unable to exchange geofencing information because there are
+no common standards or protocols. As a result, research efforts should be devoted to
+identifying a method for facilitating the exchange of critical information between the
+UTM and ATM. UTM can be implemented in each geographical region, where these UTM
+systems communicate and exchange information in various scenarios, including when an
+aerial vehicle moves between regions to accomplish its goals. Due to the lack of compatible
+communication protocols and compliance with common standards among these UTM
+systems, interoperability poses a significant problem.
+4.2. Air Space Management
+Centralized systems with centralized decision-making are commonly used in UTM
+architectures. However, a single point of failure can pose a performance challenge for
+centralized systems. Aerial vehicles can experience abrupt and rapid changes in their
+behavior and motion due to a variety of factors including weather conditions, technical
+malfunctions, pilot errors, and unexpected events. A decentralized system can be used
+to overcome the limitations of centralized-based UTM. Decentralized UTM systems face
+several challenges including safety, interoperability, conflict management, and response
+times. Additionally, if communication between aerial vehicles is lost or disrupted, there is
+a risk of collisions. Considering this situation, it is important to determine whether a UTM
+system should be decentralized, hybrid, centralized, or completely distributed. To evaluate
+and compare these UAM concepts, focusing initially on network--specific metrics, the
+authors of [103] proposed a framework that uses common performance metrics, inspired by
+
+===== PAGE 22 / 28 =====
+Drones 2024, 8, 702 22 of 28
+existing transportation systems. UAM network management concepts, namely slot-based,
+trajectory-based, and corridor-based approaches, have been provided.
+4.3. Communication Reliability
+Several technologies have been evaluated to determine the most effective communica-
+tion link technologies for UAM. There is a real risk of collisions if links are dropped due to
+sudden high demand or if C2 links fail. Cellular networks need to be improved to make
+aerial vehicle communication more effective. Link disconnection problems can be miti-
+gated by using redundant communication systems. Moreover, non-terrestrial and terrestrial
+network integration can provide better communication services for UAM applications.
+4.4. Network Management
+Researchers have made considerable efforts to develop 5G technology; however, com-
+munication services for UAM continue to be unsatisfactory. Three-dimensional movement
+in UAM, frequency handovers, and other networking factors make UAM communica-
+tion more challenging [104,105]. A list of the networking and communication factors is
+presented in Table 7.
+Table 7. Communication and networking challenges in UAM.
+Technology Advantages Limitations
+Cellular network Currently, cellular networks, such as 5G, offer high data
+rates, low transmission delays, and support high mobility.
+Due to the downward tilt of the antennas on existing
+mobile towers, they are unsuitable for UAM
+connectivity.
+UAVs and HAPs UAVs and HAPs offer large-area coverage and reliable
+communication and navigation for UAM.
+The dense deployment of UAVs in urban areas poses a
+safety concern because of the possibility of collisions.
+HAPs links can be affected by rain attenuation.
+LEO satellites LEO satellites can provide near-continuous connectivity
+and navigation, and a long service time of up to 15 years.
+Costly and require a large constellation, which leads to
+issues such as Doppler effects, fading, and rapid
+handovers.
+NOMA
+High-spectrum efficiency using the same resources
+(frequency) results in lower delays, because users are not
+required to wait for a slot before sending data.
+A complex receiver and decoding process add
+additional delays, making it unsuitable for C2 links.
+RSMA Users can simultaneously send data by using multiple
+access techniques.
+The complexity of the system increases with the
+number of users.
+RIS Increasing UAM connectivity through better coverage of
+BLOS communication in urban areas.
+Channel state information is required to operate, but
+flying vehicles have a high level of mobility in a 3D
+environment. Further, RISs are subject to propagation
+and processing delays, which make them unsuitable
+for C2 communication.
+Sidelink (D2D)
+Allows distributed and decentralized multihop
+communication for flying vehicles. Moreover, sidelink
+provides a high data rate, throughput, and minimum delay.
+Limited transmission range.
+SDN With SDN, UAM networks are highly scalable and easy
+to manage.
+Virtualization of networks based on SDN faces
+security challenges.
+mmWave
+mmWave requires small antennae due to short-wave
+frequencies and allows higher bandwidth and data rates
+than RF.
+Highly directional beamforming technology is required
+due to the strong attraction of high frequencies.
+THz wave High data rate and bandwidth. Development is at an early stage and is limited by path
+loss and range.
+Cloud and fog computing
+UAM requires end-to-end path planning and weather
+information; in such cases flying vehicles utilize
+delay-tolerant clouds and fog computing for computation.
+It is challenging to locate high-speed flying vehicles.
+Edge computing
+Edge computing is a distributed computing service that
+solves handover and offloading problems for
+flying vehicles.
+A dense deployment of edge servers is required to
+provide this service.
+Digital twin
+Digital twins enable UAM simulations to optimize route
+planning, collision avoidance, and mission planning for
+UAM communication.
+Currently, digital twins are not feasible for large-scale
+UAM networks because of their large data
+requirements.
+
+===== PAGE 23 / 28 =====
+Drones 2024, 8, 702 23 of 28
+4.5. Weather
+Weather influence is a significant challenge in UAM operations. Aerial vehicles are
+subject to disruptions primarily caused by wind and in-path obstacles [ 106]. Weather
+conditions are more critical for UAM than for large aircraft. A variety of weather conditions
+can severely reduce the visibility of UAM, such as fog, haze, dust storms, rain, snow, and
+glare, making driving difficult. Sensor data are prone to disturbances, particularly during
+bad weather conditions. The UAM must be able to acquire and identify surrounding
+environmental information in real time and dynamically to make accurate judgments in
+different weather environments. Moreover, the flight status of other flying vehicles must be
+exchanged in real time. A UAM system’s perception of the environment, whether good or
+bad, is comparable to that of a human, as it is related to the goal and objective of ensuring
+safe driving.
+4.6. Noise
+The success or failure of a UAM vehicle concept is also significantly influenced by
+the requirement for minimal noise emissions, which is a significant concern in terms of
+public acceptance. According to a survey on how the public perceives UAM, the majority
+expressed serious anxiety regarding the type and amount of noise generated by UAM. To
+the greatest extent feasible, UAM noise characteristics should be integrated into the current
+urban background soundscape to secure community acceptability. Blade tip speed is a
+crucial design factor that must be as low as is feasible. Potential solutions include spreading
+thrust generation across several rotors, reducing the weight, and increasing the rotor area.
+The latter runs counter to the requirement that aerial vehicles be as small as feasible to
+accommodate the constrained space and architecture in cities. Given the limited space
+available, this requirement suggests that aircraft size may be the limiting factor for the high
+data rate between UAM and its stations in urban areas [107].
+4.7. Social Factors
+Despite aiming to provide safe, sustainable, inexpensive, and accessible mobility,
+UAM must address concerns including societal equality, public acceptability of noise, and
+safety. UAM implementation may be made easier with demonstration projects, operating
+standards, limits on flying over residential areas at night, and inclement weather conditions.
+However, many challenges remain. Additionally, efforts should be made to examine the
+social and economic effects of UAM on local communities and to solve inequality issues.
+Testing for the integration of UAM in the same airspace as regular flights, safety and
+health effects, identification of data requirements, public perception, and best practices
+for multimodal integration and vertiport design are a few possible areas for further study.
+Moreover, further studies could concentrate on market entry strategies, commercial model-
+ing, pertinent certification steps, the UAM environment, sensor and actuator developments,
+design challenges, technological requirements, and implications for the operational concept
+to drive UAM systems forward.
+5. Conclusions
+A revolutionary era of aeronautical communication began with the advent of UAM. In
+this article, we discussed the role of UAM in future mobility systems for the development
+of sustainable smart cities. Some key requirements must be satisfied for the successful
+deployment of UAM technologies. In particular, high-speed and high-accuracy data com-
+munication and mid-air vehicle-to-vehicle communication techniques are being developed.
+Simultaneously, each of these technologies requires high reliability and robustness. In
+densely populated areas, UAM systems require the overcoming of security and integration
+barriers, precise navigation and surveillance capabilities, vehicle-to-vehicle interactions,
+CDAA capabilities, and the management of communication failures. This paper discussed
+various aspects of UAM operational concepts and communication techniques. Moreover,
+our study analyzed in depth the key enabling technologies of UAM for communication
+
+===== PAGE 24 / 28 =====
+Drones 2024, 8, 702 24 of 28
+and networking. Our study examined a number of challenges related to UAM develop-
+ment, including operational scenarios, ATM, routing, high-quality communication services,
+navigation, collision detection, path planning, weather effects, and noise control. At the
+end of the paper, we discussed future research directions for UAM deployment, and open
+research issues and challenges. Lastly, UAM can be successfully integrated into a smart
+living community when the public is involved, and most users consent to its daily use.
+Author Contributions: Conceptualization, M.Y.A.; methodology, M.Y.A.; validation, M.Y.A. and
+S.P .; investigation, M.Y.A. and S.P .; resources, M.Y.A.; writing—original draft preparation, M.Y.A.;
+writing—review and editing, M.Y.A. and S.P .; supervision, S.P .; project administration, S.P .; funding
+acquisition, S.P . All authors have read and agreed to the published version of the manuscript.
+Funding: This work was supported by research grants from Chosun University in 2023.
+Data Availability Statement: Not applicable.
+Acknowledgments: The authors would like to thank EunSang Bak at Chosun University for his
+detailed comments in helping improve the presentation of this article.
+Conflicts of Interest: The authors declare no conflicts of interest.
+References
+1. Turok, I. Urbanisation and development. In The Routledge Companion to Planning in the Global South; Routledge: London, UK, 2017;
+pp. 93–103. [CrossRef]
+2. Kelly, F.J.; Fussell, J.C. Air Pollution and Public Health: Emerging Hazards and improved understanding of risk.Environ. Geochem.
+Health 2015, 37, 631–649. [CrossRef] [PubMed]
+3. Schubert, D.; Sys, C.; Vanelslander, T.; Roumboutsos, A. No-Queue Road Pricing: A comprehensive policy instrument for Europe?
+Util. Policy 2022, 78, 101413. [CrossRef]
+4. Biswas, K.; Ghazzai, H.; Sboui, L.; Massoud, Y. Urban Air Mobility: An IoT Perspective. IEEE Internet Things Mag. 2023, 6,
+122–128. [CrossRef]
+5. Vongvit, R.; Maeng, K.; Lee, S.C. Effects of Trust and Customer Perceived Value on the Acceptance of Urban Air Mobility as
+Public Transportation. Travel Behav. Soc. 2024, 36, 100788. [CrossRef]
+6. Cohen, A.; Shaheen, S.; Farrar, E. Urban Air Mobility: History, Ecosystem, Market Potential, and Challenges. IEEE Trans. Intell.
+Transp. Syst. 2021, 22, 6074–6087. [CrossRef]
+7. Al-Rubaye, S.; Tsourdos, A.; Namuduri, K. Advanced Air Mobility Operation and Infrastructure for Sustainable Connected
+eVTOL Vehicle. Drones 2023, 7, 319. [CrossRef]
+8. Goyal, R.; Cohen, A. Advanced Air Mobility: Opportunities and Challenges Deploying eVTOLs for Air Ambulance Service. Appl.
+Sci. 2022, 12, 1183. [CrossRef]
+9. Alam, M.M.; Arafat, M.Y.; Moh, S.; Shen, J. Topology control algorithms in multi-unmanned aerial vehicle networks: An extensive
+survey. J. Netw. Comput. Appl. 2022, 207, 103495. [CrossRef]
+10. Gordo, V .; Becerra, I.; Fransoy, A.; Ventas, E.; Menendez-Ponte, P .; Xu, Y.; Tojal, M.; Perez-Castan, J.; Perez Sanz, L. A Layered
+Structure Approach to Assure Urban Air Mobility Safety and Efficiency.Aerospace 2023, 10, 609. [CrossRef]
+11. Rajendran, S.; Srinivas, S. Air Taxi Service for Urban Mobility: A Critical Review of Recent Developments, Future Challenges,
+and Opportunities. Transp. Res. Part E-Logist. Transp. Rev. 2020, 143, 102090. [CrossRef]
+12. Cohen, A.; Shaheen, S. Urban Air Mobility: Opportunities and obstacles. In International Encyclopedia of Transportation; Elsevier:
+Amsterdam, The Netherlands, 2021; pp. 702–709. [CrossRef]
+13. Sinha, P .; Chowdhury, M.M.; Guvenc, I.; Matolak, D.W.; Namuduri, K. Wireless connectivity and localization for Advanced Air
+Mobility Services. IEEE Aerosp. Electron. Syst. Mag. 2024, 39, 4–14. [CrossRef]
+14. Arafat, M.Y.; Moh, S. A Q-Learning-Based Topology-Aware Routing Protocol for Flying Ad Hoc Networks.IEEE Internet Things J.
+2021, 9, 1985–2000. [CrossRef]
+15. Arafat, M.Y.; Poudel, S.; Moh, S. Medium Access Control Protocols for Flying Ad Hoc Networks: A Review. IEEE Sens. J. 2021, 21,
+4097–4121. [CrossRef]
+16. Arafat, M.Y.; Moh, S. Routing Protocols for Unmanned Aerial Vehicle Networks: A Survey.IEEE Access 2019, 7, 99694–99720.
+[CrossRef]
+17. Morshed Alam, M.; Moh, S. Joint optimization of trajectory control, task offloading, and resource allocation in air-ground
+integrated networks. IEEE Internet Things J. 2024, 11, 24273–24288. [CrossRef]
+18. Bine, L.M.S.; Svaigen, A.R.R.; Boukerche, A.; Aylon, L.B.R.; Loureiro, A.A.F. Flavors of the Next Generation of Unmanned Aerial
+Vehicles Networks. IEEE Internet Things J. 2024, 11, 24604–24620. [CrossRef]
+19. Guo, J.; Chen, L.; Na, X.; Vlacic, L. Advanced Air Mobility: An Innovation for Future Diversified Transportation and Society.
+IEEE Trans. Intell. Veh. 2024, 9, 3106–3110. [CrossRef]
+
+===== PAGE 25 / 28 =====
+Drones 2024, 8, 702 25 of 28
+20. Pan, G.; Alouini, M.-S. Flying Car Transportation System: Advances, Techniques, and Challenges.IEEE Access 2021, 9, 24586–24603.
+[CrossRef]
+21. Schweiger, K.; Schmitz, R.; Knabe, F. Impact of Wind on eVTOL Operations and Implications for Vertiport Airside Traffic Flows:
+A Case Study of Hamburg and Munich. Drones 2023, 7, 464. [CrossRef]
+22. Zhang, J.; Liu, Y.; Yao, Z. Overall eVTOL Aircraft Design for Advanced Air Mobility.Green Energy Intell. Transp. 2024, 3, 100150.
+[CrossRef]
+23. Rendon, M.A.; Sánchez, C.D.; Gallo, J.; Anzai, A.H. Aircraft Hybrid-Electric Propulsion: Development Trends, Challenges and
+Opportunities. J. Control Autom. Electr. Syst. 2021, 32, 1244–1268. [CrossRef]
+24. Qu, W.; Xu, C.; Tan, X.; Tang, A.; He, H.; Liao, X. Preliminary Concept of Urban Air Mobility Traffic Rules.Drones 2023, 7, 54.
+[CrossRef]
+25. Arafat, M.Y.; Moh, S. Localization and Clustering Based on Swarm Intelligence in UAV Networks for Emergency Communications.
+IEEE Internet Things J. 2019, 6, 8958–8976. [CrossRef]
+26. Wang, S.; Zhang, X.; Zhai, Y.; Zheng, L.; Liu, B. Enhancing Navigation Integrity for Urban Air Mobility with Redundant Inertial
+Sensors. Aerosp. Sci. Technol. 2022, 126, 107631. [CrossRef]
+27. Bauranov, A.; Rakas, J. Designing Airspace for Urban Air Mobility: A Review of Concepts and Approaches. Prog. Aerosp. Sci.
+2021, 125, 100726. [CrossRef]
+28. Arafat, M.Y.; Pan, S. The new paradigm of safe and sustainable transportation: Urban Air Mobility. In Frontier Computing on
+Industrial Applications Volume 3; Lecture Notes in Electrical Engineering; Springer: Singapore, 2024; pp. 347–352. [CrossRef]
+29. Wang, L.; Deng, X.; Gui, J.S.; Jiang, P .; Wan, S. A Review of Urban Air Mobility-Enabled Intelligent Transportation Systems:
+Mechanisms, Applications and Challenges. J. Syst. Archit. 2023, 141, 102902. [CrossRef]
+30. Kasliwal, A.; Kasliwal, A.; Furbush, N.J.; Furbush, N.J.; Gawron, J.H.; McBride, J.R.; Wallington, T.J.; De Kleine, R.; Kim, H.C.;
+Keoleian, G.A. Role of Flying Cars in Sustainable Mobility. Nat. Commun. 2019, 10, 1555. [CrossRef]
+31. Straubinger, A.; Rothfeld, R.; Shamiyeh, M.; Büchter, K.-D.; Kaiser, J.; Plötner, K. An Overview of Current Research and
+Developments in Urban Air Mobility—Setting the Scene for UAM Introduction. J. Air Transp. Manag. 2020, 87, 101852. [CrossRef]
+32. Coppola, P .; De Fabiis, F.; Silvestri, F. Urban Air Mobility (UAM): Airport Shuttles or City-Taxis?Transp. Policy 2024, 150, 24–34.
+[CrossRef]
+33. Cokorilo, O. Urban Air Mobility: Safety Challenges. Transp. Res. Procedia 2020, 45, 21–29. [CrossRef]
+34. Misra, A.; Jayachandran, S.; Kenche, S.; Katoch, A.; Suresh, A.; Gundabattini, E.; Selvaraj, S.K.; Legesse, A.A. A review on Vertical
+Take-off and landing (VTOL) tilt-rotor and Tilt Wing Unmanned Aerial Vehicles (uavs).J. Eng. 2022, 2022, 1803638. [CrossRef]
+35. Jin, Z.; Ng, K.K.H.; Zhang, C.; Wu, L.; Li, A. Integrated Optimisation of Strategic Planning and Service Operations for Urban Air
+Mobility Systems. Transp. Res. Part A Policy Pract. 2024, 183, 104059. [CrossRef]
+36. Zeng, L.; Hu, J.; Pan, D.; Shao, X. Automated Design Optimization of a Mono Tiltrotor in Hovering and Cruising States. Energies
+2020, 13, 1155. [CrossRef]
+37. Wilke, G. Quieter and Greener Rotorcraft: Concurrent Aerodynamic and Acoustic Optimization. CEAS Aeronaut. J. 2021, 12,
+495–508. [CrossRef]
+38. Qiao, Z.; Wang, D.; Xu, J.; Pei, X.; Su, W.; Wang, D.; Bai, Y. A Comprehensive Design and Experiment of a Biplane Quadrotor
+Tail-Sitter UAV .Drones 2023, 7, 292. [CrossRef]
+39. Namuduri, K.; Fiebig, U.-C.; Matolak, D.W.; Guvenc, I.; Hari, K.; Maattaanen, H.-L. Advanced Air Mobility: Research Directions
+for Communications, Navigation, and Surveillance. IEEE Veh. Technol. Mag. 2022, 17, 65–73. [CrossRef]
+40. Elmokadem, T.; Savkin, A.V . Towards Fully Autonomous UAVs: A Survey. Sensors 2021, 21, 6223. [CrossRef]
+41. Jin, Z.; Li, D.; Xiang, J. Robot Pilot: A New Autonomous System Toward Flying Manned Aerial Vehicles.Engineering 2023, 27,
+242–253. [CrossRef]
+42. Wei, H.; Lou, B.; Zhang, Z.; Liang, B.; Wang, F.; Lv, C. Autonomous Navigation for eVTOL: Review and Future Perspectives.IEEE
+Trans. Intell. Veh. 2024, 9, 4145–4171. [CrossRef]
+43. SESAR Joint Undertaking. SESAR Automation in Air Traffic Management—Long-Term Vision and Initial Research Roadmap.
+Available online: https://www.sesarju.eu/automation (accessed on 15 November 2024).
+44. Arafat, M.Y.; Moh, S. JRCS: Joint Routing and Charging Strategy for Logistics Drones. IEEE Internet Things J. 2022, 9, 21751–21764.
+[CrossRef]
+45. Pukhova, A.; Llorca, C.; Moreno, A.T.; Staves, C.; Zhang, Q.; Moeckel, R. Flying Taxis Revived: Can Urban Air Mobility Reduce
+Road Congestion? J. Urban Mobil. 2021, 1, 100002. [CrossRef]
+46. Bharadwaj, S.; Carr, S.; Neogi, N.A.; Topcu, U. Decentralized Control Synthesis for Air Traffic Management in Urban Air Mobility.
+IEEE Trans. Control Netw. Syst. 2021, 8, 598–608. [CrossRef]
+47. Ince, B.; Celdran Martinez, V .; Selvam, P .K.; Petrunin, I.; Seo, M.; Tsourdos, A. Sense and Avoid Considerations for Safe sUAS
+Operations in Urban Environments. IEEE Aerosp. Electron. Syst. Mag. 2024, 1–16. [CrossRef]
+48. Song, K. Optimal Vertiport Airspace and Approach Control Strategy for Urban Air Mobility (UAM).Sustainability 2023, 15, 437.
+[CrossRef]
+49. Bulusu, V .; Onat, E.B.; Sengupta, R.; Yedavalli, P .; Macfarlane, J. A Traffic Demand Analysis Method for Urban Air Mobility.IEEE
+Trans. Intell. Transp. Syst. 2021, 22, 6039–6047. [CrossRef]
+
+===== PAGE 26 / 28 =====
+Drones 2024, 8, 702 26 of 28
+50. Kim, J.; Atkins, E. Airspace Geofencing and Flight Planning for Low-Altitude, Urban, Small Unmanned Aircraft Systems. Appl.
+Sci. 2022, 12, 576. [CrossRef]
+51. Guan, X.; Lyu, R.; Shi, H.; Chen, J. A Survey of Safety Separation Management and Collision Avoidance Approaches of Civil UAS
+Operating in Integration National Airspace System. Chin. J. Aeronaut. 2020, 33, 2851–2863. [CrossRef]
+52. Afari, S.; Golubev, V .; Lyrintzis, A.S.; Mankbadi, R. Review of Control Technologies for Quiet Operations of Advanced Air-Mobility.
+Appl. Sci. 2023, 13, 2543. [CrossRef]
+53. Niklaß, M.; Dzikus, N.; Swaid, M.; Berling, J.; Lührs, B.; Lau, A.; Terekhov, I.; Gollnick, V . A Collaborative Approach for an
+Integrated Modeling of Urban Air Transportation Systems. Aerospace 2020, 7, 50. [CrossRef]
+54. Ahmed, S.S.; Hulme, K.F.; Fountas, G.; Eker, U.; Benedyk, I.; Still, S.E.; Anastasopoulos, P .C. The Flying Car—Challenges and
+Strategies Toward Future Adoption. Front. Built Environ. 2020, 6, 106. [CrossRef]
+55. Li, K.; Wu, Y.; Bakar, A.; Wang, S.; Li, Y.; Wen, D. Energy System Optimization and Simulation for Low-Altitude Solar-Powered
+Unmanned Aerial Vehicles. Aerospace 2022, 9, 331. [CrossRef]
+56. Qu, W.; Huang, J.; Li, C.; Liao, X. A Demand Forecasting Model for Urban Air Mobility in Chengdu, China. Green Energy Intell.
+Transp. 2024, 3, 100173. [CrossRef]
+57. Liu, Y.; Kreimeier, M.; Stumpf, E.; Zhou, Y.; Liu, H. Overview of Recent Endeavors on Personal Aerial Vehicles: A Focus on the
+US and Europe Led Research Activities. Prog. Aerosp. Sci. 2017, 91, 53–66. [CrossRef]
+58. Abu Zaid, A.; Belmekki, B.E.Y.; Alouini, M. eVTOL Communications and Networking in UAM: Requirements, Key Enablers, and
+Challenges. IEEE Commun. Mag. 2023, 61, 154–160. [CrossRef]
+59. Chae, M.; Kim, S.H.; Kim, M.; Park, H.-T.; Kim, S.H. Potential market based policy considerations for Urban Air Mobility. J. Air
+Transp. Manag. 2024, 119, 102654. [CrossRef]
+60. Chandrasekharan, S.; Gomez, K.; Al-Hourani, A.; Kandeepan, S.; Rasheed, T.; Goratti, L.; Reynaud, L.; Grace, D.; Bucaille, I.;
+Wirth, T.; et al. Designing and Implementing Future Aerial Communication Networks. IEEE Commun. Mag. 2016, 54, 26–34.
+[CrossRef]
+61. Piccioni, A.; Marotta, A.; Rinaldi, C.; Graziosi, F. Enhancing Mobile Networks for Urban Air Mobility Connectivity.IEEE Netw.
+Lett. 2024, 6, 110–114. [CrossRef]
+62. Zhou, Q.; Tan, F. Avionics of Electric Vertical Take-off and Landing in the Urban Air Mobility: A Review.IEEE Aerosp. Electron.
+Syst. Mag. 2024, 39, 1–26. [CrossRef]
+63. Kamilova, Z.A. A Route Network Planning Method for Urban Air Delivery. Transp. Res. Part E-Logist. Transp. Rev. 2022, 166,
+102872. [CrossRef]
+64. Shon, H.-K.; Kim, S.; Lee, J. Optimal Planning of Urban Air Mobility Systems Accounting for Ground Access Trips. Int. J. Sustain.
+Transp. 2024, 18, 356–378. [CrossRef]
+65. Arafat, M.Y.; Moh, S. A Survey on Cluster-Based Routing Protocols for Unmanned Aerial Vehicle Networks.IEEE Access 2019, 7,
+498–516. [CrossRef]
+66. Mao, Y.; Dizdar, O.; Clerckx, B.; Schober, R.; Popovski, P .; Poor, H.V . Rate-Splitting Multiple Access: Fundamentals, Survey, and
+Future Research Trends. IEEE Commun. Surv. Tutor. 2022, 24, 2073–2126. [CrossRef]
+67. Li, J.; Shen, D.; Yu, F.; Qi, D. A Method for Air Route Network Planning of Urban Air Mobility.Aerospace 2024, 11, 584. [CrossRef]
+68. Tsai, K.-C.; Fan, L.; Lent, R.; Wang, L.-C.; Han, Z. Distributionally Robust Optimal Routing for Integrated Satellite-Terrestrial
+Networks Under Uncertainty. IEEE Trans. Commun. 2024, 72, 6401–6415. [CrossRef]
+69. Causa, F.; Fasano, G. Multi-Objective Modular Strategic Planning Framework for Low Altitude Missions Within the Urban Air
+Mobility Ecosystem. IEEE Trans. Aerosp. Electron. Syst. 2024, 60, 474–489. [CrossRef]
+70. Baltaci, A.; Dinc, E.; Ozger, M.; Alabbasi, A.; Cavdar, C.; Schupke, D. A Survey of Wireless Networks for Future Aerial
+Communications (FACOM). IEEE Commun. Surv. Tutor. 2021, 23, 2833–2884. [CrossRef]
+71. Alam, M.M.; Moh, S. Joint Topology Control and Routing in a UAV Swarm for Crowd Surveillance.J. Netw. Comput. Appl. 2022,
+204, 103427. [CrossRef]
+72. Arafat, M.Y.; Moh, S. Bio-Inspired Approaches for Energy-Efficient Localization and Clustering in UAV Networks for Monitoring
+Wildfires in Remote Areas. IEEE Access 2021, 9, 18649–18669. [CrossRef]
+73. Kim, S.H. Receding Horizon Scheduling of On-Demand Urban Air Mobility With Heterogeneous Fleet. IEEE Trans. Aerosp.
+Electron. Syst. 2020, 56, 2751–2761. [CrossRef]
+74. Ansari, S.; Taha, A.; Dashtipour, K.; Sambo, Y.A.; Abbasi, Q.H.; Imran, M. Urban Air Mobility—A 6G Use Case? Front. Commun.
+Netw. 2021, 2, 729767. [CrossRef]
+75. Khan, A.A.; Khan, M.M.; Khan, K.M.; Arshad, J.; Ahmad, F. A Blockchain-Based Decentralized Machine Learning Framework for
+Collaborative Intrusion Detection within UAVs. Comput. Netw. 2021, 196, 108217. [CrossRef]
+76. Alam, M.M.; Moh, S. Survey on Q-Learning-Based Position-Aware Routing Protocols in Flying Ad Hoc Networks. Electronics
+2022, 11, 1099. [CrossRef]
+77. Niu, Z.; Nie, P .; Tao, L.; Sun, J.; Zhu, B. RTK with the Assistance of an IMU-Based Pedestrian Navigation Algorithm for
+Smartphones. Sensors 2019, 19, 3228. [CrossRef] [PubMed]
+78. Saeed, N.; Al-Naffouri, T.Y.; Alouini, M.-S. Wireless communication for Flying Cars. Front. Commun. Netw. 2021, 2, 689881.
+[CrossRef]
+
+===== PAGE 27 / 28 =====
+Drones 2024, 8, 702 27 of 28
+79. Adanza, D.; Gifre, L.; Alemany, P .; Fern ández-Palacios, J.P .; González-de-Dios, O.; Muñoz, R.; Vilalta, R. Enabling Traffic
+Forecasting with Cloud-Native SDN Controller in Transport Networks. Comput. Netw. 2024, 250, 110565. [CrossRef]
+80. Hosseini, N.; Jamal, H.; Haque, J.; Magesacher, T.; Matolak, D.W. UAV command and control, navigation and surveillance: A
+review of potential 5G and satellite systems. In Proceedings of the 2019 IEEE Aerospace Conference, Big Sky, MT, USA, 2–9 March
+2019. [CrossRef]
+81. Beidas, B.F.; Seshadri, R.I. OFDM-Like Signaling for Broadband Satellite Applications: Analysis and Advanced Compensation.
+IEEE Trans. Commun. 2017, 65, 4433–4445. [CrossRef]
+82. del Peral-Rosado, J.A.; Saloranta, J.; Destino, G.; Destino, G.; Lopez-Salcedo, J.A.; Seco-Granados, G. Methodology for Simulating
+5G and GNSS High-Accuracy Positioning. Sensors 2018, 18, 3220. [CrossRef]
+83. Cui, X.; Gulliver, T.A.; Li, J.; Zhang, H. Vehicle Positioning Using 5G Millimeter-Wave Systems.IEEE Access 2016, 4, 6964–6973.
+[CrossRef]
+84. Arafat, M.Y.; Alam, M.M.; Moh, S. Vision-Based Navigation Techniques for Unmanned Aerial Vehicles: Review and Challenges.
+Drones 2023, 7, 89. [CrossRef]
+85. Su, Y.; Xu, Y. A Risk Assessment Method for Mid-Air Collisions in Urban Air Mobility Operations.IEEE Trans. Intell. Veh. 2024,
+1–15. [CrossRef]
+86. Aldao, E.; González-de Santos, L.M.; González-Jorge, H. LiDAR Based Detect and Avoid System for UAV Navigation in UAM
+Corridors. Drones 2022, 6, 185. [CrossRef]
+87. Eurocontrol. ACAS (Airborne Collision Avoidance System). Available online: https://www.eurocontrol.int/system/acas
+(accessed on 15 November 2024).
+88. Son, Y.-S.; Sung, H.-K.; Heo, S.W. Automotive Frequency Modulated Continuous Wave Radar Interference Reduction Using
+Per-Vehicle Chirp Sequences. Sensors 2018, 18, 2831. [CrossRef] [PubMed]
+89. Sahin, A.; Hosseini, N.; Jamal, H.; Hoque, S.S.M.; Matolak, D.W. DFT-Spread-OFDM-Based Chirp Transmission.IEEE Commun.
+Lett. 2021, 25, 902–906. [CrossRef]
+90. Bertram, J.; Wei, P .; Zambreno, J. A Fast Markov Decision Process-Based Algorithm for Collision Avoidance in Urban Air Mobility.
+IEEE Trans. Intell. Transp. Syst. 2022, 23, 15420–15433. [CrossRef]
+91. Yang, X.; Wei, P . Autonomous Free Flight Operations in Urban Air Mobility With Computational Guidance and Collision
+Avoidance. IEEE Trans. Intell. Transp. Syst. 2021, 22, 5962–5975. [CrossRef]
+92. Park, C.; Kim, G.S.; Park, S.; Jung, S.; Kim, J. Multi-Agent Reinforcement Learning for Cooperative Air Transportation Services in
+City-Wide Autonomous Urban Air Mobility. IEEE Trans. Intell. Veh. 2023, 8, 4016–4030. [CrossRef]
+93. Pongsakornsathien, N.; Bijjahalli, S.; Gardi, A.; Symons, A.; Xi, Y.; Sabatini, R.; Kistan, T. A Performance-Based Airspace Model
+for Unmanned Aircraft Systems Traffic Management. Aerospace 2020, 7, 154. [CrossRef]
+94. Manyam, S.G.; Casbeer, D.W.; Darbha, S.; Weintraub, I.E.; Kalyanam, K. Path Planning and Energy Management of Hybrid Air
+Vehicles for Urban Air Mobility.IEEE Robot. Autom. Lett. 2022, 7, 10176–10183. [CrossRef]
+95. Huang, G.; Hu, M.; Yang, X.; Wang, X.; Wang, Y.; Huang, F. A Review of Constrained Multi-Objective Evolutionary Algorithm-
+Based Unmanned Aerial Vehicle Mission Planning: Key Techniques and Challenges. Drones 2024, 8, 316. [CrossRef]
+96. Neto, E.C.P .; Baum, D.M.; de Almeida, J.R.; Camargo, J.B.; Cugnasca, P .S. A Trajectory Evaluation Platform for Urban Air Mobility
+(UAM). IEEE Trans. Intell. Transp. Syst. 2021, 23, 9136–9145. [CrossRef]
+97. Jin, Z.; Ng, K.K.H.; Zhang, C. Robust optimisation for vertiport location problem considering travel mode choice behaviour in
+Urban Air Mobility Systems. J. Air Transp. Res. Soc. 2024, 2, 100006. [CrossRef]
+98. Rigas, E.S.; Kolios, P .; Ellinas, G. Scheduling aerial vehicles in large scale urban air mobility schemes with vehicle relocation.IEEE
+Trans. Intell. Veh. 2024, 1–15. [CrossRef]
+99. Yunus, F.; Casalino, D.; Avallone, F.; Ragni, D. Efficient prediction of urban air mobility noise in a vertiport environment.Aerosp.
+Sci. Technol. 2023, 139, 108410. [CrossRef]
+100. Reiche, C.; Cohen, A.; Fernando, C. An Initial Assessment of the Potential Weather Barriers of Urban Air Mobility.IEEE Trans.
+Intell. Transp. Syst. 2021, 22, 6018–6027. [CrossRef]
+101. Yahi, N.; Gudeta, S.G.; Karimoddini, A. On-the-fly coordination of maneuvers for separation assurance of UAM aircraft in
+congested airspace. IEEE Trans. Intell. Transp. Syst. 2024, 25, 18714–18733. [CrossRef]
+102. Hamissi, A.; Dhraief, A. A survey on the Unmanned Aircraft System Traffic Management. ACM Comput. Surv. 2023, 56, 1–37.
+[CrossRef]
+103. Abdellaoui, R.; Naser, F.; Stasicka, I.; Hagag, N.; Lee, H.; Moolchandani, K.A. Building a Performance Comparison Framework
+for Urban Air Mobility Airspace Management Concepts. In Proceedings of the 2023 IEEE/AIAA 42nd Digital Avionics Systems
+Conference (DASC), Barcelona, Spain, 1–5 October 2023; pp. 1–10. [CrossRef]
+104. Han, R.; Li, H.; Apaza, R.; Knoblock, E.; Gasper, M. Deep Reinforcement Learning Assisted Spectrum Management in cellular
+based Urban Air Mobility. IEEE Wirel. Commun. 2022, 29, 14–21. [CrossRef]
+105. Tomaszewski, L.; Kołakowski, R. Advanced Air Mobility and Evolution of Mobile Networks. Drones 2023, 7, 556. [CrossRef]
+
+===== PAGE 28 / 28 =====
+Drones 2024, 8, 702 28 of 28
+106. Phadke, A.; Medrano, F.A.; Chu, T.; Sekharan, C.N.; Starek, M.J. Modeling Wind and Obstacle Disturbances for Effective
+Performance Observations and Analysis of Resilience in UAV Swarms. Aerospace 2024, 11, 237. [CrossRef]
+107. Peng, H.; Bhanpato, J.; Behere, A.; Mavris, D.N. A Rapid Surrogate Model for Estimating Aviation Noise Impact across Various
+Departure Profiles and Operating Conditions. Aerospace 2023, 10, 627. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.

@@ -1,0 +1,13 @@
+scenario_name: S2
+run_count: 35
+wall_time_s: 4105.1881610830005
+generated_missions_total: 37800
+completed_within_duration_total: 33547
+completed_after_duration_total: 4253
+collision_risk_count_total: 50717
+building_collision_count_total: 19922
+aircraft_collision_count_total: 30795
+avg_pad_delay_s_mean: 356.2477335307793
+max_pad_delay_s_max: 5147.943890379278
+avg_flight_time_s_mean: 226.029440075101
+models: A,B,C,D,E

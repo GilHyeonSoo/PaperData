@@ -1,0 +1,21 @@
+description: 5000m 광역 UAM 도시, 2시간 누적 운항
+model: A
+map:
+  width: 5000
+  height: 5000
+  grid_size: 100
+  road_width: 20
+  building_density: 0.3
+vertiports:
+  count: 32
+aircraft:
+  fleet_size: 200
+  cruise_speed_kmh: 240
+simulation:
+  random_seed: 1600
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60

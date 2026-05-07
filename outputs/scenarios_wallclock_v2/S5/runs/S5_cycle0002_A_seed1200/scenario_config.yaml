@@ -1,0 +1,22 @@
+description: 대형 일반 밀도 도시 시나리오
+model: A
+map:
+  width: 6000
+  height: 6000
+  grid_size: 100
+  road_width: 20
+  building_density: 0.35
+vertiports:
+  count: 40
+  pad_occupancy_enabled: true
+aircraft:
+  fleet_size: 300
+  cruise_speed_kmh: 240
+simulation:
+  random_seed: 1200
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60

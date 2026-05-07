@@ -1,0 +1,13 @@
+scenario_name: S1
+run_count: 40
+wall_time_s: 3608.439119125
+generated_missions_total: 43200
+completed_within_duration_total: 14133
+completed_after_duration_total: 29067
+collision_risk_count_total: 211754
+building_collision_count_total: 14886
+aircraft_collision_count_total: 196868
+avg_pad_delay_s_mean: 2077.099920950496
+max_pad_delay_s_max: 6007.747648923709
+avg_flight_time_s_mean: 919.0273566335618
+models: A,B,C,D

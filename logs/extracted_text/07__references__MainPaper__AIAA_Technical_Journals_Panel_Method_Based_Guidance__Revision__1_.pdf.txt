@@ -1,0 +1,985 @@
+SOURCE: references/MainPaper/AIAA_Technical_Journals_Panel_Method_Based_Guidance__Revision_ (1).pdf
+PAGES: 35
+
+
+
+===== PAGE 1 / 35 =====
+HAL Id: hal-04701507
+https://enac.hal.science/hal-04701507v1
+Submitted on 22 Jul 2025
+HAL is a multi-disciplinary open access archive
+for the deposit and dissemination of scientific re-
+search documents, whether they are published or not.
+The documents may come from teaching and research
+institutions in France or abroad, or from public or pri-
+vate research centers.
+L’archive ouverte pluridisciplinaire HAL, est des-
+tinée au dépôt et à la diffusion de documents scien-
+tifiques de niveau recherche, publiés ou non, émanant
+des établissements d’enseignement et de recherche
+français ou étrangers, des laboratoires publics ou
+privés.
+HAL Authorization
+Urban Air Mobility Guidance with Panel Method:
+Experimental Evaluation Under Wind Disturbances
+Zeynep Bilgin, Ilkay Yavrucuk, Murat Bronz
+To cite this version:
+Zeynep Bilgin, Ilkay Yavrucuk, Murat Bronz. Urban Air Mobility Guidance with Panel Method: Experimental
+Evaluation Under Wind Disturbances. Journal of Guidance, Control, and Dynamics, 2024, 47 (6), pp.1080-1096.
+⟨10.2514/1.G007691⟩. ⟨hal-04701507⟩
+
+===== PAGE 2 / 35 =====
+Urban Air Mobility Guidance with Panel Method: Experimental
+Evaluation under Wind Disturbances
+Zeynep Bilgin∗
+Technical University of Munich, Garching, 85748, Germany
+Murat Bronz†
+ENAC, École Nationale de l’Aviation Civile, Université de Toulouse, Toulouse, 31400, France
+Ilkay Y avrucuk‡
+Technical University of Munich, Garching, 85748, Germany
+In this paper, a nature-inspired guidance algorithm based on panel method is proposed.
+Panel method is a numerical tool borrowed from the aerodynamics domain to calculate the
+potential field of a fluid flow around arbitrarily shaped objects. The proposed algorithm has little
+computational load and generates guidance vectors in real-time that can guide multiple vehicles
+through smooth and collision-free paths. Panel method-based guidance is a promising candidate
+for air mobility applications in urban environments where multiple aerial vehicles are expected
+to operate simultaneously without colliding with architectural structures and other vehicles in
+the airspace. In this study, the effectiveness and feasibility of the proposed guidance method is
+evaluated through a test campaign conducted in Toulouse, France, using multiple quad-rotors
+in a scaled urban environment. Furthermore, the robustness of the guidance method under
+wind disturbances is tested in both indoor and outdoor experiments. Experimental results
+suggest that panel method based guidance algorithm is an effective and robust tool for real-time,
+collision-free guidance of multiple aerial vehicles in complex urban environments.
+Supplementary video: https://youtu.be/tYDMfPYLinQ
+I. Nomenclature
+ = Coefficient matrix
+G,H, or3 = Distance
+A version of this work was presented in AIAA Aviation Forum, 27 June - 1 July 2022,Chicago, Illinois, USA with paper ID AIAA 2022-3509.
+∗PhD Candidate, Institute of Helicopter Technology and VTOL, TUM School of Engineering and Design, zeynep.bilgin@tum.de, AIAA Student
+Member.
+†Assistant Professor, ENAC-Lab, Dynamic Systems, murat.bronz@enac.fr, AIAA Member.
+‡Professor, Institute of Helicopter Technology and VTOL, TUM School of Engineering and Design, ilkay.yavrucuk@tum.de, AIAA Member.
+
+===== PAGE 3 / 35 =====
+@ = Flow velocity induced by a vortex
+D andE = Flow velocity components
+# = Number of aerial vehicles
+V = Panel orientation angle
+B = Panel length
+Γ orW = Vortex strength
+ = Inertia matrix
+Ω = Angular rates
+5 and6 = Functions
+ = Control effectiveness matrix
+a = Virtual control
+Subscript = Meaning
+∞ = Free stream
+8 and 9 = Panel number
+B8=: = Sink element
+B>DA24 = Source element
+II. Introduction
+A
+dvances in automation and electric storage encouraged growth in urban aviation industry. Utilizing aerial
+vehicles for the transport of people and goods over short distances in urban areas could make a contribution to
+mobility in the future. Aerial vehicles with different designs, sizes, maneuverability, automation levels and commu-
+nication capabilities will be competing for same limited urban air space previously unregulated. This new demand
+urges industry, cities and governments come up with new air traffic management scheme [ 1]. Having fully autonomous
+vehicles that can generate collision free paths not only increases the capacity of the urban airspace but also reduces the
+urban air traffic management efforts [2]. Therefore, path planning and guidance in urban environments is an important
+issue to be addressed.
+Recent studies addressed path planning problem in urban environment [ 3–6]. However, as urban air mobility concept is
+relatively new, path planning applications in this area is limited. On the other hand, path planning for unmanned aerial
+vehicles (UA V) is well studied in literature. Therefore, to have a better insight on path planning schemes literature review
+is conducted irrespective of operation environment. Classical approaches to path planning for autonomous vehicles
+can be divided into three sub-categories: reactive methods, optimization problem based methods and potential field
+based methods. Reactive methods are suitable for dynamic environments and search safe avoidance maneuvers taking
+2
+
+===== PAGE 4 / 35 =====
+into account the velocity and/or acceleration of the obstacles [ 7–13]. Second approach is formulating the problem as a
+large optimization problem with constraints. Constraints may include dynamics of the vehicle and air traffic regulations.
+Different cost functions can be considered to optimize time, distance, energy consumption, number of maneuvers, etc.
+[14–17]. Third approach is employing artificial potential functions where repulsive functions prevent collisions and
+attractive functions guide the vehicle to its destination [ 18]. Potential field approach for path planning is applied in
+various fields from wheeled ground vehicles to unmanned aerial vehicles [ 15, 19–23]. Main advantage of this approach
+is its simplicity and easy implementation. Furthermore, it is possible to further enhance the effectiveness of potential
+field based methods by combining them with other classical or heuristic approaches [ 24–27]. The potential field method
+suffers from two major drawbacks. First one, the vehicle may get trapped in a local minima and secondly, the vehicle
+cannot reach to its destination if there are obstacles nearby due their repulsive force [ 28, 29]. Harmonic potential fields,
+a sub category of potential field based approaches, overcome the local minima limitation and produce constrained and
+well-behaved robot trajectory in static and dynamic environments [ 30–35]. One specific harmonic potential field that
+can be used in path planning is potential field of an irrotational flow of an ideal fluid [ 23, 36]. The idea to imitate the
+behavior of gases and fluids has been previously investigated. Models from fluid dynamics have been used in design of
+feedback control laws for swarms of robots [ 37]. Similarly, a multi-vehicle flocking and guidance control scheme is
+proposed by endowing fluid properties to the vehicle swarm [ 38]. For potential flow based guidance models, analytical
+solutions can be obtained by combining elementary potentials such as uniform flow, sink and source elements; however,
+these solutions can only be used to generate a flow field around relatively simple geometries, such as circle and ellipses
+[39, 40].
+In the context of urban air mobility, where obstacles can have complex shapes, classical potential field methods, especially
+those using circular representations, may become inefficient in cluttered environments. To address this, Collision Cone
+approach have been proposed in literature [ 11–13] . Collision Cone methods is a local path planning method that uses
+geometric representations to avoid obstacles in the immediate surroundings of a mobile robot where collision cones are
+generated for the vehicle and the obstacle and maneuvers that avoid these cones are selected. It is especially well-suited
+for dynamic environments with arbitrarily shaped obstacles [ 12]. Alternatively, a global path planning approach using
+harmonic potential fields can be extended to arbitrarily shaped obstacles by utilizing a numerical method, namely panel
+method borrowed from aerodynamics domain [ 40, 41]. Panel method was previously used for motion planning for
+ground robots [31, 42, 43].
+Air mobility in urban environments indicate high number of operations at low altitudes. That means aerial vehicles
+operating in urban environments are expected to safely avoid collision with both complex shaped architectural structures,
+other vehicles operating in the same limited airspace as well as any dynamic obstacles that can pop-up. Guidance
+problem in such environments become mathematically large in size and computationally expensive. Therefore, methods
+that guarantee obstacle avoidance and collision avoidance while providing fast solutions to real-time guidance for
+3
+
+===== PAGE 5 / 35 =====
+multiple aerial vehicles in urban airspace are valuable [ 44]. In this paper panel method based guidance algorithm
+is proposed to be used for real-time path planning for air mobility in urban environments. Panel method has little
+computation load; thus, it is suitable for real-time applications [ 44]. Moreover, the proposed method utilizes harmonic
+potential fields which inherently guarantee collision avoidance and convergence to goal position without getting trapped
+in a local-minima [ 30, 31]. These properties make panel method based guidance algorithm a promising candidate for
+air mobility applications in urban environments.
+Experimental evaluation of guidance methods is essential to validate the effectiveness and robustness of proposed
+algorithms. In this study, performance of the proposed panel method based guidance algorithm is evaluated through
+hardware experiments conducted in Toulouse, France. Hardware experiments are conducted for both indoor and outdoor
+scenarios using quad-rotors. Indoor flights took place in The Toulouse Occitanie Drone Flight Arena located in France.
+The flight area that is equipped with high-precision localisation and measuring instruments is one of the most hi-tech
+instrument equipped indoor flight zones in Europe [ 45]. Scaled buildings with various shapes are produced and placed
+in the 8x8 flight arena to model a scaled urban environment. Furthermore, indoor tests are conducted under wind
+disturbance to assess the robustness of the proposed method. To better evaluate performance under sensor uncertainties
+and wind disturbances outdoor tests are conducted. Outdoor experiments are held in a local RC airfield runway located
+in Muret, France. Panel method based guidance algorithm can easily be scaled to larger problems. Thanks to this
+property, in outdoor experiments, quad-rotors were able to fly in a much larger area compared to indoor tests.
+Main contributions of this study are as follows:
+• Utilizing panel method, a numerical tool for calculating potential field of a fluid flow around obstacles, as a
+real-time guidance method for multiple aerial vehicles in an urban environment. Additional flow elements are
+included in conventional panel method equations to satisfy the needs of guidance problem. To represent goal
+positions point sink elements are used and to prevent collision with other vehicles a point source element is
+assigned to each vehicle.
+• Introduction of safety source element: Although trajectories tangent to obstacle boundaries are valid solutions
+for fluid dynamics, it is not a feasible solution for path planning of aerial vehicles. To generate safer paths that
+are not tangent to obstacles an additional source element that travels with the vehicle itself is introduced. This
+novel safety source element can generate trajectories as far away from obstacles as desired while still guaranteeing
+convergence to goal position.
+• Introduction of a correction term during velocity calculation step in order to improve disturbance rejection
+performance of panel method based guidance algorithm.
+• Experimental evaluation of the panel method based guidance algorithm. Hardware experiments for both indoor
+and outdoor scenarios are conducted to assess the performance of the proposed method in real-time scenarios in a
+4
+
+===== PAGE 6 / 35 =====
+scaled urban environment.
+• Robustness performance assessment of panel method based guidance under wind disturbances and sensor errors.
+III. Panel Method Based Guidance Methodology
+A. Panel Method Preliminaries
+Panel methods are well-known numerical tools used in aerodynamics domain for solving Laplace’s equation for
+irrotational flow of an ideal fluid around arbitrarily shaped objects. Since Laplace’s equation is linear, potential flow
+elements that satisfy the Laplace’s equation can be superposed. Panel method relies on this property to divide surface of
+an object into discrete potential flow elements called ’panels’ (hence, the name ’panel’ method.) and superposing each
+element to calculate the flow velocity field around the object [40, 41].
+Following [40, 46], let D be a region in ℜ2 containing an ideal fluid and V = (G,H )) be an arbitrary point in D. Let
+\ = (D,E )) denote the instantaneıus velocity of the fluid at any point in D . By Biot-Savart Law, velocity induced by
+a point vortex element placed at a point V9 = (G9,H 9 )) on any point V = (G,H )) ∈ D can be calculated in terms of
+unknown vorticity strengthW9 as shown in Equation 1, [40].
+
+D
+E
+
+= W9
+2cA 2
+?9
+
+0 1
+−1 0
+
+
+G9 −G
+H9 −H
+
+(1)
+where (G9,H 9 )) denotes the position of the point vortex and A?9 =
+√
+(G −G9 )2 + (H −H9 )2 is the Euclidean distance
+between point vortex element and the point V = (G,H )) .
+Velocity calculation formula given in Equation 1 can be applied to calculation of velocity induced by panels on an
+obstacle surface. In Figure 1b an arbitrarily shaped object with surface divided into a number of panels is presented. In
+Figure 1a sign convention for panel orientation angles and surface normals are given.
+For this study, prescribed flow elements on panels are selected as point vortices and placed on collocation points,
+V29 = (G29,H29 )) as shown in Figure 1a. Velocity induced by a vortex element placed on 9th panel at V29 = (G29,H29 ))
+on8th panel at V28 = (G28,H28 )) can be calculated as \89 = (D,E )89 using the relation given in Equation 1, [40].
+In order to find the unknown vorticity on obstacle surface, a Dirichlet boundary condition has to be enforced; the normal
+velocity induced at each panel on the object surface has to be zero. That is, flow cannot go into or out of the object
+surface. After applying the boundary condition for each panel, the unknown vorticity problem can be expressed as a
+system of linear equations given in Equation 2, [40].
+ 89W9 ='(8 (2)
+5
+
+===== PAGE 7 / 35 =====
+(a) Sign convention for panel orientation angles and surface
+normals [33]
+(b) Panel distribution over the surface of a body of arbitrary shape [41].
+Fig. 1 Panel distribution on an arbitrarily shaped obstacle and sign conventions of panel angles.
+ 89W9 = (D,E )89 · ®=8 (3)
+Here, is a coefficient matrix and W9 is the unknown vortex strength on panel 9.  89W9 is the normal component of the
+velocity induced by 9th panel on 8th panel as given in Equation 3. Note that, the coefficient matrix  is a known matrix
+and composed of geometrical properties of panels such as their respective orientations and positions.
+The vector'( consists of normal component of velocity induced by other known potential flow elements in D. In
+aerodynamics, '( usually contains only the normal component of free stream velocity \∞ = (D∞,E ∞) · ®=8 as in
+Equation 4, [40, 41]. Here, the angle V8 is the orientation of panel surface normal as shown in Figure 1a and free stream
+velocity \∞ is shown in Figure 1b.
+'(8 = −D∞ cosV8 −E∞ sinV8 (4)
+After solving Equation 2 for unknown vortex strengths W9 , flow velocity at any point V = (G,H )) in D can be calculated
+using Equation 1 for every panel on obstacle surface and superposing the resultant velocities [ 40]. Panel methods are
+6
+
+===== PAGE 8 / 35 =====
+well studied in fluid mechanics and aerodynamics domain. Reader may refer to [ 40, 41] for detailed derivation of panel
+method.
+B. Panel Method Application in Guidance Problem
+The solution of any given problem can be numerically calculated using panel methods as long as the velocity
+potential satisfies the Laplace’s equation. Therefore, a guidance potential field around arbitrarily shaped obstacles can
+be defined using panel method.
+In order to fit the needs of the guidance problem, '( vector in Equation 2 has to be further modified.
+1. Defining a Goal Position
+First, a point sink element is introduced to represent a goal position for the vehicle. Let V = (G,H )) be an arbitrary
+point in D and V6 = (G6,H6)) ∈ D be the known goal position of a vehicle where a point sink element is placed with
+known strength, f6. Then, the velocity induced at point V = (G,H )) by the sink element at V6 = (G6,H6)) can be
+calculated using the formula given in Equation 5
+
+DB8=:
+EB8=:
+
+= −f6
+2cA 26
+
+G −G6
+H −H6
+
+(5)
+Then, velocity induced by the point sink element (DB8=: andEB8=: ) can be included to'( vector as shown in Equation 6
+'(8 = −D∞ cosV8 −E∞ sinV8 −DB8=: cosV8 −EB8=: sinV8 (6)
+2. Guaranteeing Collision Avoidance
+The guidance vector field has built in obstacle avoidance property due to the boundary condition of zero normal
+velocity at panel collocation points on obstacle surfaces imposed on panel method equations, given that sufficient number
+of panels are defined on the obstacle boundary. However, avoiding collisions between vehicles is just as important
+in a guidance problem when multiple agents are involved. To prevent collisions between aerial vehicles, each aerial
+vehicle is modeled as a point source element. Let V= = (G=,H=)) be the position of the =Cℎ vehicle in a fleet with #
+vehicles. Then, the velocity induced by a point source element at V= = (G=,H=)) with known strengthf= on any point
+V = (G,H )) ∈ D can be calculated using the formula given in Equation 7
+
+D=
+B>DA24
+E=
+B>DA24
+
+= −f=
+2cA 2=
+
+G −G=
+H −H=
+
+(7)
+7
+
+===== PAGE 9 / 35 =====
+The velocity induced by the source elements on each vehicle can be added and included in '( vector as in Equation 8.
+'(8 = −D∞ cosV8 −E∞ sinV8 −
+#Õ
+==1
+D=
+B>DA24 cosV8 −
+#Õ
+==1
+E=
+B>DA24 sinV8 −DB8=: cosV8 −EB8=: sinV8 (8)
+3. Defining a Safety Perimeter Around Obstacles
+The zero normal velocity boundary condition on panel method equations indicate that, streamlines(trajectories)
+tangent to obstacle boundaries are valid solutions for panel method. However, for guidance purposes where vehicles have
+finite volume; trajectories tangent to obstacle boundary are not valid. One possible solution is to expand the obstacle
+boundary with the amount equal to or greater than vehicle size. To increase the safety perimeter around the obstacles
+safety source element introduced in [47] is included in '( vector in Equation 9.
+'(8 = −D∞ cosV8 −E∞ sinV8 −
+#4+)$!Õ
+==1
+D=
+B>DA24 cosV8 −
+#4+)$!Õ
+==1
+E=
+B>DA24 sinV8
+−DB8=: cosV8 −EB8=: sinV8 −DB054CH cosV8 −EB054CH sinV8
+(9)
+The safety source element is a point source element that travels with the vehicle itself. This additional source element
+causes amplified the vortex strengths on the obstacles in the vicinity of the vehicle. The Safety source element is only
+used in unknown vortex strength calculations and not included in velocity vector calculations so that resultant amplified
+vortex elements prevent the tangent solution. One of the main advantages of using the safety source element is that
+Fig. 2 Paths generated with safety source elements with strengths ranging from f = 0 tof = 25[47].
+it gives the designer flexibility to control the safety perimeter around the obstacles. Effect of safety source element
+8
+
+===== PAGE 10 / 35 =====
+is demonstrated in Fig. 2. In this figure resultant paths generated with safety source element with strengths ranging
+fromf = 0 tof = 25 are plotted. As the strength of the safety source element increases, a path further away from the
+obstacle is generated without sacrificing the convergence to the goal position. A similar effect could have been achieved
+by adjusting the expansion radius of obstacles. However, when obstacle shapes change, the coefficient matrix given in
+Equation 2 has to be recalculated and inverted again; this would bring a large computational burden. Instead, since safety
+source element only appears in calculations as an additional source element, it has negligible computational burden and
+can be adjusted even online. Furthermore, since it is a source element attached to the vehicle, each vehicle can have a
+different safety source element; hence, vehicles can have different safety perimeters around obstacles depending on their
+performance specifications. For example, vehicles with high maneuverability can be assigned smaller safety source
+element and less agile vehicles can be assigned larger safety source element. This would enable operating multiple
+vehicles with varying capabilities in the same framework without sacrificing safety or performance. This capability
+would be especially useful in urban air mobility applications where vehicles with different capabilities are expected to
+operate in the same airspace.
+4. Calculating the Flow Velocity
+After finding the unknown vortex strengths by solving the Equation 2, flow velocity \ = (D,E )) at any point
+V = (G,H )) ∈ D can be calculated using the relations given in Equation 10 and Equation 11.
+D = −f6
+2c
+G −G6
+A 26
++
+#Õ
+==1
+f=
+2c
+G −G=
+A 2=
++
+(Õ
+B=1
+ Õ
+:=1
+WB:
+2c
+G −GB:
+A 2
+B:
++D∞ (10)
+E = −f6
+2c
+H −H6
+A 26
++
+#Õ
+==1
+f=
+2c
+H −H=
+A 2=
++
+(Õ
+B=1
+ Õ
+:=1
+−WB:
+2c
+H −HB:
+A 2
+B:
++E∞ (11)
+Here,D∞ andE∞ are components of the free stream velocity. The goal position is denoted by V6 = (G6,H6)) and sink
+strength associated with this goal position is f6. # is the total number of aerial vehicles in the fleet and source with
+strengthf=is assigned to each vehicle to prevent collisions. Position of vehicles are denoted as V= = (G=,H=)) . ( and
+ are number of obstacles and number of panels on obstacle surfaces respectively. Position of a vortex element on a
+given obstacle and panel is denoted as (GB:,HB: ) and associated vortex strength is WB: .
+C. Panel Method and Automatic Flight Controller Integration for Guidance
+Block diagram for panel method based guidance is presented in Figure 3. Panel method requires vehicle positions,
+goal position and obstacle vertices as input. First, the obstacle boundary is divided into small line segments and vortex
+elements with unknown strength is assigned to each line segment. Point source and point sink elements with known
+9
+
+===== PAGE 11 / 35 =====
+Fig. 3 Block diagram for panel method based guidance.
+strength are assigned to vehicles and goal positions respectively. Next, equation 2 has to be solved for unknown vortex
+strengths. Coefficient matrix  in Equation 2 only depends on obstacle shape and can be calculated and inverted offline
+to reduce computational load. After vortex strengths are found, flow velocity at current vehicle position can be calculated
+using Equation 10 and Equation 11. At this step, positions of other vehicles are also required for collision avoidance
+calculations. As every vehicle has to account for all other vehicles in the arena, computational load of this algorithm
+increases quadratically with increasing number of vehicles.
+Flow velocity is greater in narrow passages and near goal position; however, the opposite velocity regime is safer and
+more desirable for vehicles. In order to achieve a more desirable velocity profile, first, Euclidean norm of flow velocity
+vector is calculated as given in Equation 12.
+∥\ ∥ =
+√
+D2 +E2 (12)
+Here, \ = (D,E )) denote the non-zero instantaneıus velocity of the fluid at any point. Normalized flow velocity is then
+¯\ = \/∥\ ∥. Finally, the desired velocity to be fed into the automatic flight controller can be calculated as in Equation
+13. Here, 2 is a scaling constant that depends on arena size and maximum allowable speed for vehicles.
+\34B =2∥\ ∥ −1 ¯\ (13)
+The controller used in this study is based on the work [ 48]. Brief summary of the control method is presented here.
+The method relies on the control of the angular accelerations in an incremental way. First, consider the angular
+acceleration of the vehicle. Neglecting the gyroscopic moments, the angular acceleration of the vehicle becomes a
+10
+
+===== PAGE 12 / 35 =====
+function of the angular rate, airspeed, and the input vector u as in Equation 14, [48].
+O ¤
+ = f (
+, v) + g(u) (14)
+where O is the moment of inertia matrix, 
+ is the angular rate vector and v is the airspeed vector. First order Taylor
+series expansion of Equation 14 is given in Equation 15
+O ¤
+ = O ¤
+0 + m
+m
+ f (
+, v0)| 
+=
+0 (
+ − 
+0) + m
+mv f (
+0, v)| v=v0 (v − v0) + m
+mu g(u)| u=u0 (u − u0) (15)
+Here, the angular acceleration depends on the current angular acceleration, the partial derivatives of the functions f
+and g and the change in state and inputs. Considering only a small time interval, but long enough for the actuators to
+adopt their new values, the change in 
+ and v and their respective derivatives can be neglected. Dividing by O and
+assuming that the partial derivative of g with respect to u is a static matrix for some part of the flight envelope, angular
+acceleration can be approximated as given in Equation 16, [48].
+¤
+ = ¤
+0 + M (u − u0) (16)
+where M is the control effectiveness matrix, which contains the effectiveness of each actuator on each axis. Its values
+are determined with a least squares fit with changes in input and angular acceleration obtained from flight data. The
+control law can be obtained by inverting Equation 16.
+u = u0 + M −1 (. − ¤
+0) (17)
+Here, the desired angular acceleration, ¤
+, has become the virtual control .. A PD controller that will provide the
+virtual control; that is, the desired angular acceleration can be designed to control the attitude. Detailed explanation on
+controller design can be found in [48].
+IV .Experimental Setup
+One of the main contributions of this study is the experimental demonstration of the proposed method and verification
+of its robustness to unknown wind disturbance. For both indoor and outdoor experiments, ENAC’s existing infrastructure
+for autonomous systems is utilized. This section briefly explains the simulation environment used in development, the
+autopilot system, indoor and outdoor flight setup, and wind generation method.
+11
+
+===== PAGE 13 / 35 =====
+A. Simulation Environment
+A simulation environment, shown in Fig. 4a, based on pyBullet is used with the architecture suggested in [ 49].
+Simulation environment includes vehicle dynamics as well as a simplified rotor dynamics model. Rotor force and
+torque is modelled proportional to propeller rotational speed as A =:5l2, and&A =:@l2 respectively, wherel is the
+propeller rotation rate [49]. High incidence angle conditions are not taken into account.
+(a) Simulation environment based on pyBullet[ 49].
+ (b) 2-D cross-section of the arena.
+Fig. 4 Simulation environment and the arena used in simulations and hardware tests.
+Arena plotted in Fig. 4b is used for both simulations and hardware experiments. Geometric shapes in Fig. 4b
+represent the cross-sections of various buildings in an urban environment. Although panel method can handle any
+arbitrarily shaped obstacle; square, hexagon and trapezoid obstacles are selected for ease of manufacture in hardware
+experiments. As a safety precaution , obstacle boundaries are inflated by an amount equal to vehicle radius. In Fig. 4b
+solid magenta shapes are real obstacles and shaded areas are obstacle boundaries obtained after inflation. In panel
+method calculations, these inflated obstacle boundaries are considered. Horizontal and vertical lines indicate indoor
+arena limits and x-axis and y-axis are both in meters.
+B. Experiment Facilities
+1. Indoor Flight Facility
+Indoor experiments are conducted in The Toulouse Occitanie Drone Flight Arena located in Toulouse, France as
+shown in Fig. 5a. Obstacles with various shapes and heights are inserted into the 8m×8m×8m flight area to model a
+scaled urban environment. Test environment is equipped with 16-camera Optitrack system is used to track the motion of
+the quadrotors with sub-millimetre resolution in real time—a feature that is replaced by considerably less accurate GPS
+when flying outdoors.
+12
+
+===== PAGE 14 / 35 =====
+The quadrotor used in indoor scenarios is called Explorer 1 (shown in Fig. 5b). Including the battery, its mass is 400 g
+(a) The Toulouse Occitanie Drone Flight Arena located
+in Toulouse, France.
+(b) Ground control station and quadrotor Explorer 1.
+Fig. 5 Indoor flight facility.
+and its maximum thrust is 40 N. A 3-cell battery operates at 11.1 V and contains 2,700 mAh, which provides roughly 14
+minutes of flight time. Detailed specifications are presented in Table 1.
+In the indoor setup, vehicle position and attitude is sensed by the optitrack system and fed to the control computer.
+Control computer calculates desired velocities and sends this information together with vehicle’s own position via
+wireless communication. Communication scheme for indoor test environment is sketched in Figure 6.
+Fig. 6 Communication Scheme for Indoor and Outdoor Experiment Setup.
+2. Outdoor Flight Facility
+Outdoor runway experiments are conducted in a local RC airfield runway located in Muret, France, that is 124 m ×
+12.5 m in size, as shown in Fig. 7a. ENAC has privileged access to this airfield, and can do tests in a volume of 500 m
+13
+
+===== PAGE 15 / 35 =====
+Specification Units Paparazzi Quadrotor
+Indoor Outdoor
+Mass [g] 400. 440.
+Maximum Flight Speed [m/s] 4. 14.
+Flight Duration [min] 14. 12.
+Localization Optitrack GPS
+Autopilot Software Paparazzi V .6[50]
+Autopilot Hardware Tawaki V1.1
+Controller INDI[48]
+Communication XBee 2.4GHz
+Motors T-Motor F40 2400Kv
+Propellers T-Motor F5146
+Battery 11.1V 2.7Ah LiPo
+Table 1 Specifications of the aerial vehicles used in this work, including the effect of additional hardware parts
+and software limitations.
+radius and up to 120 m height (which can be increased to 450 m in certain cases). Quadrotors used for the outdoor flights
+consist of the same avionics and propulsion system used on the indoor quadrotors, but they are additionally equipped
+with Ublox-M8 GPS receiver, hence 40g of additional mass, which supplies 5 Hz position information with an accuracy
+of approximately 1.5 m. Outdoor quadrotors are shown in Fig. 7b alongside with the ground control station (ordinary
+laptop), safety-pilot transmitters, and an XBee radio-modem that is used for telemetry and down-link communication.
+Detailed specifications are presented in Table 1.
+In the outdoor setup, there is no optitrack system; hence, vehicle position and attitude is sensed by the GPS. Vehicle
+communicates its position to the control computer via wireless connection. Control computer calculates desired velocities
+and sends this information to the vehicle. Communication scheme for outdoor test environment is sketched in Figure 6.
+(a) Outdoor flight field located in Muret, France.
+ (b) Ground control station and the outdoor quadrotor.
+Fig. 7 Outdoor flight facility and the outdoor quadrotor.
+14
+
+===== PAGE 16 / 35 =====
+C. Auxilary Experiment Tools
+1. WindShape - The Wind Generator
+To test the robustness of the algorithm under effects of unknown wind gusts, the wind generator shown in Fig. 8
+is used. WindShape is a modular wind generator located inside ENAC’s indoor flight facility. Spatial wind control is
+Fig. 8 WindShape, wind generator located inside ENAC’s indoor flight facility.
+possible via wind pixels, which are individual counter-rotating small electric fans. These fans have very low moment of
+inertia compared to traditional wind tunnel fans, making them easier to change the rotation rate, hence rapid variation of
+the wind speed. However during the presented experiments, the spatial wind speed have been kept constant.
+2. Paparazzi Autopilot System
+Throughout the whole flight tests, we have used the Paparazzi Autopilot system [ 50]. It is an open-sourced project
+started back in 2003 and used by several research groups, academics, and hobbyists. Being one of the first open-source
+autopilot systems in the world, Paparazzi covers all three segments: ground, airborne, and the communication link
+between them. Paparazzi has also its complete flight plan language, where the user can define any possible trajectory
+using existing commands, such as circle, line, hippodrome, figure-eight, survey, etc. Additionally, any function written
+in C language can be called from the flight plan and executed. This opens up a lot of application possibilities, such as
+triggering a navigation procedure via a sensor output. Its integrated ground control station permits to control the flight
+plan execution, to move waypoints, or change any parameters of the aircraft while in flight.
+During both indoor and outdoor flights, the position of the vehicles are known (indoor:OptiTrack, outdoor: GPS plus
+on-board estimation), and therefore the calculated flow-field velocity for each vehicle serves as a reference velocity to
+follow. This reference is being updated at a frequency of 10Hz during the flights and once the velocity error between the
+reference and actual velocity is calculated, it is directly used as an input to the guidance control algorithm. Quadrotors
+use an Incremental Nonlinear Dynamic Inversion (INDI) [ 48] based guidance outer-loop to calculate the reference
+attitude and rotation rate, and later a cascaded INDI inner-loop calculates the required motor rpm increments.
+15
+
+===== PAGE 17 / 35 =====
+V .Results
+A. Simulation Results
+In this section, three different simulation scenarios are presented to demonstrate path planning ability of panel
+method based guidance algorithm.
+1. Baseline scenario
+A scenario for a single vehicle in an urban environment is presented in Fig. 9. Start position of the vehicle is marked
+with a circle and the goal position is marked with a cross. The resultant path followed by the vehicle is plotted as a
+red line. The vector field generated by panel method solution is also plotted in the form of streamlines on the map.
+Each streamline leads to the desired goal point while avoiding obstacles. That is, for each position on the map the
+velocity vector calculated by panel method based guidance algorithm leads to the goal position with guaranteed obstacle
+avoidance. This property makes panel method based guidance algorithm robust against disturbances since even if the
+vehicle deviates from its path due to some disturbance, at its new position a new velocity vector that leads to goal
+position is calculated.
+(a) Streamlines in All-Concave Arena.
+ (b) Streamlines in Toulouse Arena.
+Fig. 9 Streamlines and resultant paths of aerial vehicles in different arenas.
+Streamlines and vehicle paths plotted in Fig. 9 are for demonstrating the vector field generated by panel method. In
+practice, neither streamlines nor the entire vehicle path is calculated. Instead, panel method based guidance algorithm
+calculates a single velocity vector for the current position of the vehicle. The path plotted in Fig. 9 is the result of
+following the velocity vectors that are calculated and fed to the vehicle at each position. Panel method based guidance
+algorithm should not be confused with search algorithms where an optimal path is selected among multiple candidates.
+16
+
+===== PAGE 18 / 35 =====
+2. Guaranteed global convergence
+(a) Baseline simulation: Path is open.
+ (b) Path is blocked at time C = 0.
+(c) Path is blocked at time C =C1 > 0.
+Fig. 10 Streamlines generated by panel method in case of a narrow passage blocked by a virtual obstacle.
+The vector field generated by panel method has no local minima and convergence to global minima is guaranteed[30].
+In Fig. 10 this property is demonstrated with an example scenario. The baseline simulation is plotted in Fig. 10a where
+the goal position is set at the end of a narrow passage. Following the streamlines, the vehicle travels through the tunnel
+between two buildings to arrive at the desired destination. In order to create a possible local minima, a U shaped obstacle
+is generated by blocking the exit of the tunnel between two trapezoid obstacles as shown in Fig. 10b. Having a priori
+information about the map; hence, the blockage, panel method generates a path that completely avoids the U shaped
+obstacle and travels around the buildings to reach desired destination. Finally, in the third case plotted in Fig. 10c, the
+vehicle has no a priori information about the blocked path. Instead, in an attempt to trap the vehicle inside the U shaped
+obstacle, the path is blocked after the vehicle enters the tunnel. This time, as soon as the path through the tunnel is
+blocked, the vehicle turns back and finds an alternate route around buildings to reach its destination.
+17
+
+===== PAGE 19 / 35 =====
+3. Multiple vehicles
+When multiple aerial vehicles are operating at the same time, obstacle avoidance alone is not enough, collision
+between vehicles should also be prevented. In order to avoid collision between the vehicles, each vehicle is modeled as
+a point source element that repel other vehicles. Complete knowledge of positions of all aerial vehicles in the fleet is
+assumed. The source element moves with the vehicle; hence, at every step the vector field needs to be updated with new
+source position. In Fig. 11 an example scenario where two aerial vehicles intercepting in a narrow passage is plotted. In
+Fig. 11a no source element is defined for either vehicle and vehicles collide midway. For the second case plotted in
+Fig. 11b vehicles have equal source strength, f1 =f2 > 0. This time, vehicles avoid collision while trying to fit into the
+narrow passage. Source strength is a design parameter and it is possible to assign uneven source strength to vehicles.
+For the final case, uneven source strength, f1 >f 2 > 0 is assigned to vehicles. Resultant paths are plotted in Fig. 11c.
+In this configuration, the Blue Vehicle has priority over the Green Vehicle. Hence, the Blue Vehicle takes a shorter path
+through the narrow passage alone while the Green Vehicle yields and takes a detour around buildings. This type of
+uneven source assignment could be useful for air traffic management where vehicles have differing capabilities and/or
+priorities.
+In Fig. 12 trajectories of ten aerial vehicles operating at the same time in two different arenas are plotted. The arena
+plotted in Fig. 12a is Toulouse Arena which is the same arena used in hardware experiments. Second arena plotted in
+Fig. 12b consist of 15 randomly generated and randomly placed buildings. For both scenarios the vehicles have random
+start and goal positions. To eliminate trivial scenarios, minimum distance between start and goal positions are set to 1
+m. Collision between the vehicles is avoided by source elements assigned to each vehicle. For this scenario, source
+strengths of the vehicles are also randomized. Notice that, vehicles with greater source strength have higher priority
+and they inhabit inner regions of the city and travel between buildings whereas vehicles with lower source strength
+have lower priority and fly longer paths around the city. Panel method based guidance algorithm can successfully solve
+guidance problem for multiple aerial vehicles simultaneously even in environments dense with obstacles.
+B. Indoor Flight Tests
+Indoor experiments for this study are conducted in The Toulouse Occitanie Drone Flight Arena located in Toulouse,
+France (Fig. 5a). The quad-rotor shown in Fig. 5b is used in indoor hardware experiments.
+1. Single Vehicle
+For the initial hardware experiments, a single vehicle operating in a scaled urban environment is considered. The
+vehicle is tasked with traveling to 5 different locations consecutively as shown in Fig. 13. The vehicle starts from
+point E and must circle between positions marked with E-A-B-C-D-E as shown in Fig. 13a. Goal locations and their
+18
+
+===== PAGE 20 / 35 =====
+(a) Solution with f1 =f2 = 0.
+ (b) Solution with f1 =f2 > 0.
+(c) Solution with f1 >f 2 > 0.
+Fig. 11 Simulations with varying source strengths on vehicles through a narrow passage.
+(a) Simulation in Toulouse Arena.
+ (b) Simulation in randomly generated arena.
+Fig. 12 Randomized simulations with multiple aerial vehicles. All vehicles are assigned a random source
+strength,f >0.
+19
+
+===== PAGE 21 / 35 =====
+(a) Single trajectory and goal positions.
+ (b) Trajectories for 9 minute flight.
+(c) Captured images of the experiment.
+Fig. 13 Experiment 1. The vehicle is tasked with circling between positions marked with E-A-B-C-D-E for 9
+minutes while avoiding obstacles.
+order is selected such that the vehicle is forced into narrow corridors between buildings to better demonstrate the
+obstacle avoidance capability of panel method based guidance algorithm. In Fig. 13b, trajectory generated by the
+vehicle after 9 minute flight is plotted. It can be observed that the vehicle consistently avoids collision with obstacles
+and successfully arrives at the desired goal position every time. In Fig. 13c, composite images captured during the
+experiment is presented.
+2. Multiple Vehicles
+One of the strengths of panel method based guidance algorithm is its ability to generate a collision free paths in
+real-time for multiple vehicles simultaneously. Unfortunately the platform shown in Fig. 5b consist of only a single
+quad-rotor. Consequently, an off-the-shelf platform namely Tello EDU Quad-Rotors (Fig. 14) are utilized to perform
+indoor experiments with multiple aerial vehicles.
+In the experiments with multiple aerial vehicles, each vehicle has its own starting position and destination. Vehicle
+trajectories for two example scenarios are plotted in Figures 15 and 18. In Fig.15a and Fig. 18a trajectories generated in
+20
+
+===== PAGE 22 / 35 =====
+Fig. 14 Tello EDU Quad-rotor
+(a) Simulation and experiment trajectories.
+ (b) Captured images of experiment.
+Fig. 15 Experiment 2. Three aerial vehicles travel to different destinations simultaneously while avoiding
+collision with buildings and each other.
+simulation for three aerial vehicles are plotted together with actual paths followed by the vehicles during the experiment.
+Dashed lines are the trajectories generated in simulation and solid lines are the actual trajectories of the vehicles.
+Black arrows plotted on the trajectories are the velocity vectors commanded to the vehicles at given time steps. The
+difference between simulation paths and actual paths are mostly due to imprecise positioning of the vehicles at the start
+of experiments. In hardware experiments with multiple aerial vehicles, when one vehicle starts from a different position
+than the simulation not only it rides a different streamline, but also due to repulsive forces between the vehicles, the
+other vehicles generate different paths even if they have started at the exact same location as the simulation. Nonetheless,
+regardless of their starting positions, each vehicle can reach their destination without colliding with buildings or the
+other vehicles. Composite images generated with camera snapshots of hardware experiment for scenario 2 and scenario
+3 are presented in Fig 15b and Fig. 18b respectively.
+In Figure 16 sequential plots of resultant trajectories for the three vehicles for Experiment 2 are given. Sequential plots
+suggest that there are no collision between vehicles. Desired velocity input and measured velocity of Vehicle 1 (red on
+21
+
+===== PAGE 23 / 35 =====
+Fig. 16 Experiment 2, sequential figures.
+Fig. 17 Experiment 2, desired velocity and measured velocity of Vehicle 1 (Red).
+Fig. 15) is plotted in Figure 17. Here, desired velocity is bounded to 0.5 m/s so that vehicle dynamics do not dominate
+the resultant paths.
+22
+
+===== PAGE 24 / 35 =====
+(a) Simulation and experiment trajectories.
+ (b) Captured images of experiment.
+Fig. 18 Experiment 3. Three aerial vehicles travel to different destinations simultaneously while avoiding
+collision.
+C. Indoor Tests with WindShape
+To test the robustness of the algorithm under effects of unknown wind gusts the wind generator shown in Fig. 8 is
+used. WindShape is a modular wind generator located inside ENAC’s indoor flight facility.
+1. Effect of Correction Term
+To assess the effectiveness of panel method under wind disturbance three basic cases are considered and plotted
+on Fig. 19. First, to compare the performance of panel method and wind correction term, both methods are tested in
+an empty arena under wind disturbance. Results are presented in Fig. 19a. Here, wind speed (measured at the exit of
+WindShape) is gradually increased from 0</B to 10</B and the vehicle is tasked with flying on a straight line. In Fig.
+19a, solid lines are the trajectories obtained from panel method solution and dashed lines are trajectories generated
+by panel method with correction term. The improvement introduced by the correction term is evident in this plot.
+Especially at higher wind speeds correction term reduces the deviation from original path significantly. Therefore, for
+the rest of the experiments panel method with correction term is used for path planning.
+For the second case, a building is placed downstream of the wind to check whether the wind disturbance can cause
+a collision to an obstacle. As it can be observed from Fig. 19b, the vehicle avoids the building when the the wind
+speed is as high as 7</B. However, this time the vehicle overshoots as soon as it exits the WindShape cone. This sort
+of overshoot is expected since there is a sudden change in wind speed at the exit of wind generator cone and velocity
+correction only uses instantaneous velocity error as opposed to prediction of desired path multiple steps ahead. Hence,
+for the third case, an other building is placed at the overshooting position to check whether this overshoot movement
+23
+
+===== PAGE 25 / 35 =====
+(a) Case 1: Empty arena.
+ (b) Case 2: Arena with one building.
+(c) Case 3: Arena with two buildings.
+Fig. 19 Trajectories under wind disturbance for 3 cases. Even under effects of wind disturbance, collision
+avoidance is satisfied.
+would cause a collision. In Fig. 19c, trajectories for the third case are plotted. In this scenario, in order to force the
+vehicle between buildings starting position is shifted 1< towards north. In this case too, panel method prevents collision
+with both obstacles under wind gust.
+2. Single Vehicle
+In Fig. 20, an example scenario for a single vehicle in an scaled urban environment is plotted. For this scenario the
+vehicle is tasked with traveling between its start position in north west and its destination in south east. This mission
+requires the vehicle to travel downstream in wind cone generated by WindShape. In Fig. 20a, trajectory logs from
+experiments conducted at different wind speeds are plotted together. Although the disturbance caused by the wind is
+evident, the vehicle arrives to its destination without much deviation from the original path. In Fig. 20b, sequential
+image captures from the experiment with wind speed of 4</B are presented.
+24
+
+===== PAGE 26 / 35 =====
+(a) Trajectories for scenario 1.
+(b) Images captured from experiment with wind
+speed,+F = 4</B for scenario 1.
+Fig. 20 Scenario 1: Single vehicle travelling downstream in wind cone.
+(a) Trajectories for scenario 2.
+(b) Images captured from experiment with wind
+speed,+F = 4</B for scenario 2.
+Fig. 21 Scenario 2: Travelling across wind cone.
+Second example scenario where a vehicle is tasked with travelling from west to east is presented in Fig. 21. In
+this mission the vehicle has to travel across the wind cone generated by WindShape. In Fig. 21a, trajectory logs
+from experiments conducted at different wind speeds are plotted together. Especially at high wind speeds there is
+visible deviation from the original path. Nonetheless, the vehicle follows a collision free path and arrives to the desired
+destination. In Fig. 21b, sequential image captures from the experiment with wind speed of 4</B are presented.
+25
+
+===== PAGE 27 / 35 =====
+(a) Trajectories for scenario 3.
+(b) Images captured from experiment with wind
+speed,+F = 4</B for scenario 3.
+Fig. 22 Scenario 3: Guidance for a real vehicle and a virtual vehicle. The virtual vehicle has the same sensors
+and dynamics as the real vehicle.
+(a) Trajectory under sudden disturbance.
+(b) Image captured from experiment with sudden
+disturbance.
+Fig. 23 Scenario 4: Sudden discrete disturbance. The vehicle is pushed with a stick at the position marked with
+red arrow.
+3. Multiple vehicles
+For urban mobility applications, planning collision free paths for multiple aerial vehicles is a necessity. To that end,
+a virtual vehicle is included to the experiments throughout Paparazzi’s dynamic simulation. The virtual vehicle has
+the same sensors and dynamics as the real vehicle; however, it does not experience the wind disturbance generated
+by WindShape. Experiment with the virtual vehicle is presented in Fig. 22. Here, the mission of the virtual vehicle
+is to travel from north east to its goal in south west. Similarly, the real vehicle travels from west to east. Both aerial
+26
+
+===== PAGE 28 / 35 =====
+vehicles are modelled as point source elements in calculations to prevent any collisions. Furthermore, this experiment
+is conducted under different wind speeds. In Fig. 22a, trajectory logs from experiments conducted at different wind
+speeds are plotted together. To avoid collision with the virtual vehicle, real vehicle follows a path around hexagonal
+buildings. However, when the wind speed is larger than 3</B, the real vehicle is forced to take the path between
+hexagonal buildings. In either case, there is no collision with the virtual vehicle. In Fig. 22b, sequential image captures
+from the experiment with wind speed of 4</B are presented.
+4. Discrete Disturbance
+The last but not least, a final scenario for indoor arena is presented in Fig. 23. In this scenario a different type of
+disturbance is considered which is other than wind. The vehicle is tasked with travelling from north west to south east.
+At the position indicated with the red arrow in Fig. 23a the quad-rotor is pushed towards east with a stick. Although this
+sudden impact places the vehicle on a different streamline, using panel method a velocity vector that guarantees collision
+avoidance and convergence to goal position can be found at any empty position on the map. Hence, the vehicle can still
+avoid buildings and arrive at its destination. The disturbance neither causes any collision nor prevents the vehicle from
+reaching its goal.
+D. Outdoor Tests
+Outdoor experiments are conducted in a local RC airfield runway located in Muret, France, as shown in Fig. 7a.
+For the outdoor scenarios, there are no real buildings on the test area. Instead, no-fly zones with different shapes are
+(a) Recorded trajectory for outdoor experiment.
+ (b) Satellite image captured from experiment.
+Fig. 24 Outdoor experiment with single vehicle. The vehicle is tasked with traveling between 5 goal positions
+consecutively.
+defined on the outdoor arena. No-fly zones are marked with magenta colored polygons on the map as shown in Fig.
+27
+
+===== PAGE 29 / 35 =====
+24b. Similar to indoor tests, no-fly zones are also inflated as a safety precaution. Inflated boundaries are plotted with
+shaded pink color. Safety perimeter for outdoor experiments were taken as 1< (as opposed to 202< safety perimeter in
+indoor arena) due to greater sensor errors that had to be considered such as GPS accuracy, heading information from
+magnetometer, etc...
+(a) Trajectories of aerial vehicles for f = 0.95.
+ (b) Trajectories of aerial vehicles for f = 1.5.
+Fig. 25 Outdoor experiment with one real and one virtual vehicle.
+1. Single Vehicle
+In Fig. 24, outdoor experiment for a single vehicle is plotted. For this scenario, the vehicle starts from origin and
+is tasked with traveling to four goal positions sequentially and returning to origin again. Trajectory of the vehicle is
+plotted in Fig. 24a and satellite image capture from the experiment is presented in Fig. 24b.
+2. Multiple vehicles
+In Fig. 25, outdoor experiments with one real and one virtual vehicle are presented. The virtual vehicle has the same
+sensors and dynamics as the real vehicle. Both vehicles are tasked with travelling between 3 different goal positions
+sequentially while avoiding each other and no-fly zones. In Fig. 25a, trajectories of an experiment with relatively low
+source strength is given. In this case, both vehicles enter narrow corridors between no-fly zones and do not alter their
+path until they get close enough to the other vehicle. For the second case plotted in Fig. 25b, same scenario is repeated
+with larger source strength. This time, instead of entering narrow passages between no-fly zones, the vehicles take a
+detour around virtual obstacles and avoid each other completely.
+28
+
+===== PAGE 30 / 35 =====
+VI. Conclusion
+In this study, panel method based guidance algorithm for unmanned aerial vehicles for air mobility in urban
+environments is developed and robustness and effectiveness of the proposed algorithm is evaluated through hardware
+experiments in indoor and outdoor test facilities.
+Panel method based guidance algorithm generates guidance vectors that can lead multiple aerial vehicles through
+collision free paths around obstacles with any size and shape. Since the vector field generated by panel method equations
+has no local minima, guidance vectors always lead the vehicle towards the goal position. Proposed algorithm has little
+computational load and is suitable for real-time applications.
+This study introduces a new safety source element to steer the vehicles further away from obstacles as an additional
+safety precaution. The strength of the safety source element can be adjusted depending on the vehicle capabilities or
+safety requirements. Changing the magnitude of the source element does not bring any additional computational load;
+hence, this parameter can even be adjusted online.
+A possible downside of panel method solution is that, for obstacle avoidance, positions and shapes of the buildings in a
+city have to be known beforehand. Still, it is not unrealistic to have this information with current mapping tools. Panel
+method is sensitive to size and number of panels, suitable number of panels are required to represent obstacles and have
+obstacle avoidance. Moreover, panel method based guidance algorithm does not guarantee generating time or distance
+optimal paths. However, the paths generated by the method are smooth and natural which makes it easier for aerial
+vehicles to follow.
+In this study, obstacle avoidance and collision avoidance performance of panel method based guidance algorithm is
+tested using multiple quad-rotors in a scaled urban environment built in an indoor flight arena. Experimental results
+suggest that, proposed algorithm can successfully guide multiple aerial vehicles in cluttered environments without
+collision in real-time. Furthermore, obstacle avoidance and goal convergence capabilities of the panel method based
+guidance algorithm under wind gust disturbances are evaluated through indoor and outdoor test campaigns. Panel
+method based guidance algorithm is inherently robust against disturbances as it does not plan any paths but instead
+generates guidance vectors that lead to the goal position. In order to reduce the deviation under strong wind disturbances,
+a correction term is introduced and fed back to the velocity calculation with a PD controller. Experimental results
+suggest that proposed algorithm is robust against wind disturbances. Even under effect of wind, the vehicles can avoid
+obstacles and arrive desired goal positions.
+Robustness of the proposed guidance algorithm is further tested with outdoor experiments where not only there were
+wind disturbances but also greater sensor errors had to be considered such as GPS accuracy, heading information from
+magnetometer, etc... Outdoor experiments are conducted with virtual no-fly zones instead of buildings as obstacles. In
+an open area with no buildings to disturb the wind flow, the effect of wind around buildings could not be observed.
+To conclude, both indoor and outdoor flight tests suggests that panel method based guidance algorithm is a promising
+29
+
+===== PAGE 31 / 35 =====
+tool for real-time guidance for air mobility in urban environments with decent disturbances rejection and guaranteed
+global convergence.
+Acknowledgments
+Authors would like to thank Cédric Boutet and Laurent Lacaze for the construction of scaled urban environment
+at ENAC and Xavier Paris for the indoor flight arena technical support and finally the open-source community of the
+Paparazzi Autopilot System. Through out this work Author Z. Bilgin was funded by Campus France.
+References
+[1] Hansman, R., and Vascik, P ., “Constraint Identification In On-Demand Mobility For Aviation Through An Exploratory Case
+Study Of Los Angeles,” 2018.
+[2] Bauranov, A., and Rakas, J., “Designing airspace for urban air mobility: A review of concepts and approaches,” Progress
+in Aerospace Sciences , Vol. 125, 2021, p. 100726. https://doi.org/https://doi.org/10.1016/j.paerosci.2021.100726, URL
+https://www.sciencedirect.com/science/article/pii/S0376042121000312.
+[3] Ahamed, S., Prakash, S., Shuvrangshu, J., and Debasish, G., “UAS Flight Path Planning using Numerical Potential Fields in
+Dense Non-segregated Airspace,” 2021 International Conference on Unmanned Aircraft Systems (ICUAS), 2021, pp. 1010–1019.
+https://doi.org/10.1109/ICUAS51884.2021.9476791.
+[4] Zhang, N., Zhang, M., and Low, K. H., “3D path planning and real-time collision resolution of multirotor drone opera-
+tions in complex urban low-altitude airspace,” Transportation Research Part C: Emerging Technologies, Vol. 129, 2021, p.
+103123. https://doi.org/https://doi.org/10.1016/j.trc.2021.103123, URL https://www.sciencedirect.com/science/article/pii/
+S0968090X2100142X.
+[5] Dai, W ., Pang, B., and Low, K. H., “Conflict-free four-dimensional path planning for urban air mobility considering airspace
+occupancy,” Aerospace Science and Technology, Vol. 119, 2021, p. 107154. https://doi.org/https://doi.org/10.1016/j.ast.2021.
+107154, URL https://www.sciencedirect.com/science/article/pii/S1270963821006647.
+[6] Huang, S., and Low, K. H., “A Path Planning Algorithm for Smooth Trajectories of Unmanned Aerial Vehicles via Potential
+Fields,” 2018 15th International Conference on Control, Automation, Robotics and Vision (ICARCV) , 2018, pp. 1677–1684.
+https://doi.org/10.1109/ICARCV.2018.8581198.
+[7] Fiorini, P ., and Shiller, Z., “Motion Planning in Dynamic Environments Using Velocity Obstacles,” The International Journal
+of Robotics Research, Vol. 17, No. 7, 1998, pp. 760–772. https://doi.org/10.1177/027836499801700706.
+[8] Petti, S., and Fraichard, T., “Safe Motion Planning in Dynamic Environments,” 2005, pp. 2210 – 2215. https://doi.org/10.1109/
+IROS.2005.1545549.
+30
+
+===== PAGE 32 / 35 =====
+[9] Fox, D., Burgard, W., and Thrun, S., “The Dynamic Window Approach to Collision Avoidance,” Robotics and Automation
+Magazine, IEEE, Vol. 4, 1997, pp. 23 – 33. https://doi.org/10.1109/100.580977.
+[10] Chan, N., Kuffner, J. J., and Zucker, M., “Improved Motion Planning Speed and Safety using Regions of Inevitable Collision,”
+2008. URL https://api.semanticscholar.org/CorpusID:16622850.
+[11] Chakravarthy, A., and Ghose, D., “Obstacle Avoidance in a Dynamic Environment: A Collision Cone Approach,” IEEE
+Transactions on Systems, Man, and Cybernetics—Part A: Systems and Humans , Vol. 28, No. 5, 1998, pp. 570–574. https:
+//doi.org/10.1109/3468.709600.
+[12] Chakravarthy, A., and Ghose, D., “Generalization of the Collision Cone Approach for Motion Safety in 3-D Environments,”
+Autonomous Robots, Vol. 32, No. 3, 2012, pp. 243–266. https://doi.org/10.1007/s10514-011-9270-z.
+[13] Chakravarthy, A., and Ghose, D., “Collision Cones for Quadric Surfaces,” IEEE Transactions on Robotics, Vol. 27, No. 6, 2011,
+p. 1166. https://doi.org/10.1109/TRO.2011.2159413.
+[14] M.irzaei Teshnizi, M., Kosari, A., Goliaei, S., and Shakhesi, S., “Centralized Path Planning for Multi-aircraft in the Presence of
+Static and Moving Obstacles,” International Journal of Engineering , Vol. 33, No. 5, 2020, pp. 923–933. https://doi.org/10.
+5829/ije.2020.33.05b.25.
+[15] Chen, Y ., Luo, G., Mei, Y ., Yu, J., and Su, X., “UA V path planning using artificial potential field method updated by optimal
+control theory,” International Journal of Systems Science , Vol. 47, 2016, pp. 1407 – 1420. URL https://api.semanticscholar.org/
+CorpusID:29757767.
+[16] Ge, D., and Topcu, U., “Hierarchical Path Planning for Urban On-Demand Air Mobility,” 2019 IEEE Conference on Control
+Technology and Applications (CCTA), 2019, pp. 894–899. https://doi.org/10.1109/CCTA.2019.8920446.
+[17] Pradeep, P ., and Wei, P ., “Energy-Efficient Arrival with RTA Constraint for Multirotor eVTOL in Urban Air Mobility,”Journal
+of Aerospace Information Systems, Vol. 16, 2019. https://doi.org/10.2514/1.I010710.
+[18] Khatib, O., “Real-time obstacle avoidance for manipulators and mobile robots,” Proceedings. 1985 IEEE International
+Conference on Robotics and Automation, Vol. 2, 1985, pp. 500–505. https://doi.org/10.1109/ROBOT.1985.1087247.
+[19] Orozco-Rosas, U., Montiel, O., and Sepúlveda, R., “Mobile robot path planning using membrane evolutionary artificial potential
+field,” Applied Soft Computing Journal , 2019, pp. 236–251. https://doi.org/10.1016/j.asoc.2019.01.036.
+[20] Lifen, L., Ruoxin, S., Shuandao, L., and Jiang, W., “Path planning for UA VS based on improved artificial potential field
+method through changing the repulsive potential function,” 2016 IEEE Chinese Guidance, Navigation and Control Conference
+(CGNCC), 2016, pp. 2011–2015. https://doi.org/10.1109/CGNCC.2016.7829099.
+[21] Yingkun, Z., “Flight path planning of agriculture UA V based on improved artificial potential field method,” 2018 Chinese
+Control And Decision Conference (CCDC) , 2018, pp. 1526–1530. https://doi.org/10.1109/CCDC.2018.8407369.
+31
+
+===== PAGE 33 / 35 =====
+[22] Liu, Y ., and Zhao, Y ., “A virtual-waypoint based artificial potential field method for UA V path planning,”2016 IEEE Chinese
+Guidance, Navigation and Control Conference (CGNCC), 2016, pp. 949–953. https://doi.org/10.1109/CGNCC.2016.7828913.
+[23] Honglun, W ., Wentao, L., Y ao, P ., Liang, X., and Chang, L., “Three-dimensional Path Planning for Unmanned Aerial Vehicle
+Based on Interfered Fluid Dynamical System,” Chinese Journal of Aeronautics , Vol. 28, 2014. https://doi.org/10.1016/j.cja.
+2014.12.031.
+[24] Bayat, F., Najafi-Nia, S., and Aliyari, M., “Mobile Robots Path Planning: Electrostatic Potential Field Approach,” Expert
+Systems with Applications, Vol. 100, 2018. https://doi.org/10.1016/j.eswa.2018.01.050.
+[25] Nazarahari, M., Khanmirza, E., and Doostie, S., “Multi-objective multi-robot path planning in continuous environment using an
+enhanced Genetic Algorithm,” Expert Systems with Applications , Vol. 115, 2018. https://doi.org/10.1016/j.eswa.2018.08.008.
+[26] Tsourveloudis, N., Valavanis, K., and Hebert, T., “Autonomous Vehicle Navigation Utilizing Electrostatic Potentional Fields and
+Fuzzy Logic,” Robotics and Automation, IEEE Transactions on, Vol. 17, 2001, pp. 490 – 497. https://doi.org/10.1109/70.954761.
+[27] Li, H., Liu, W ., Y ang, C., Wang, W ., Qie, T., and Xiang, C., “An Optimization-based Path Planning Approach for Autonomous
+Vehicles using dynEFW A-Artificial Potential Field,”IEEE Transactions on Intelligent Vehicles, 2021, pp. 1–1. https://doi.org/
+10.1109/TIV.2021.3123341.
+[28] Li, W ., Y ang, C., Jiang, Y ., Liu, X., and Su, C.- Y ., “Motion Planning for Omnidirectional Wheeled Mobile Robot by Potential
+Field Method,” Journal of Advanced Transportation, Vol. 2017, 2017, pp. 1–11. https://doi.org/10.1155/2017/4961383.
+[29] Hosseini Rostami, S. M., Kumar, A., Wang, J., and Liu, X., “Obstacle avoidance of mobile robots using modified artificial
+potential field algorithm,” EURASIP Journal on Wireless Communications and Networking , Vol. 2019, 2019. https://doi.org/10.
+1186/s13638-019-1396-2.
+[30] Chester, C. R., “Techniques in Partial Differential Equations,” McGraw-Hill, 1970, pp. 72–73.
+[31] Kim, J.-O., and Khosla, P ., “Real-time obstacle avoidance using harmonic potential functions,” IEEE Transactions on Robotics
+and Automation, Vol. 8, No. 3, 1992, pp. 338–349. https://doi.org/10.1109/70.143352.
+[32] Masoud, A. A., “A harmonic potential field approach for joint planning and control of a rigid, separable nonholonomic, mobile
+robot,” Robotics and Autonomous Systems, Vol. 61, No. 6, 2013, pp. 593–615. https://doi.org/https://doi.org/10.1016/j.robot.
+2013.02.007, URL https://www.sciencedirect.com/science/article/pii/S0921889013000432.
+[33] Fahimi, F., “Autonomous robots,” Springer, 2010, pp. 81–127.
+[34] Daily, R., and Bevly, D. M., “Harmonic potential field path planning for high speed vehicles,”2008 American Control Conference,
+2008, pp. 4609–4614. https://doi.org/10.1109/ACC.2008.4587222.
+[35] Garrido, S., and Moreno, L., “Robotic Navigation using Harmonic Functions and Finite Elements.” 2006, pp. 94–103.
+32
+
+===== PAGE 34 / 35 =====
+[36] Liang, X., Honglun, W., Li, D., and Liu, C., “Three-dimensional path planning for unmanned aerial vehicles based on fluid
+flow,” 2014, pp. 1–13. https://doi.org/10.1109/AERO.2014.6836520.
+[37] Pimenta, L. C. A., Pereira, G. A. S., Michael, N., Mesquita, R. C., Bosque, M. M., Chaimowicz, L., and Kumar, V ., “Swarm
+Coordination Based on Smoothed Particle Hydrodynamics Technique,” IEEE Transactions on Robotics, Vol. 29, No. 2, 2013, p.
+383. https://doi.org/10.1109/TRO.2013.2243998.
+[38] Song, Z., Lipinski, D., and Mohseni, K., “Multi-vehicle cooperation and nearly fuel-optimal flock guidance in strong background
+flows,” Ocean Engineering, Vol. 141, 2017, pp. 388–404. https://doi.org/10.1016/j.oceaneng.2017.05.024.
+[39] Lewis, R. I., The surface vorticity method for inviscid ideal fluid flow , Cambridge Engine Technology Series, Cambridge
+University Press, 1991, pp. 3–98.
+[40] Katz, J., and Plotkin, A., Singularity Elements and Influence Coefficients, 2ⁿᵈ ed., Cambridge Aerospace Series, Cambridge
+University Press, 2001, p. 230–261. https://doi.org/10.1017/CBO9780511810329.012.
+[41] Anderson, J. D., “Fundamentals of Aerodynamics,” McGraw-Hill, 2011, pp. 319–325.
+[42] Zhang, Y ., and Valavanis, K. P ., “A 3-D Potential panel method for robot motion planning,”Robotica, Vol. 15, 1997, pp. 421 –
+434. https://doi.org/10.1017/S0263574797000520.
+[43] Velagić, J., Vuković, L., and Ibrahimović, B., “Mobile Robot Motion Framework Based on Enhanced Robust Panel Method,”
+International Journal of Control, Automation and Systems , Vol. 18, No. 5, 2020, pp. 1264–1276. https://doi.org/https:
+//doi.org/10.1007/s12555-019-0009-5.
+[44] Uzol, O., Y avrucuk, I., and Sezer Uzol, N., “Panel-Method-Based Path Planning and Collaborative Target Tracking for Swarming
+Micro Air Vehicles,” Journal of Aircraft - J AIRCRAFT , Vol. 47, 2010, pp. 544–550. https://doi.org/10.2514/1.45469.
+[45] ENAC, “Drone Flight Arena Toulouse Occitanie,” Ecole Nationale de l’ Aviation Civile, Retrieved 19 October 2021, from
+https://www.enac.fr/en/drone-flight-arena-toulouse-occitanie-0, 2021.
+[46] Maxwell, J. C., “On Physical Lines of Force,” Philosophical Magazine Series 4 , Vol. 21, No. 139, 1861, pp. 161–175.
+https://doi.org/10.1080/14786446108643680.
+[47] Bilgin, Z., Bronz, M., and Y avrucuk, I., “Experimental Evaluation of Panel-Method-Based Path Planning for eVTOL in A
+Scaled Urban Environment,” Vertical Flight Society Forum 78, 2022. https://doi.org/10.4050/F-0078-2022-17536.
+[48] Smeur, E., de Croon, G., and Chu, Q., “Cascaded incremental nonlinear dynamic inversion for MA V disturbance rejection,”
+Control Engineering Practice, Vol. 73, 2018, pp. 79–90. https://doi.org/https://doi.org/10.1016/j.conengprac.2018.01.003, URL
+https://www.sciencedirect.com/science/article/pii/S0967066118300030.
+[49] Panerati, J., Zheng, H., Zhou, S., Xu, J., Prorok, A., and Schoellig, A., “Learning to Fly—a Gym Environment with PyBullet
+Physics for Reinforcement Learning of Multi-agent Quadcopter Control,” , 03 2021.
+33
+
+===== PAGE 35 / 35 =====
+[50] Hattenberger, G., Bronz, M., and Gorraz, M., “Using the Paparazzi UA V System for Scientific Research,” 2014. https:
+//doi.org/10.4233/uuid:b38fbdb7-e6bd-440d-93be-f7dd1457be60.
+34

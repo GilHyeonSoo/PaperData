@@ -1,0 +1,13 @@
+scenario_name: S6
+run_count: 30
+wall_time_s: 4179.564653875
+generated_missions_total: 32400
+completed_within_duration_total: 31891
+completed_after_duration_total: 509
+collision_risk_count_total: 28096
+building_collision_count_total: 22306
+aircraft_collision_count_total: 5790
+avg_pad_delay_s_mean: 53.58831759015603
+max_pad_delay_s_max: 1650.3309053969724
+avg_flight_time_s_mean: 133.44259936631795
+models: A,B,C,D,E

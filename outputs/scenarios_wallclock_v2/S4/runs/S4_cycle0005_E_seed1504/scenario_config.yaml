@@ -1,0 +1,22 @@
+description: 대형 저밀도 도시 시나리오
+model: E
+map:
+  width: 5000
+  height: 5000
+  grid_size: 100
+  road_width: 20
+  building_density: 0.3
+vertiports:
+  count: 32
+  pad_occupancy_enabled: true
+aircraft:
+  fleet_size: 200
+  cruise_speed_kmh: 240
+simulation:
+  random_seed: 1504
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60

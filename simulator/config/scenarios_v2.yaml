@@ -1,0 +1,163 @@
+scenario_runner:
+  parallel: true
+  max_workers: 6
+  output_root: outputs/scenarios_v2
+
+wallclock_runner:
+  target_seconds: 3600
+  max_workers: 6
+  output_root: outputs/scenarios_wallclock_v2
+  models: [A, B, C, D, E]
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60
+  seed_start: 1000
+  report_interval_seconds: 60
+
+scenarios:
+  S1:
+    description: 소형 고혼잡 도시 시나리오
+    model: E
+    map:
+      width: 1500
+      height: 1500
+      grid_size: 50
+      road_width: 10
+      building_density: 0.35
+    vertiports:
+      count: 8
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 75
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 101
+      duration: 5400
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60
+
+  S2:
+    description: 중소형 확장 도시 시나리오
+    model: E
+    map:
+      width: 2000
+      height: 2000
+      grid_size: 50
+      road_width: 12
+      building_density: 0.35
+    vertiports:
+      count: 12
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 100
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 102
+      duration: 7200
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60
+
+  S3:
+    description: 중형 고밀도 도시 시나리오
+    model: E
+    map:
+      width: 3000
+      height: 3000
+      grid_size: 75
+      road_width: 15
+      building_density: 0.45
+    vertiports:
+      count: 20
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 150
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 103
+      duration: 7200
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60
+
+  S4:
+    description: 대형 저밀도 도시 시나리오
+    model: E
+    map:
+      width: 5000
+      height: 5000
+      grid_size: 100
+      road_width: 20
+      building_density: 0.30
+    vertiports:
+      count: 32
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 200
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 104
+      duration: 7200
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60
+
+  S5:
+    description: 대형 일반 밀도 도시 시나리오
+    model: E
+    map:
+      width: 6000
+      height: 6000
+      grid_size: 100
+      road_width: 20
+      building_density: 0.35
+    vertiports:
+      count: 40
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 300
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 105
+      duration: 7200
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60
+
+  S6:
+    description: 대형 고밀도 스트레스 시나리오
+    model: E
+    map:
+      width: 6000
+      height: 6000
+      grid_size: 100
+      road_width: 20
+      building_density: 0.45
+    vertiports:
+      count: 40
+      pad_occupancy_enabled: true
+    aircraft:
+      fleet_size: 360
+      cruise_speed_kmh: 240
+    simulation:
+      random_seed: 106
+      duration: 7200
+      mission_interval: 30
+      time_step: 10
+      conflict_time_step: 20
+      max_departure_delay: 300
+      delay_step: 60

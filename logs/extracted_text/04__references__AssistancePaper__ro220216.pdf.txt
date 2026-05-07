@@ -1,0 +1,1901 @@
+SOURCE: references/AssistancePaper/ro220216.pdf
+PAGES: 40
+
+
+
+===== PAGE 1 / 40 =====
+HAL Id: hal-04665959
+https://hal.science/hal-04665959v1
+Submitted on 31 Jul 2024
+HAL is a multi-disciplinary open access archive
+for the deposit and dissemination of scientific re-
+search documents, whether they are published or not.
+The documents may come from teaching and research
+institutions in France or abroad, or from public or pri-
+vate research centers.
+L’archive ouverte pluridisciplinaire HAL, est des-
+tinée au dépôt et à la diffusion de documents scien-
+tifiques de niveau recherche, publiés ou non, émanant
+des établissements d’enseignement et de recherche
+français ou étrangers, des laboratoires publics ou
+privés.
+HAL Authorization
+UA V path planning techniques: a survey
+Soheila Ghambari, Mahmoud Golabi, Laetitia Jourdan, Julien Lepagnot, Lhassane
+Idoumghar
+To cite this version:
+Soheila Ghambari, Mahmoud Golabi, Laetitia Jourdan, Julien Lepagnot, Lhassane Idoumghar. UA V path plan-
+ning techniques: a survey. RAIRO - Operations Research, 2024, 58 (4), pp.2951-2989. ⟨10.1051/ro/2024073⟩.
+⟨hal-04665959⟩
+
+===== PAGE 2 / 40 =====
+RAIRO-Oper. Res. 58 (2024) 2951–2989 RAIRO Operations Research
+https://doi.org/10.1051/ro/2024073 www.rairo-ro.org
+UAV PATH PLANNING TECHNIQUES: A SURVEY
+Soheila Ghambari 1*
+ , Mahmoud Golabi 1
+ , Laetitia Jourdan 2
+ ,
+Julien Lepagnot1
+ and Lhassane Idoumghar 1
+Abstract. Unmanned Aerial Vehicles (UAVs) are ideally suited for many real-world applications
+ranging from scientific to commercial, industrial, and military fields. Enhancing the efficiency of UAV-
+based missions through optimization techniques is of paramount significance. In this regard, the path
+planning problem that refers to finding the best collision-free path between the start point and the
+destination by addressing temporal, physical, and geometric constraints is a key issue. In this paper,
+a review of recent path planning methods from different perspectives with a clear and comprehensive
+categorization is presented. This study provides a general taxonomy categorizing the existing works
+into classical approaches, soft-computing techniques, and hybrid methods. Here, a detailed analysis of
+the recent techniques as well as their advantages and limitations is offered. Additionally, it provides an
+overview of environment modeling methods, path structures, optimality criteria, completeness criteria,
+and current UAV simulators.
+Mathematics Subject Classification. 52B05, 05C38, 05C85.
+Received April 27, 2022. Accepted March 24, 2024.
+1. Introduction
+UAVs, commonly known as drones, are referred to as aerial vehicles without a human pilot on board. They uti-
+lize aerodynamic forces to produce lift for the vehicle and possess the capability to operate either autonomously
+or under remote piloting control. UAVs can be expendable or recoverable and can carry a lethal or nonlethal
+payload [43]. UAVs, which were originally employed for military purposes, have now reached a greatly expanded
+role in many ﬁelds of aviation owing to their ﬂexibility and cost-eﬃciency in comparison with conventional
+aircraft [209], as well as their potential in hazardous scenarios [218]. They predominantly work in uncertain
+environments where it is vital to keep their routes away from threats, barriers, and restricted areas. Hence, a
+noticeable trend in both the market and among UAV system designers is leaning towards increased autonomy
+[145]. Systems advancing in intelligence, diversity, and collaboration, operating independently of a human pilot
+and possessing the ability to self-plan missions, signiﬁcantly contribute to their heightened eﬀectiveness and
+value. In such scenarios, the main task of a UAV, as an autonomous vehicle, is to move from one location
+to another one while meeting deﬁned criteria such as minimum path length, minimum ﬂight time, minimum
+fuel consumption, and minimum danger exposure. Aditional aspects, such as lowering operational expenses and
+Keywords. UAVs, path planning techniques, offline and online, classical methods, soft-computing approaches.
+1 University of Haute-Alsace, IRIMAS UR 7499, F-68100 Mulhouse, France.
+2 Universitiy of Lille, CNRS, Centrale Lille, UMR 9189 CRIStAL, F-59000 Lille, France.
+*Corresponding author: soheila.ghambari@uha.fr
+c○ The authors. Published by EDP Sciences, ROADEF, SMAI 2024
+This is an Open Access article distributed under the terms of the Creative Commons Attribution License ( https://creativecommons.org/licenses/by/4.0),
+which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.
+
+===== PAGE 3 / 40 =====
+2952 S. GHAMBARI ET AL .
+mitigating the likelihood of detection can be integrated into the rudimentary objectives. Planning a suitable
+safe trajectory, known as the UAV path planning problem, is inevitable to make this mission possible.
+Typically, the path planning problem is scrutinized from two points of view: robotics [100], and dynamics &
+control [308]. The computational cost is a primary focus in robotics, while the dynamics & control perspective
+emphasizes the dynamic behavior of trajectories in three-dimensional (3D) space. UAV Path Planning, however,
+is signiﬁcantly diﬀerent from most traditionally deﬁned mobile and manipulator robots [113]. To give full play to
+the UAVs’ maneuverability, the optimal trajectories should take non-trivial dynamics constraints into account
+while achieving self-control ﬂight and computational eﬃciency. The problem has a non-linear nature where its
+complexity exponentially increases with its dimensionality [34].
+Up to now, lots of studies carried out in-depth to deal with the UAV path planning problem. The current
+literature can be classiﬁed into classical or exact, soft-computing, and hybrid methods. This paper presents a
+general taxonomy of UAV path planning approaches. Each technique has its advantages over others in certain
+aspects. Early works, including classical methods such as graph search algorithms, are usually considered as
+time-eﬃcient methods. In these approaches, a local path is generated based on the current information that
+spans the area of operation. Due to this assumption, the considered path is partially planned and cannot be
+considered a global optimum. Hence, soft-computing techniques are put forward as an alternative method.
+They have no assumption about the problem that is being optimized and adopt diﬀerent learning strategies
+to perform an eﬀective search toward the global path. One can use soft-computing techniques in conjunction
+with pre-processed and stored cost maps as a means to reduce computational time. Thus, the versatility of
+soft-computing approaches has rendered them an appealing option for tackling the intricacies of the UAV
+path planning problem [29, 235]. Indeed, there has been increasing attention placed on the application of soft-
+computing techniques in recent years [340]. In practical scenarios, they might not always be the most suitable
+option when computational resources are restricted. These challenges have inspired researchers to introduce
+hybrid (multi-fusion) strategies as a solution to address the problem.
+There exist several helpful surveys covering UAV path planning methods [30,76,228,268,343] (see Tabs. 1 and 2
+for a brief overview). For instance, in [113], a survey has been done by oﬀering a valuable survey of current
+algorithms from the perspective of robotics, control ﬁelds, and autonomous UAV guidance approaches. This
+survey focused on classical algorithms and presented a general aspect of the particular problems arising with
+UAVs. In [69], authors provided a survey of motion planning techniques that deal with the presence of uncertainty
+by emphasizing their application to UAVs. In another study, Triharminto et al. [289] reviewed three kinds
+of algorithms, including grid-based, evolutionary-based, and curve-based algorithms for dynamic UAV path
+planning problems. In the same direction, Yang et al. [314] provided a review of the UAV path planning problem
+by classifying the existing methods into ﬁve categories: sampling-based, node-based, mathematical-based, bio-
+inspired based, and multi-fusion based algorithms. Another literature review of deep learning methods for UAVs,
+including shortest path, motion, navigation, or manipulation planning has been presented in [45]. In another
+research, Radmanesh et al. [233] provided a comparative study for several exact and heuristic algorithms. Very
+recently, Zhao et al. [340] put forward a summary of research on UAV path planning focusing on computational
+intelligence (CI) methods with three diﬀerent points of view: characteristic of CI algorithms, types of time
+domain, and types of environment. Besides, Choi et al. [63] reviewed the state-of-the-art machine learning
+techniques that have been applied to UAVs for autonomous ﬂight. In their work, a review of control strategies
+including parameter tuning, adaptive control for an uncertain environment, real-time path planning, and object
+recognition is considered. Very recently, Aggarwal and Kumar [4] considered the various UAV path planning
+techniques. They classiﬁed the existing methods into three broad categories including representative techniques,
+cooperative techniques, and non-cooperative techniques. In this regard, they discussed and analyzed the coverage
+and connectivity of the UAVs’ network communication.
+In the same direction, this study provides a more comprehensive picture of available approaches with an
+organized structure. A general taxonomy is introduced to categorize the existing works into classical or exact
+methods, soft-computing techniques, and hybrid (multi-fusion) approaches. The paper reviews available studies
+by considering the problem deﬁnition, the environment representation, the solution method, the type of path
+
+===== PAGE 4 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2953
+Table 1. The list of existing surveys in the literature.
+Subject Year Proposed taxonomy of techniques
+Motion Planning Literature in the Presence of Uncertainty [69] 2012– Uncertainty in Vehicle Dynamic
+– Uncertainty in Environment Knowledge
+– Uncertainty in pose
+– Reactive planning
+Dynamic Path Planning for Intercepting of a Moving Target [289] 2013– Grid-based Algorithm
+– Evolutionary Algorithm
+– The Curve Algorithm
+On the performance comparison of multi-objective evolutionary
+UAV path planners [30]
+2013 Evolutionary Heuristics
+– Genetic Algorithm
+– Particle Swarm Optimization
+– Differential Evolution Algorithm
+3D Path Planning [314] 2014 – Sampling-based Algorithms
+– Node-based Algorithms
+– Bio-inspired Algorithms
+– Multi-fusion Algorithms
+A Review of Deep Learning Methods and Applications for
+Unmanned Aerial Vehicles [45]
+2017 – Deep Learning for Planning and Situational Awareness
+Survey on computational-intelligence-based UAV path planning
+[340]
+2018 Classification from the aspect of algorithms
+– Genetic Algorithm
+– Particle Swarm Optimization
+– Ant Colony Optimization
+– Artificial Neural Network
+– Fuzzy Logic
+– Learning-based methods
+Classification from the aspect of the time domain
+– Offline path planning
+– Online path planning
+Classification from the aspect of the space domain
+– Path planning in 2D environments
+– Path planning in 3D environments
+Comparative Study of Path-Planning and Obstacle Avoidance
+Algorithms for UAVs [233]
+2018 – Potential Field and Vector force field
+– Floydandndash; Warshal
+– Genetic Algorithm
+– Greedy algorithm and Multi-step Look Ahead Policy
+– Aandlowast algorithm
+– Dynamic Programming
+– Approximate Reinforcement Learning
+– Mixed Integer Linear Programming
+Path and view planning for UAVs [343] 2019 – Planning for scene reconstruction
+– Environment exploration with obstacle avoidance
+– Aerial cinematography
+3D Flight Path Planning for UAVs [268] 2019 Path Planning
+– Graph-based Algorithms
+– Heuristic Search Algorithms
+– Field-based Algorithms
+– Intelligent Optimization Algorithms
+Energy Efficient Path Planning Algorithms for UAVs [76] 2019 – Combinatorial Path Planning
+– Sampling-based Path Planning
+– Biological-based Path Planning
+
+===== PAGE 5 / 40 =====
+2954 S. GHAMBARI ET AL .
+Table 2. The list of existing surveys in the literature (continue...).
+Subject Year Proposed taxonomy of techniques
+UAVs using machine learning for autonomous flight [63] 2019 Machine Learning Applied to UAVs
+– Control Strategies (Parameter tuning/ Adaptive control based
+on neural networks/ Real-time path planning and navigation)
+– Object recognition (Collision avoidance/ Object recognition on
+task)
+UAV motion planning [228] 2020 Path Finding
+– Sampling-based methods
+– Searching-based methods
+Trajectory Optimization
+– Hard-constrained methods
+– Soft-constrained planning
+Path planning techniques for unmanned aerial vehicles: A review,
+solutions, and challenges [4]
+2020 Representation techniques
+– Sampling-based techniques
+– Probabilistic roadmaps
+– Rapid-exploring random trees
+– Voronoi diagram
+– A* algorithm
+– Artificial intelligence techniques
+Cooperative techniques
+– Mathematical models
+– Bio-inspired models
+– Machine learning models
+– Multi-objective optimization models
+Non-cooperative techniques
+Coverage and connectivity
+Security in UAVs path planning
+Addressing disasters in smart cities through UAVs path planning
+and 5G communications: A systematic review [224]
+2021 Classifying path planning methods into:
+– Conventional Methods
+– Learning-based Algorithms
+– Cell-based Algorithms
+– Model-based Techniques
+A review of artificial intelligence applied to path planning in UAV
+swarms [223]
+2022 AI algorithms in UAV swarms for Path Planning problems
+– Reinforcement Learning
+– Evolutive Computing
+– Swarm Intelligence
+– Graph Neural Networks
+UAV Path Planning Using Optimization Approaches: A Survey [8] 2022 An overview of UAV path planning approaches
+– Classical methods
+– Heuristic
+– Metaheuristics
+– Machine Learning
+– Hybrid Methods
+Path-Planning for Unmanned Aerial Vehicles with Environment
+Complexity Considerations: A Survey [141]
+2023 Classification of UAV path planning approaches
+– Sampling-based Methods
+– Node-based methods
+– mathematical modeling
+– Bio-inspired techniques
+– reinforcement Learning-based methods
+– Multi-fusion Methods
+Path planning optimization in unmanned aerial vehicles using meta-
+heuristic algorithms: a systematic review [310]
+2023 Classifying metaheuristics into:
+– Evolutionary Algorithms
+– Physic-based Algorithms
+– Swarm-based Algorithms
+– Hybrid Metaheuristics
+
+===== PAGE 6 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2955
+planning (oﬄine/online), the dimensionality of the problem, and diﬀerent criteria for evaluation. In addition,
+we had a thorough overview of the available simulators for the UAV path planning problem.
+In this survey paper, we conducted a systematic literature review following a well-deﬁned process to identify
+the most relevant articles within the scope of this research, aligning with recent studies in the ﬁeld. Initially,
+a selection of widely used search engines such as Google Scholar, Web of Science, Scopus, and IEEE Xplore
+was narrowed down to gather literature from reputable online resources. Semantic searches utilizing pertinent
+keywords and phrases were employed to retrieve articles closely related to the research questions outlined in
+this study. Subsequently, a meticulous screening process was undertaken to ﬁlter the retrieved articles, reﬁning
+the number of publications and shortlisting those that exhibited the highest quality match with the present
+research. To further enhance the search results, a set of assessment criteria was introduced. The assessment
+involved a manual evaluation of each article’s abstract to ascertain its relevance to the subject matter. Articles
+lacking relevant keywords in their abstracts or written content were excluded, while those deemed pertinent
+were thoroughly analyzed to assess their suitability for this study. Only papers that perfectly aligned with the
+review’s scope were ultimately retained, culminating in a comprehensive evaluation of the latest trends and
+state-of-the-art approaches in UAV path planning studies. The gathered studies encompass a wide range of
+sources, including SpringerLink, ScienceDirect, IEEE digital library, ACM, Google Scholar, Taylor & Francis,
+Wiley, and arXiv. Additionally, the review examined previous literature, surveys, and cross-references to identify
+other works that demonstrated promising solutions to the path planning problem.
+The remainder of this paper is organized as follows. Section 2 starts by brieﬂy explaining the historical
+background of UAVs, classiﬁcation, and diﬀerent applications. In Section 3, a general review of the UAV path
+planning problem is presented by elaborating on the deﬁnition, diﬀerent types of path planning, description of the
+problem space as well as the optimality and completeness criteria. Section 4 explains existing UAV path planning
+approaches with details by providing diagrams and pseudo-codes while mentioning the research example for each
+method. Section 5 discusses the time complexity of UAV path planning algorithms. In Section 6, the available
+resources including the datasets and developed simulators are introduced. In Section 7 the advantages and
+drawbacks of each path planning category are discussed. Section 8 outlines the unresolved issues in autonomous
+UAVs as potential avenues for future research. The conclusion of this study is presented in Section 9.
+2. Background, classification, and application of UA Vs
+2.1. A short history of UAVs
+In the early 1990s, the term UAV came into general use to describe robotic aircraft. From then until now,
+multiple terms are currently in service based on UAVs application. The U.S. Federal Aviation Administra-
+tion deﬁnes any unmanned ﬂying craft as a UAV regardless of size [202, 293]. The most common terms are
+“Unmanned Aerial Vehicle”, “Unmanned Air Vehicle”, “Unmanned Aircraft Vehicle”, “Unmanned Aerospace
+Vehicle”, “Uninhabited Aircraft Vehicle”, “Unmanned Autonomous Vehicle”, and “Upper Atmosphere Vehicle”.
+The ﬁrst unmanned ﬂight was done in 1780 by the Montgolﬁer brothers in France. In 1840, the ﬁrst military use
+of unmanned balloons equipped with bombs took place in Austria during an attack on Venice. The 90-second
+ﬂight of steam-powered UAVs along the Potomac River near Washington, D.C. in 1896 was a milestone in
+the application of camera-equipped UAVs in surveillance. The Kettering Bug ﬁrst ﬂew in 1918 and the Queen
+Bee developed in the 1930s are among the ﬁrst generations of radio-controlled unmanned aircraft applied in
+military operations. Advanced military reconnaissance and surveillance operations have led to the development
+of modern remote-controlled UAVs during 1980–2000. Since 2003, commercial UAVs gain popularity in search
+and rescue operations as well as delivery, ﬁlm-making, construction, and real estate industries. The Amazon
+Prime Air project was a new milestone in commercial drones. Despite the launch of the Amazon Prime Air
+project in 2013, the formidable challenges, including the construction of secure delivery infrastructure and man-
+aging numerous drones operating simultaneously over vast urban areas, hindered the complete realization of this
+revolutionary initiative. Nevertheless, recent advancements in sense-and-avoid technologies, utilized to detect
+stationary and moving impediments, have encouraged Amazon to inaugurate its groundbreaking UAV-driven
+
+===== PAGE 7 / 40 =====
+2956 S. GHAMBARI ET AL .
+Figure 1. Major components of a UAV.
+delivery network in Lockeford, California, starting from late 2022 [17]. The advent of novel technologies in UAVs
+has facilitated their utilization in a myriad of real-life civil operations, thereby expanding the horizon of possibil-
+ities in this domain. These include applications in agriculture, where UAVs equipped with multispectral cameras
+are used to survey and monitor crops [234, 296]. In search and rescue operations, UAVs can quickly and safely
+access diﬃcult-to-reach areas, as applied in 2013, during the California Rim ﬁre [66]. Additionally, UAVs can
+be used in disaster response [237] and even in the democratic process, as demonstrated in the case of Ghana’s
+2020 elections, where UAVs were used to distribute masks to polling stations [345]. Libya, Nagorno-Karabakh,
+Syria, and Ukraine wars indicate that the applications of UAVs are not limited to civil operations. The use
+of UAVs in military operations has drastically changed the way that modern warfare is conducted, attacking
+enemy targets or providing valuable intelligence and reconnaissance capabilities without putting human lives at
+risk. The evolution of UAVs can be traced through [79,189,202,252].
+2.2. Different types and key elements of UAVs
+UAVs exhibit diverse shapes and conﬁgurations tailored to their speciﬁc purposes. Depending on the ﬂight
+missions, the type and size of the installed equipment of the UAVs are diﬀerent. In this study, we consider four
+types of UAVs. The ﬁrst model is “ Multi-Rotor” drones that have multiple propellers for ﬂight. They are the
+most common UAV types generally utilized for video surveillance and photography applications. The multi-rotor
+drones are also categorized into six classes based on the number of propellers. These categories include “Bicopter”
+with two propellers, “Tricopter” with three propellers, “Quadcopter” with four propellers, “Pentacopter” with
+ﬁve propellers, “Hexacopter” with six propellers, and “Octocopter” with eight propellers. The second type is
+“Fixed-Wing” drones with wings instead of propellers, like airplanes. “Single-Rotor” drones are the third type of
+UAVs ﬁtted with a singular rotor and a compact tail for directional adjustments. Single-Rotor drones exhibit a
+resemblance that aligns more closely with helicopters and in comparison with Fixed-Wing drones, they are very
+energy eﬃcient. The last type is “ Fixed-Wing Hybrid VTOL ” drones. Here, VTOL represents Vertical Take-Oﬀ
+and Landing. These UAVs use propeller(s) to takeoﬀ and wings for gliding [206,293].
+Here, we will explain the main components of the most popular structure of a “Quadcopter” model (see
+Fig. 1)1:
+– Propellers: propellers, or wings depending on the availability, are the ﬁrst element of a Quadcopter to provide
+direction and thrust. Propellers are classiﬁed into standard and pusher categories. Standard propellers are
+located on the front side of the Quadcopter to direct the drone, while pusher propellers are on the backside
+to oﬀer thrust in both forward and backward directions.
+1https://cfdflowengineering.com/working-principle-and-components-of-drone/ .
+
+===== PAGE 8 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2957
+– Flight Controller: the ﬂight controller acts as the brain of Quadcopters. It possesses the capability to regulate
+the power supply to both the electronic speed controller and motors, while also detecting orientation changes.
+– Electronic Speed Controller: the electronic speed controller regulates the speed of the motor. It can provide
+dynamic braking and reversing options.
+– Motors: DC motors are utilized to maintain the Quadcopter airborne for the required duration. A quadcopter
+entails high torque motors that help to change the speed of the propellers.
+– FPV Transmitter: the transmitter sends signals from the controller to generate commands of direction and
+thrust.
+– Control Receiver: the control receiver captures signals from the transmitter and forwards them to the ﬂight
+controller. Besides, the Quadcopter features a GPS module delivering navigation data such as longitude,
+latitude, and elevation to the controller. This module aids the controller in identifying previously traversed
+routes and ensures a safe return to the starting point in the event of a lost connection.
+– Antenna: the antenna is a critical component of the UAV’s communication system, allowing it to send and
+receive signals to and from ground stations or other aircraft. It is responsible for transmitting data such as
+telemetry, commands, and video. The performance of the antenna is essential for maintaining a reliable and
+stable connection between the UAV and the operator.
+– Battery: the next component is a rechargeable battery that provides the power for the UAV.
+– Power Distribution Panel (PDP): PDP is responsible for taking the input power from the battery and
+distributing it to various UAV components such as the ﬂight controller, motors, and other electrical systems.
+It also provides protection against overcurrent and short circuits, ensuring the safe operation of the UAV.
+– Camera: the Camera is generally used for monitoring the environment. It can be inbuilt or detachable.
+– Landing Gear: the Landing Gear is used for big drones to avert any potential damage upon landing. The
+requirements of landing gear vary in terms of the drone’s functionality. For instance, delivery drones carrying
+parcels need expansive landing gear to provide suﬃcient space for holding items.
+– Chassis: the chassis serves as the primary structure of the Quadcopter, accommodating all other constituents.
+When the UAV initiates the take-oﬀ command through the controller, it communicates with the receiver,
+which then transfers the command to the ﬂight controller board. This board, in turn, activates the propellers,
+resulting in the generation of lift-oﬀ thrust that allows the UAV to become airborne. The propellers serve a dual
+function of providing both direction and speed to the UAV. To enhance reliability, UAVs employ a sophisticated
+multi-propeller system, enabling them to mitigate failures. The propellers operate collectively, so even if one
+propeller malfunctions, the drone can rely on the remaining propellers to ensure stability, navigate, and land
+safely. Furthermore, the GPS module plays a vital role by assisting the drone in identifying its ﬂight path and
+obtaining real-time data such as location, speed, and altitude.
+2.3. Classification of UAVs
+Generally, UAVs vary in their conﬁgurations based on the platform and the type of mission. Several UAV
+classiﬁcations are presented in the literature based on diﬀerent distinguishing parameters. Hassanalian et al.
+[121] presented a general UAV classiﬁcation in terms of the performance characteristics such as range, maximum
+altitude, aircraft weight, wingspan, wing loading, speed, endurance, cost design, and size. These are the main
+design parameters that distinguish diﬀerent types of UAVs and provide beneﬁcial classiﬁcation systems. Based
+on the engine type, they classiﬁed UAVs into fuel engines and electric motors. UAVs are also categorized based
+on their weight, with classiﬁcations including Micro, Light, Medium, Heavy, and Super Heavy classes, spanning
+a range from under 5 kilograms to over 2 metric tons. Based on the ﬂight range, UAVs can be classiﬁed into close,
+short, medium, and large endurance categories, spanning a range from under 10 to 1500 kilometers. According
+to Hassanalian et al. [121], UAVs are categorized into VTOL (Vertical Takeoﬀ and Landing), HTOL (Horizontal
+Takeoﬀ and Landing), and Hybrid classes based on their landing and takeoﬀ capabilities. VTOL UAVs are able
+to take oﬀ and land vertically, without requiring a runway or other external support. HTOL UAVs, on the
+other hand, require a runway or other external support to take oﬀ and land. They typically have longer ﬂight
+
+===== PAGE 9 / 40 =====
+2958 S. GHAMBARI ET AL .
+ranges and can carry larger payloads than VTOL UAVs, but are less maneuverable and more limited in their
+operational capabilities. Hybrid drones, including tilt-rotor, tilt-wing, tilt-body, and ducted fan UAVs combine
+the capability of both VTOL and HTOL types. Tilt-rotor UAVs undergo a transition from vertical to cruise
+ﬂight by tilting the rotors forward for 90 ∘. In tilt-wing UAVs, the entire wing is adjusted from a 0 ∘ angle to
+90∘, enabling a shift in ﬂight modes from horizontal to vertical. Free-wing tilt-body UAVs possess a fuselage
+that serves as a lifting body and a wing that can pivot freely in the pitch axis. The central lifting body and the
+left/right wing pair are both free to rotate about the spanwise shaft, independently of the relative wind and of
+one another. Ducted fan UAVs refer to a type wherein the propulsive system, also known as the “fan”, is enclosed
+within a duct. This design allows for eﬃcient and eﬀective airﬂow management, contributing to the UAV’s overall
+performance. In some cases, UAVs are grouped according to their functionality such as target and decoy for
+providing ground and aerial gunnery targets; reconnaissance for providing battleﬁeld intelligence; combat for
+providing attack capability in high-risk missions; research and development for improving UAVs technologies;
+and civil and commercial UAVs that are used in agriculture, aerial photography, logistics, and data collection
+[102, 249]. In the taxonomy of UAVs based on their practical applications, it is crucial to acknowledge that
+diverse UAV classes may be utilized to address a particular application. Such a nuanced understanding of UAV
+classiﬁcation ensures that the most suitable and eﬀective platform is selected for the desired operation. It is
+worth mentioning that an overview of diﬀerent kinds of UAVs categorized based on size, endurance, range,
+conﬁguration, wing loading, and engine type is provided with a detailed description in [19,185,267,294].
+2.4. Application of UAVs
+UAVs were initially developed for military operations, and have been utilized in various conﬂicts, including
+Libya, Nagorno-Karabakh, Syria, and Ukraine [42]. However, the multifarious capabilities of these unmanned
+aerial platforms soon became evident, extending far beyond military applications. For instance, NASA’s well-
+known X-37B drone was used in several space search missions [108]. As technology evolved, UAVs became
+increasingly accessible, and their potential in civil applications began to emerge. Advances in camera and sensor
+technology, improvements in battery life and ﬂight control systems, and developments in artiﬁcial intelligence
+and machine learning algorithms opened up new possibilities for UAVs to be used in a variety of practical
+applications. One application of UAVs is in the delivery industry which is a prominent industry experiencing
+signiﬁcant growth at present. The concept of delivery drones entered the mainstream with Amazon Prime Air
+[191]. In 2019, Google Wing, the drone company owned by Google’s parent company Alphabet, achieved two
+milestones: launching the ﬁrst public delivery by drone service in the suburbs of Canberra and becoming the ﬁrst
+company to receive Federal Aviation Administration (FAA) approval for drone delivery to customers in Virginia,
+United States [243]. UAVs are also used in the agriculture sector to spray water and pesticides or to do mapping
+or video surveillance in expansive landscapes. To provide an illustration, back in October 2017, a team of Chinese
+researchers employed cutting-edge UAV RGB imagery technology to create a highly precise weed cover map
+of the rice ﬁelds located in the southern reaches of China [129]. The UAVS’ maneuverability in hard-to-access
+locations makes them a useful means for search and rescue operations. This was exempliﬁed on a dark and rainy
+night on November 2021 near Leicestershire, United Kingdom, when a thermal UAV located a missing woman
+within seconds of takeoﬀ, swiftly leading to her safe rescue [153]. Several successful case studies of the application
+of UAVs in humanitarian operations including search and rescue, relief distribution, and damage assessment
+are collected in [96]. UAVs can also be used in construction, as Southwestern Florida Cougar Companies apply
+LiDAR surveying equipment to provide more detailed topographic surveys [195]. The other usage of UAVs is
+for internet service providers. Facebook Aquila and Google Loon were among the ﬁrst projects working on the
+concept of some huge UAVs capable of sending signals to remote destinations, enabling direct access to the
+internet [4,121]. Loon announced it is shutting down, citing the lack of a “long-term, sustainable business” [16].
+The Aquila project was also halted due to technical challenges and changing priorities [22]. Although Aquila
+and Loon projects have come to an end, Airbus continues to develop its solar-powered aircraft, Zephyr, which
+aims to provide internet connectivity to remote areas for extended periods of time [7]. Generally, UAVs are
+equipped with various sensors and cameras for surveillance and reconnaissance missions in both outdoor and
+
+===== PAGE 10 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2959
+indoor environments. In this regard, the applications of UAVs can be categorized based on the type of missions
+(military/civil) and the type of ﬂight zones (outdoor/indoor) in airspace environments.
+3. UA V path planning problem
+Optimizing UAV-based operations from diﬀerent perspectives is thoroughly studied in the literature. The
+optimization problems in this area could be classiﬁed as vehicle routing problems to determine the ﬂying routes,
+path planning problems to determine the optimal path to reach the destination, and location problems for
+ﬁnding launching and/or refueling stations.
+3.1. Problem definition and different types of path planning
+Nowadays, with the proliferation of applications of UAVs, autonomous navigation is more signiﬁcant, of
+which the key component is path planning. UAV path planning, referred to as motion planning, is a branch of
+classical path-ﬁnding that has been extensively researched in the ﬁeld of robotics [299]. However, two domain-
+speciﬁc challenges are covered by UAV path planners that may not be encountered in the robotics domain.
+First, UAVs work in a 3D space as they can change their altitude level during the ﬂight. In contrast, motion
+planning for robots is usually considered in a two-dimensional (2D) space [113, 116, 137, 247]. This heightened
+degree of freedom greatly expands the range of possible missions. Secondly, a UAV ( e.g., ﬁxed-wing UAV)
+lacks the capability to hover and must maintain a consistently high cruising speed. This imposes more intricate
+constraints on the path planning problem. In contrast, motion planning for robots remains unaﬀected by this
+demand, as robots can decelerate and come to a complete stop as needed. In an abstract term, the UAV path
+planning problem can be considered as an optimization problem aimed at generating a safe space path between
+an initial location and the desired destination under speciﬁc constraint conditions to carry out a speciﬁc task
+[116]. Along its trajectory, the UAV can navigate through certain regions while actively avoiding areas that
+might contain obstacles, radars, prohibited zones, and so on.
+As an application aspect of the UAV path planning problem, one can refer to the following groups of path
+planning problems. The ﬁrst group is informative path planning (IPP) problem which plans paths for the robots
+to maximize the utility of data collection [193,219]. In fact, paths need to be planned such that the information
+gathered about an unknown environment while satisfying the given budget constraint is maximized. As the
+second group, Coverage path planning (CPP) problem is to determine a path that passes through all points of
+an area or volume of interest while avoiding obstacles [140,197,295]. Cooperative path planning constitutes the
+third category, involving the utilization of path planning algorithms to generate a coordinated mission [11,301].
+An example of such a mission involves a cluster of UAVs departing from a base and synchronously arriving
+at a designated rendezvous point. These UAVs have the capability to execute tasks during their journey, such
+as conducting area searches and detecting objects along their route. In the literature, it is also addressed the
+reactive path planning. In fact, path planning methods need to be reactive and adaptive regarding life situations,
+traﬃc, and obstacle crossing. It is similar to saying we have an online path planning [124,181].
+Generally, UAVs can ﬂy in known, unknown, or partially known environments. Hence, the literature has delved
+into a range of perspectives on issues in UAV path planning problems, categorizing them into oﬄine/global,
+online/local, and cooperative path planning challenges [262,290,319,340]. In oﬄine path planning, the path will
+be scheduled prior to the commencement of the ﬂight, relying on either a pre-existing environmental map or the
+current and historical perceptual data within the search space. This approach is frequently inadequate for prompt
+responses, particularly in urban settings where the primary challenge lies in dealing with unidentiﬁed moving
+obstacles – an issue prevalent in real-world applications. In online path planning, elements in the environment
+(e.g., obstacles or adversaries) are moving, and there is generally a signiﬁcant level of uncertainty about the
+environment. Hence, online path planning strategies explore unknown regions using laser range ﬁnders, onboard
+cameras, or sensors to reach a high-resolution intermediate route limited to a segment of the overall path. Based
+on the reviewed literature, it can be deducted that although online path planners prove eﬀective in unseen
+environments, they still exhibit ineﬃciency when dealing with distant targets or highly clustered spaces. As
+
+===== PAGE 11 / 40 =====
+2960 S. GHAMBARI ET AL .
+a solution, a combined approach is proposed, wherein oﬄine path planners are utilized to establish a global
+path towards a speciﬁc destination, whilst online path planners guarantee the tracking of the global path by
+accounting for moving obstacles [204, 290]. If a mission is too complex to be accomplished by a single UAV, a
+team of UAVs is employed, and thereby cooperative path planning is studied [315].
+For path planning, the dimension of the environment is another perspective that could raise a new classiﬁ-
+cation as follows: (a) two-dimensional (longitude and latitude), (b) three-dimensional (longitude, latitude, and
+altitude), (c) four-dimensional (three spatial dimensions and the planning time) [65], and (d) ﬁve-dimensional
+(three spatial dimensions, the path planning time, and time horizon) [199].
+3.2. Description of problem space
+Modeling the environment and obstacles are the key elements of the UAV path planning problem. There
+are several terminologies to describe the problem space [75, 131, 170, 211] that could be brieﬂy mentioned as
+follows. The UAV, as an aerial robot, ﬂies in a 3D world space. The world space can be represented based on
+(i) “Voronoi diagram” and “Visibility graph” as the earliest and well-known variants of the roadmap method in
+which the free space is retracted, reduced to, or mapped onto a network of one-dimensional lines [169,187] (see
+Figs. 2a and 4); (ii) cell decomposition that decomposes the free space into smaller convex polygons or regions
+called cells, which are then connected by a graph to depicts the adjacency associations between cells [20, 158]
+(Fig. 5); (iii) potential ﬁeld which is based on the idea of assigning a potential function to the free space to
+simulate the UAV as a particle reacting to attractive and repulsive forces [154] (Fig. 2d) 2; (iv) the occupancy
+grid map which is composed of equal-size cells, where each cell is represented by a unique index and can be free
+or occupied [74, 88] (Fig. 2e); (v) and ﬁnally 3D map representation techniques ( e.g., point clouds [101], voxel
+grids [292], surface maps [342]). These representation methods should be selected properly to handle complex
+and cluttered spaces, such as bridges, buildings (convex, and/or concave), etc. [316]. The world space often
+contains obstacles space comprising static or dynamic obstacles. The way used to model obstacles will aﬀect
+the search algorithms and the determined route. Hence, the reasonable modeling approach can streamline the
+intricacies of the problem, especially for urban environments where the spaces are not always ﬂat and include
+buildings, mountains, other vehicles, radar areas, and so on. Therefore, the obstacles can be supposed to be any
+geometrical ﬁgures in the form of cubes, ﬂoating balls, and other simple models [320]. In order to model a real
+environment, the parameterization of the obstacle set deﬁned by the geometric centers of the physical obstacles
+will be a key factor. In fact, in the real environment, obtaining the accurate coordinates of the geometric centers
+of obstacles is typically challenging to estimate. In UAV path planning, obstacle modeling necessitates the
+inclusion of additional buﬀer space to mitigate the impact of measuring errors during the planning process.
+The UAV in the world space can be deﬁned by a vector of twelve variables including three position coordinates
+(3D), three velocity coordinates, three orientation angles (roll, yaw, and pitch), and three orientation rate angles
+[52,113]. This vector is called the UAV conﬁguration space. In the majority of studies, a vector of three position
+coordinates and three orientation coordinates is used to represent the UAVs’ conﬁguration space. The estimation
+of these attitudes as well as the representation of orientation is required to have a safe autonomous ﬂight. The
+minimum set of points or variables needed to represent a conﬁguration is called the Degrees of Freedom that is
+equivalent to the dimension of the UAV’s conﬁguration [52,113]. Here, an example of the coordinate system and
+the free body diagram of a quadcopter are illustrated in Figure 2f. It is obvious that developing an algorithm
+that provides an exact analytic solution to such a problem is very diﬃcult, if not say impossible. The path can
+be either obtained as discrete line segments or a continuous curve ( e.g., Splines or B´ ezier curve [127,133]) using
+a sequence of waypoints connecting the start position to the destination in the free world space. If the path
+is parameterized by time, then we will have trajectory planning instead of path planning that only gives the
+positional information [233].
+2Robert Platt, Classical Path Planning ( http://www.ccs.neu.edu/home/rplatt/cs5335_spring2019/slides/path_planning_
+classical.pdf).
+
+===== PAGE 12 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2961
+Figure 2. Modeling the environment. (a) An example of Voronoi diagram-based partitioning
+of an obstacle map [184]. (b) An example of visibility graph for path planning [39]. (c) An
+example of cell decomposition. (d) An example of potential ﬁeld. (e) An example of occupancy
+grid map [119]. (f) An example of the coordinate systems and the quadrotor frame.
+3.3. The completeness criterion
+Completeness, an essential criterion for evaluating the performance of path planning algorithms [167], holds
+signiﬁcant importance in UAV path planning techniques. It ensures the discovery of a path, if one exists, by
+providing a framework for UAVs and delivering a solution when the path planning technique can search for an
+optimal path [4]. The completeness criterion guarantees that the algorithm will always ﬁnd a solution, regard-
+less of the speciﬁc conﬁguration of the environment [141]. There are two forms of completeness: probabilistic
+completeness and resolution completeness [328]. Probabilistic completeness implies that as time and compu-
+tation resources approach inﬁnity, the algorithm will ﬁnd a solution with a probability of one [177]. In other
+words, given inﬁnite time and resources, the algorithm will always ﬁnd a feasible path if one exists. Probabilistic
+
+===== PAGE 13 / 40 =====
+2962 S. GHAMBARI ET AL .
+completeness is exhibited by sample-based methods such as RRT and evolutionary algorithms [328]. Resolution
+completeness, on the other hand, guarantees to ﬁnd an existing solution within a ﬁnite time, provided that
+the resolution of the underlying discretization is ﬁne enough [59]. Most resolution complete planners are graph
+search methods like Dijkstra, A*, and Field D* [328]. These completeness criteria play a crucial role in evaluating
+the eﬀectiveness and reliability of UAV path planning algorithms.
+3.4. The optimality criteria
+UAV path planning problem is typically characterized by diﬀerential constraints such as limited speed and
+maximum acceleration, uncertainty in the world space, atmospheric violence, etc. Generally, the path length
+[106], the path smoothness [305], the optimality in time and cost as well as energy consumption [81, 118, 287],
+robustness to tolerate the position sensing device errors and the rotation driving errors, as well as linear driving
+errors [58], along with the collision avoidance with obstacles [245], are the principal factors in UAV path
+planning problems. These factors can be considered either in the form of objective functions that require to
+be minimized and/or maximized or in the form of constraints that a route must comply with. The UAV path
+planning problem is studied both in single objective [15, 56, 245, 320] and multi-objective [122, 325] contexts.
+As an example, Shao et al. [257] considered a combination of minimal ﬂying path length, the safe ﬂying cost
+around the mountain, the radar detection cost, and the collision cost among ﬂying UAVs in a single objective
+model. In another study, the UAV path planning problem is modeled as the weighted sum of three optimization
+criteria comprising the minimization of path length, threat probability, and the ﬂight safety altitude [338]. In
+a handful of multi-objective studies, Mittal and Deb [196] employed NSGA-II in conjunction with 𝐾-means
+clustering to simultaneously minimize the total path length and maximize the safety margin from ground
+obstacles. Ren et al. [238] introduced a crowding-distance-based NSGA-II to address a multi-objective UAV
+path planning challenge in urban settings, incorporating distance and safety objectives, and utilizing the octrees
+data structure. Golabi et al. [114] presented a novel multi-objective integer programming model for a collision-
+free discrete drone path planning problem. These constraints and objectives entail ﬁnding a path planning
+algorithm that has less computational time and cost. In another research, Yu et al. [325] considered the UAV
+path planning as a constrained multi-objective optimization problem considering the path length and path
+risk as the objectives, and the ﬂight altitude and the turning angle as the constraints. Computational aspects
+including time complexity and memory requirements are among the criteria for judging whether a UAV path
+planning algorithm is eﬃcient.
+4. A review of existing UA V path planning methods
+So far, various methods have been raised to deal with the UAV path planning problem regarding the diﬀerent
+tasks, requirements, and environments [113, 314]. This study classiﬁes the existing approaches into classical
+or exact methods, soft-computing techniques, and hybrid (multi-fusion) approaches. Each category contains a
+variety of methods that conform to certain characteristics. The following subsections scrutinize each category
+based on the related studies in the literature.
+4.1. Classical methods
+The most commonly used classical methods for solving the UAV path planning problem include various
+techniques for representing the environment space, such as roadmap and cell decomposition, as well as dif-
+ferent search algorithms, including A * and Dijkstra, potential ﬁeld methods, mathematical programming, and
+sampling-based approaches [208]. It is worth noting that the choice of environment representation method and
+search algorithm can signiﬁcantly aﬀect the eﬃciency and eﬀectiveness of the path planning process. For exam-
+ple, roadmap and cell decomposition are two popular strategies for environment representation that require a
+search algorithm for path generation or planning [141]. A notable advantage of classical methods lies in their
+simplicity, leading to shorter computational times. They exhibit a deterministic characteristic in identifying the
+
+===== PAGE 14 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2963
+optimal collision-free path if it exists ( e.g., graph search algorithms). Nonetheless, their eﬀectiveness is contin-
+gent upon the size of the search space, as they store all explored nodes in memory, making them susceptible
+to failure in the presence of uncertainty when the vehicle operates [20]. They also still have diﬃculties with
+system dynamics, sensors, and so on. In the following subsections, a detailed elaboration of the aforementioned
+methods in the context of UAV path planning is provided.
+4.1.1. Classical methods for environment representation
+The following methods primarily focus on environment representation, requiring a search algorithm to ﬁnd
+the optimal or feasible path within the constructed representation.
+4.1.1.1. Roadmap. The roadmap method is among the earliest motion planning techniques [169]. To construct
+the roadmap, the free space is retracted, reduced to, or mapped onto a network of one-dimensional line segments.
+Then, a search mechanism based on an artiﬁcial intelligence approach is used to ﬁnd a solution that is limited
+to the network. The roadmap method has been proven to be eﬀective in simple polygonal environments [187]
+where the obstacles are static. The earliest and well-known variants of roadmap methods are “Voronoi diagram”
+[23,190,304] and “Visibility graph” that have been used for both single [6,250] and multiple UAVs path planning
+[190]. However, the authors of Beard et al . [23] and Wang et al. [298] introduced solution methods that employ
+the Voronoi diagram and visibility graph, respectively, particularly in scenarios involving dynamic threats.
+4.1.1.2. Cell decomposition. The cell decomposition technique decomposes the obstacle-free space into non-
+overlapping convex polygons, known as cells [20, 111, 176]. After decomposition, a connectivity graph is con-
+structed according to the adjacency relationships between the cells ( i.e., nodes), and their connecting links.
+From this connectivity graph, a continuous path can be determined by simply following adjacent free cells from
+the start to the target point. Cell decomposition methods can be classiﬁed as exact [168] (that a graph asso-
+ciated with the approximate cell decomposition is a tree that can be a quadtree for 2D spaces and an octree
+for 3D spaces [103]), regular grid [36], and adaptive [54]. If a feasible path exists in the free space, then the
+cell decomposition method will ﬁnd the path easily by sequentially organizing the cells. Nevertheless, the cell
+decomposition method depends on the format of the cells and if the formed cell is too large or rough then it will
+not attain the smallest path distance or length in a reasonable time [158]. The cell decomposition method could
+not provide acceptable performance in dynamic and real-time circumstances [77]. As an example of applying
+this technique for UAVs, Li et al. [176] suggested an exact cellular decomposition method for the coverage
+path planning with UAVs. Authors of [135] presented a combination of cell decomposition and fuzzy logic for
+quadrotor path planning to avoid collisions with dynamic obstacles.
+4.1.2. Classical search-based methods
+This section focuses on classical UAV path planning methods searching the solution space to identify the
+shortest or near-optimal paths. These algorithms systematically explore diﬀerent paths and evaluate their suit-
+ability based on deﬁned criteria.
+4.1.2.1. Mathematical programming. The mathematical programming method employs probability and math-
+ematical models to predict future events and to determine the most eﬃcient curve between the start and goal
+conﬁgurations by minimizing a certain scalar quantity. In this approach, a set of inequalities is used to model
+the obstacles and environment, and the path planning problem is solved as a mathematical optimization prob-
+lem. An earlier and comprehensive review of mathematical programming methods can be found in [2,32]. Some
+popular mathematical programming methods used in UAV path planning problems are linear programming [55]
+and mixed-integer linear programming [80,157,164,251] models. Dynamic programming is another mathemati-
+cal programming approach that is adopted for obtaining an optimal path when full information and unlimited
+computation resources are available [92, 109, 139, 233]. These methods often fail to achieve global optimality
+within a reasonable time frame and are occasionally ineﬀective in generating feasible solutions. However, these
+methods can provide valuable insights into the problem’s structure [98].
+4.1.2.2. Graph search methods. A graph can be brieﬂy introduced as a non-linear data structure consisting
+of nodes and edges. The nodes are vertices and edges are arcs or lines that attach any two other nodes in
+
+===== PAGE 15 / 40 =====
+2964 S. GHAMBARI ET AL .
+the graph. These algorithms carve paths through the graph, but there is no expectation that those paths
+are computationally optimal [200]. The Dijkstra’s algorithm and the A * algorithm are the most commonly
+used graph search algorithms in the community to successfully apply in ﬁnding the shortest path for UAVs
+[27,62,165,192,260]. The well-known Breadth-ﬁrst and Depth-ﬁrst search algorithms also fall within this category
+[76]. You can ﬁnd a brief summary of the mentioned algorithms in the subsequent content, where their key aspects
+and functionalities are explained.
+Dijkstra’s algorithm. Dijkstra’s algorithm was ﬁrst introduced by Edsger W. Dijkstra in 1956 [82,94]. As a
+classical method derived from dynamic programming, Dijkstra embodies an iterative approximation approach
+to solve dynamic programming equations within the context of the shortest path problem. Based on the distance
+from the origin, the algorithm uses a single heuristic to create labels associated with vertices. The labels represent
+the cost from the source vertex to that particular vertex [142]. This algorithm determines the costs between
+a given vertex and all other vertices in a graph to determine alternatives in decision-making [266]. Dijkstra’s
+algorithm is known to be computationally intensive based on nodal density [207].
+A* algorithm. The A * algorithm is an informed search algorithm introduced by Hart et al. [120] as a
+generalization of Dijkstra’s algorithm. This algorithm is widely applied in graph traversal and robot path
+planning problems. It is a best-ﬁrst search heuristic that can potentially search a wide area of a grid map to
+determine the least-cost path from a given initial node to the ﬁnal one [57]. Best-ﬁrst search is categorized as a
+heuristic search algorithm that utilizes the distance between the current node and the target point to discover
+a path within a graph [76]. The greedy best-ﬁrst search results in a feasible path instead of the optimal one
+[198]. The best-ﬁrst search algorithm employs a greedy approach to expand nodes in close proximity to the
+target node, resulting in improved eﬃciency. However, in scenarios with increased obstacles, the quality of the
+planned path may not match that of the Dijkstra algorithm. Consequently, the A * algorithm can be considered
+an amalgamation of the advantageous aspects of both the Dijkstra and best-ﬁrst search algorithms [335].
+During the years, several modiﬁed versions of A * algorithm such as D * [271], D *-Lite [159], ﬁeld D * [91],
+fringe saving A* (FSA*) [276], and generalized adaptive A * (GAA*) [278] are developed for UAV path planning
+problem.
+According to the above explanations, the Dijkstra’s and A * algorithms keep a set of nodes in a memory to
+determine the potential shortest path. The main diﬀerence between these two algorithms is the order in which
+these nodes are explored. A * focuses on reaching the target node from the current node, while Dijkstra tries to
+visit every node to catch the goal. Therefore, in practice, the A * algorithm is often more suitable because of
+using less memory when the search space is large, and a decent lower bound on the remaining distance exists.
+Depth-First Search (DFS). Depth-ﬁrst search algorithms traverse a tree by exploring one node and its
+descendants3 at a time. The algorithm initiates from a selected node and progressively expands its search to the
+deepest nodes, backtracking only when there are no more child elements to explore [212]. If the deepest node
+does not contain the desired solution, the algorithm backtracks to the start of the tree and continues the search
+by exploring adjacent nodes on the right, following a similar “deep” format [241, 285]. This process continues
+until the solution is found. DFS may miss large portions of the workspace since it tries to search several paths
+at a time before completing one path [110, 170]. DFS may not always yield the most optimal solution as it
+prioritizes the ﬁrst successful path found, disregarding the time or steps taken to reach it, with the risk of
+falling into a loop of exploring an inﬁnite depth [212].
+Breadth-First Search (BFS). In the breadth-ﬁrst search algorithm, all the current level nodes are visited
+prior to their descendants [212], following a systematic approach where shallow nodes are expanded ﬁrst by
+exploring all the subsequent level nodes along the path [76]. Unlike the depth-ﬁrst search algorithm that focuses
+on exploring a single path to its deepest depths, BFS expands its search by including all nodes within each
+layer, adhering to the ﬁrst-in-ﬁrst-out (FIFO) principle implemented through a queue structure [38]. Although
+BFS may be slower than DFS in ﬁnding a path, it is often considered more favorable due to its systematic
+3A descendant refers to a node that can be reached from a particular node by traversing one step down the path.
+
+===== PAGE 16 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2965
+exploration of all nodes within each layer and its ability to keep track of visited nodes before moving on to the
+next layer [212]. In contrast, DFS can be time-consuming as it may delve into uncharted depths of a single node
+without necessarily leading to a viable solution [38, 241]. Despite the potential eﬃciency, BFS requires more
+memory compared to DFS due to the need to store all visited nodes in the order they were encountered [38].
+This storage step is crucial in BFS tree traversal as it inﬂuences the sequence in which the algorithm explores
+nodes in the subsequent layer [76].
+4.1.2.3. Potential ﬁeld. Inspired by the concept of electrical charges, the potential ﬁeld was ﬁrst introduced by
+Khatib [154]. This method involves assigning repulsive forces to obstacles and attractive forces to the target.
+This allows the vehicle to navigate towards the target while simultaneously avoiding obstacles (see Algorithm 1).
+Sfeir et al. [253] presents an enhanced repulsion mechanism aimed at minimizing oscillations and preventing
+conﬂicts in scenarios where obstacles are situated near a target. This approach is extended successfully to
+navigate single and multiple robots to perform complex tasks. Because of its ﬂexible and simple structure,
+concise mathematical description, and convenience for real-time control, it is eﬃciently applied to both single
+and multiple UAVs for both oﬄine and online path planning problems [53,64,70,125,179,182,259,281]. Despite
+the quick response speed of artiﬁcial potential ﬁeld in real-time path planning, the potential ﬁeld can be swiftly
+stuck in local minima in the case of extensive search spaces [90,174,188].
+Algorithm 1: The artiﬁcial potential ﬁeld algorithm [233].
+Input: An open list of nodes of graph
+Output: The shortest path
+1 Start with tessellating the area
+2 The Goal Weight ← 0
+3 while next position is not goal do
+4 for all the obstacles do
+5 Evaluate the repelling function
+6 Evaluate the attracting function for the goal
+7 Apply the resultant forcing function to obtain next location of UAVs
+8 if UAV encountered local minima then
+9 Assume a virtual obstacle there
+10 Go to next position
+11 return The shortest path
+4.1.2.4. Sampling-based methods. Sampling-based approaches are considered as a black box returning a feasible
+collision-free path [87] with signiﬁcant advantages of high-speed implementation [162]. These methods use only
+information from a collision detector while searching the conﬁguration space to sample the environment as a
+set of nodes or other forms, then map the workspace or just search randomly to ﬁnd an optimal path [178].
+Arguably in the literature, the most popular variants of sampling-based planners are probabilistic roadmap
+(PRM) and rapidly exploring random tree (RRT) [217]. These two approaches have demonstrated eﬃcacy as
+frameworks for navigating high-dimensional spaces to generate feasible solutions. However, it is important to
+note that they do not ensure the attainment of an optimal solution.
+The PRM method, simultaneously developed at Stanford and Utrecht, has been proven to work well in
+high-dimensional search spaces [148, 149]. The basic idea behind PRM is to take random instances from the
+conﬁguration space. Thereafter, it checks whether or not they are in the free space, and utilize a local planner
+to connect these conﬁgurations to other nearby conﬁgurations (see Algorithm 2). There are various proposals
+in the literature regarding the UAV path planning problem. Authors of [216, 277, 309, 311] suggested improved
+
+===== PAGE 17 / 40 =====
+2966 S. GHAMBARI ET AL .
+approaches using PRM for solving both oﬄine and online UAV path planning problems. However, PRM tends
+to be ineﬃcient when obstacle geometry is not known beforehand [147]. As an alternative, RRT algorithms that
+present a solution regardless of the geometry of the obstacles have been extensively explored [231].
+Algorithm 2: PRM algorithm.
+Input: A graph with initial and goal points
+Output: Find the shortest path between the start and goal
+1 The vertices 𝑉 ← ∅
+2 The edges 𝐸 ← ∅
+3 while next vertex is not goal do
+4 𝑐 ← a random configuration in the free space
+5 𝑉 ← 𝑉 ∪ 𝑐
+6 𝑁𝑐 ← a set of neighbor vertices chosen from 𝑉
+7 for all 𝑐′ ∈ 𝑁𝑐 do
+8 if the line ( 𝑐, 𝑐′) is collision free then
+9 add the edge ( 𝑐, 𝑐′) to 𝐸
+10 Find the shortest path from the start point to the goal on the constructed graph using a shortest path finding
+algorithm
+11 return The shortest path
+The RRT method, which was ﬁrst introduced by LaValle et al. [171] is another computationally eﬃcient
+algorithm that explores a random tree to produce the ﬁrst feasible solution to the goal through a cluttered
+environment with non-convex obstacles (see Algorithm 3). Many works have studied the RRT algorithm and
+its variants in the application of UAV path planning problems and collision avoidance [5, 172, 221, 339]. For
+instance, Saunders et al. [248] presented a two-part solution technique that uses a modiﬁed RRT algorithm
+on a prior terrain map to create a waypoint path around known obstacles. Yang et al. [312] introduced a
+3D path planning algorithm based on a modiﬁed RRT method by combining biased sampling and the greedy
+extension of nodes. In their method, the unnecessary waypoints are removed by a simple path pruning RRT
+method to deal with a piece-wise linear path. Aguilar et al. [5] presented a path planning system for autonomous
+navigation of UAVs in a 3D space based on two improved versions of the RRT method called RRT*Goal and
+RRT*Limit.
+Algorithm 3: RRT algorithm.
+Input: Initial configuration 𝑞init, number of vertices in RRT 𝐾, incremental distance (Δ 𝑞)
+Output: RRT graph G
+1 G.init (𝑞init)
+2 for 𝑘 = 1 to 𝐾 do
+3 𝑞rand ← Random State()
+4 𝑞near ← Nearest Vertex(𝑞rand, 𝐺)
+5 𝑞new ← New State(𝑞near, 𝑞rand, Δ𝑞)
+6 G.add Vertex (𝑞new)
+7 G.add Edge ( 𝑞near, 𝑞new)
+8 return The graph 𝐺
+
+===== PAGE 18 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2967
+4.2. Soft-computing methods
+Soft-computing or intelligent techniques have emerged as new optimization tools mimicking the capability of
+the human brain in reasoning, modeling, adapting, and responding to address real-world problems [132]. In this
+section, the state-of-the-art machine learning, fuzzy approaches, and metaheuristics or evolutionary algorithms
+that have been applied successfully for the autonomous ﬂight of UAVs will be discussed.
+4.2.1. Machine learning
+Machine learning consists of supervised learning, unsupervised learning, reinforcement learning, and deep
+learning algorithms that learn from existing data to build and reﬁne models to make predictions for diﬀerent
+tasks instead of following traditional pre-programmed instructions [45,63,258]. In recent years, such algorithms
+are extensively applied to deal with diﬀerent perspectives of autonomous UAV ﬂights including tuning the
+parameters for the controller [138], applying adaptive control algorithms for autonomous ﬂight [163], recognizing
+objects in farming [214], real-time path planning [143,146,180,332], and real-time collision avoidance considering
+obstacles or other aerial vehicles [144, 173]. Among the machine learning techniques, the clustering methods
+such as QT and 𝐾-means [286,327], reinforcement learning 4 (see Algorithm 4) and deep reinforcement learning
+[156,284], cooperative and geometric learning [333], and neural network [210,321] are widely employed for UAVs
+path planning problem and collision avoidance.
+Algorithm 4: Reinforcement learning algorithm for UAV path planning.
+Input: A state space 𝒮, an action space 𝒜, a reward function 𝑅(𝑠, 𝑎), a discount factor 𝛾, an exploration rate 𝜖,
+and a maximum number of episodes 𝑁
+Output: A policy 𝜋(𝑠) that maps states to actions
+1 Initialize a 𝑄-function 𝑄(𝑠, 𝑎) arbitrarily Initialize an empty replay buffer 𝐷
+2 for 𝑒𝑝𝑖𝑠𝑜𝑑𝑒 = 1 to 𝑁 do
+3 Initialize the state 𝑠0 to the start position
+4 while 𝑠𝑡 is not the goal position do
+5 With probability 𝜖 choose a random action 𝑎𝑡 from 𝒜, otherwise choose 𝑎𝑡 = argmax𝑎 𝑄(𝑠𝑡, 𝑎)
+6 Execute action 𝑎𝑡 and observe reward 𝑟𝑡 and next state 𝑠𝑡+1
+7 Store transition ( 𝑠𝑡, 𝑎𝑡, 𝑟𝑡, 𝑠𝑡+1) in 𝐷
+8 Sample a mini-batch of transitions ( 𝑠𝑖, 𝑎𝑖, 𝑟𝑖, 𝑠𝑖+1) from 𝐷
+9 Update the Q-function using the Bellman equation:
+𝑄(𝑠𝑖, 𝑎𝑖) ← 𝑄(𝑠𝑖, 𝑎𝑖) + 𝛼 (𝑟𝑖 + 𝛾 max𝑎 𝑄(𝑠𝑖+1, 𝑎) − 𝑄(𝑠𝑖, 𝑎𝑖))
+10 Set 𝑠𝑡 = 𝑠𝑡+1
+11 return The learned policy 𝜋(𝑠) = argmax𝑎 𝑄(𝑠, 𝑎)
+4.2.2. Fuzzy inference system
+The fuzzy approaches deal with uncertainty representing the input and output relation in the if-then manner
+and constructing a knowledge base [194]. The ability to handle unknown conditions makes the fuzzy logic system
+an ideal tool to address the obstacle avoidance problem for performing navigation tasks [246, 344]. However,
+they have rarely been applied in the UAV path planning domain owing to challenges associated with adjusting
+membership functions. For a better understanding of the method, an example of the structure of a fuzzy inference
+system for path planning is shown in Figure 3. In recent years, employing the fuzzy logic methods integrated
+with other UAV-based techniques has shown promising results [150,152,302,334].
+4For further information on reinforcement learning, interested readers may refer to [282]. The agent–environment interaction is
+illustrated in Figure 3.1 of this book.
+
+===== PAGE 19 / 40 =====
+2968 S. GHAMBARI ET AL .
+Figure 3. An example of Fuzzy Inference System for path planning [50].
+4.2.3. Metaheuristics
+Metaheuristics are widely used approaches for solving optimization problems that cannot be eﬃciently solved
+by exact methods. They are commonly nature-inspired algorithms that adopt some principles from nature
+(e.g., physics or biology via evolutionary concepts). Metaheuristics utilize stochastic components and random
+variables and do not apply the gradient or Hessian matrix of the objective function. Besides, they have several
+important parameters that should be ﬁtted to the problem at hand [35].
+In the application of the UAV path planning problem, metaheuristics consider 2D or 3D map information
+(e.g., the bounded of the environment, the position of the obstacles, the initial position of the vehicle, and the
+destination coordinate) as the input values. Then, an initial population of candidate solutions, which are paths,
+is generated randomly. Next, according to the deﬁned objective function that is limited to some constraints,
+the algorithm tries to ﬁnd collision-free solutions or paths that connect the initial position to the destination
+while satisfying the constraints. This procedure continues until meeting the termination conditions. Finally, the
+best path is recorded as the output of the algorithm [105]. In the following, we present the most widely used
+metaheuristics in the application of UAV path planning problems. Then, a list of some other metaheuristics
+that are also applied successfully in this special application is provided.
+Simulated Annealing (SA). Simulated Annealing is a metaheuristic algorithm that can be used in UAV path
+planning applications to ﬁnd a near-optimal solution in a large search space [61, 130, 261]. It is inspired by the
+annealing process in metallurgy, where a metal is heated and slowly cooled to increase its strength and stability.
+In simulated annealing, the algorithm starts with an initial solution and randomly perturbs it to ﬁnd a new
+solution. The algorithm then evaluates the new solution and decides whether to accept it based on a probability
+function. This probability function is designed to allow the algorithm to escape from local minima and explore
+the search space more thoroughly. In the context of UAV path planning, simulated annealing can be used to
+optimize a path for a set of objectives, such as minimizing energy consumption or maximizing coverage while
+avoiding obstacles and maintaining a safe altitude. The literature on UAV path planning extensively showcases
+the widespread adoption of SA as a prominent solution method. Examples include its application in ﬁnding ﬂight
+paths for UAVs to inspect multiple points of interest across a designated region [25], obtaining nearly optimal
+paths in 2D radar-constrained environments [291], determining the shortest feasible path between sensors for
+data gathering of IoT nodes in a three-dimensional setting [71], and identifying optimal energy-eﬃcient paths
+for UAV transmission tower inspection [307].
+Genetic Algorithm (GA). GA is a stochastic search procedure that imitates the natural selection and
+survival of the ﬁttest mechanism in nature [115]. A population of solutions/paths is generated and evolved
+towards better solutions. Each solution is encoded as a chromosome with a set of properties. GA iteratively
+enhances the population by adjusting to the ﬁtness landscape. The ﬁtness of each solution is assessed using
+an objective function and the ﬁttest solutions are selected from the current population. The new generation of
+solutions is evolved based on crossover and mutation operators and the proceeding procedure continues until the
+
+===== PAGE 20 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2969
+termination criteria are met. In literature, GA is adopted for both single and multiple UAVs with satisfactory
+results [73,239,263–265]. For example, Nikolos et al. [204] introduced a combination of modiﬁed breeder GAs by
+incorporating characteristics of the conventional method to design an oﬄine/online path planner for autonomous
+UAV navigation. Macharet et al. [183] presented a feasible path planning approach for UAVs using GA and
+B´ ezier curve. Snomezet al. [269] proposed a GA based on a combination of traveling salesman problem approach
+for determining the optimal ﬂyable trajectory for UAVs in a 3D environment. Cekmez et al. [48] put forward
+a parallel GA on Graphics Processing Unit (GPU) architecture for multiple UAVs. Similarly, Roberge et al.
+[240] presented a parallel implementation of GA on GPU cores to generate routes as a series of line segments
+connected by circular arcs.
+Ant Colony Optimization (ACO). ACO is a swarm intelligence-based algorithm inspired by the collective
+behavior of ants in nature [84]. The standard algorithm is inherently parallel and straightforward to execute. It
+possesses considerable resilience and the capacity to explore improved solutions. In this algorithm, the walking
+path of ants is used to express the feasible solution for the problem. In the application of UAV path planning
+problems, each ant is intended to search for the shortest path in the free space. Over time, there is a continuous
+augmentation in the concentration of pheromones along shorter paths, accompanied by a corresponding rise in
+the preference of ants for those paths. This positive reinforcement mechanism eventually converges, guiding the
+entire ant colony toward the identiﬁcation of the optimal path. As a result, the solution derived represents the
+optimal resolution for the given path planning problem. Here, we mention several works that applied ACO to
+tackle the UAV path planning problem addressing both singular and multiple UAV instances in certain and
+uncertain workspace [60,117,161]. Duan et al. [85] introduced a novel Max–Min adaptive ACO for multiple UAV
+path planning in dynamic and uncertain environments. Authors of [123] presented an ACO search strategy to
+ﬁnd the optimal trajectory for a UAV path planning problem in an indoor environment. Cekmes et al. [47]
+solved the UAV path planning problem using a highly parallelized ACO algorithm based on Compute Uniﬁed
+Device Architecture (CUDA). In another research, Cui et al. [68] suggested a bidirectional searching mechanism
+incorporated in the ACO algorithm to deal with oﬄine UAV path planning problems. Authors of [48] presented
+a UAV path planning algorithm to construct a feasible path by using a multi-colony ACO algorithm to reach
+an optimal or near-optimal solution.
+Particle Swarm Optimization (PSO). PSO simulates the social behavior of a swarm of birds or a school
+of ﬁshes [151]. In the application of UAV path planning, the problem is optimized by utilizing the shared
+information of the global and local solutions in the swarm. In PSO, simple agents, called particles, move in
+the search space and the position of a particle shows a candidate solution/path. The velocity of each particle
+undergoes systematic adjustments in adherence to deﬁned rules, aimed at reﬁning their positions within the
+search space. Concurrently, the collective intelligence of the best solution is captured and communicated to fellow
+particles in subsequent iterations. Whenever the stopping conditions are reached, the algorithm terminates and
+the best solution is recorded as a safe and feasible path. PSO attracted the increasing attention of scholars in
+the ﬁeld of UAV path planning in recent years [136,257,300]. Foo et al. [93] proposed a 3D multi-objective path
+planning problem formulation and solution approach for UAVs by employing PSO algorithm to minimize the
+risk of enemy threats, fuel consumption, and path length. In another study, Sujit et al. [275] addressed the path
+planning problem of multiple UAVs in a cluttered environment by developing the anytime algorithm based on
+the PSO method. Bao et al. [21] proposed a modiﬁed PSO for reconnaissance UAV path planning problems. Fu
+et al. [97] introduced a new variant of the PSO algorithm based on phase angle-encoded and quantum-behaved
+for 3D UAV route planning in diﬀerent known and static threat environments. Authors of [9] introduced a
+system to plan collision-free 4D trajectories of multiple UAVs based on an anytime approach and PSO. Huang
+et al. [128] proposed an improved PSO for 3D path planning of ﬁxed-wing UAVs.
+Differential Evolution (DE). DE [272] is an evolutionary algorithm commonly employed for solving path
+planning problems involving single UAVs as well as multiple UAVs, in both known and unknown environments.
+DE has good convergence properties with easy implementation. It constitutes an iterative process involving a
+population of individuals or paths generated through the integration of a parent and fellow individuals within
+
+===== PAGE 21 / 40 =====
+2970 S. GHAMBARI ET AL .
+the population. Similar to GA, each individual in DE possesses a set of variables representing waypoints. These
+variables undergo mutation and crossover search operators to generate a novel solution. During the optimization
+process, it only accepts candidate solutions that are superior to their parents and incorporates them into the
+next generation of the algorithm. DE is a fast and eﬃcient algorithm for ﬁnding a high-quality solution to the
+UAV path planning problem while completing the mission robustly. For example, authors of [203] applied DE to
+design an oﬄine path planner for UAVs to have coordinated navigation in known static marine environments.
+Zhang et al. [330] proposed an improved DE algorithm for online UAV path planning problems. Zhouet al. [341]
+developed a novel DE based on a chaotic approach for UAV trajectory planning problems in 3D environments.
+Sun et al. [280] presented a constrained adaptive multi-objective format of the DE algorithm to produce multiple
+feasible paths for a UAV path planning problem. Authors of [324] suggested an adaptive selection mutation-
+constrained DE algorithm for a UAV path planning problem in disaster scenarios. In another research, Yu et al.
+[325] considered a multi-objective UAV path planning problem and applied a knee point-based DE algorithm
+as the solution algorithm.
+In the literature, there exist other metaheuristics used to solve UAV path planning problems from diﬀerent
+aspects. Here, we listed the most popular and recent techniques. Li et al. [175] proposed an improved gravita-
+tional search algorithm (GSA) to generate the feasible ﬂight route for UAVs. Zhang et al. [331] introduced a
+memetic algorithm for path planning of curvature-constrained UAVs for surveillance of multiple ground targets.
+Authors of [106, 323] applied teaching-learning-based optimization (TLBO) to ﬁnd the shortest ﬂight route. In
+another study, Chen et al. [56] introduced a modiﬁed central force optimization (CFO) method using the idea
+of the PSO’s search operator and the mutation operator of the GA to address the UAV path planning problem.
+Radmanesh et al. [232] employed grey wolf optimization (GWO) to solve the UAV path planning in the pres-
+ence of ﬁxed and moving obstacles in an uncertain environment. Similarly, Yao et al. [318] integrated the model
+predictive control and an improved version of GWO for solving the cooperative target tracking by multi-UAVs
+in an urban environment. Alihodzic et al. [12] introduced a ﬁreworks algorithm for optimization of UAV path
+planning problem in a 2D space. In another research, Alihodzic et al. [13] used the elephant herding optimization
+(EHO). Yongbo et al. [320] proposed a modiﬁed version of the wolf pack search algorithm (WPS) to compute
+the quasi-optimal trajectories for the UAV path planning in complex 3D spaces. Yao et al. [317] presented a new
+algorithm based on ant lion optimizer (ALO) to plan feasible UAV routes in 2D spaces. Goel et al. [112] utilized
+glow-worm swarm optimization (GSO) for online UAV path planning in a 3D environment. Zhang et al. [338]
+applied an improved version of the fruit ﬂy optimization (FFO) algorithm to solve the problem in a 3D static
+environment. Authors of [226] suggested a multi-objective pigeon-inspired optimization algorithm to coordinate
+UAVs to ﬂy in a stable formation and guarantee the safety of the ﬂight in a complex workspace. Dasdemir et al.
+[72] proposed a preference-based multi-objective evolutionary algorithm (MOEA) to solve UAV route planning.
+For those seeking further information, we recommend referring to a recent survey conducted by Yahia and
+Mohammed [310]. This comprehensive survey oﬀers an extensive overview of metaheuristic approaches applied
+to the UAV path planning problem.
+4.3. Hybrid or multi-fusion methods
+In recent years, there has been a growing trend toward hybridizing diﬀerent methods in UAV path planning
+problems. A hybrid or multi-fusion approach refers to the combination of diﬀerent techniques to obtain better
+results, where a single algorithm is not able to achieve the optimal solution individually [314]. A hybrid approach
+can combine the advantages of diﬀerent methods and overcome their limitations. Choosing an adequate com-
+bination of complementary algorithmic concepts can be the key to achieving top performance in solving many
+hard optimization problems [33].
+In the domain of UAV path planning problems, the hybridization may involve the combination of diﬀerent
+soft-computing approaches [86, 104, 239, 313, 322]. Combining the grey wolf optimizer with modiﬁed symbiotic
+organisms search [227], using the knee solution to guide the search direction of the diﬀerential evolution algorithm
+[325], and hybridizing reinforcement learning with the grey wolf optimizer algorithm [227] are some studies
+hybridizing soft-computing approaches in solving UAV path planning problems. The combination of classical
+
+===== PAGE 22 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2971
+Table 3. The time complexity of UAV path planning techniques.
+Algorithm Complexity Explanation
+Voronoi Diagram 𝑂(𝑛 log(𝑛)) [205] n is the number of the vertices
+Visibility Graph 𝑂(𝑛2) [205]
+Exact Cell Decomposition 𝑂(𝑛 log(𝑛)) [113] n represents the number of obstacle vertices
+PRM 𝑂(𝑛 log(𝑛)) [220] n is the number of iterations
+RRT 𝑂(𝑛 log(𝑛)) [303]
+Dijkstra 𝑂(|𝐸| + |𝑉 | log|𝑉 |) [228] V is the set of vertices, E the set of edges
+BFS & DFS 𝑂(|𝐸| + |𝑉 |) [228]
+A* 𝑂(𝑛2) [40] n is the number of vertices
+methods with each other has also been considered in several studies [83,326]. Combining artiﬁcial potential ﬁeld
+method and RRT-Connect algorithm [336], hybridizing D * with probabilistic roadmaps [126], and integrating
+artiﬁcial potential ﬁeld method with the idea of bidirectional biased sampling [306] are some sample studies
+of this type of hybridization. Furthermore, combining classic methods with soft-computing techniques has also
+been considered in the literature [3, 288]. For instance, combining RRT with the grey wolf optimizer [155],
+hybridizing the fuzzy logic with the cell decomposition approach [135], or combining multi-population genetic
+algorithm with visibility graphs [18] have been scrutinized in the literature.
+5. Complexities and computational time of path planning algorithms
+The computational time of a path planning algorithm refers to the amount of time it takes for the algorithm
+to generate a feasible path from a starting point to a goal location [141,242]. The computational time of a path
+planning algorithm can vary depending on several factors such as the size of the search space, the complexity
+of the environment, and the number of obstacles to be avoided [337]. Some path planning algorithms, such as
+Breadth-First Search (BFS), have a high computational cost because they systematically explore all possible
+paths in the search space [212]. On the other hand, Depth-First Search (DFS) has a lower computational cost,
+but it may not always ﬁnd the shortest path [212]. Other algorithms, such as A * and Dijkstra’s Algorithm, are
+optimized to ﬁnd the shortest path but may still require signiﬁcant computational resources for large search
+spaces [49, 244]. In addition to the algorithm itself, the computational time of a path planning algorithm can
+also be aﬀected by the processing power and memory of the computer or device running the algorithm [256].
+The general time complexities for certain UAV path planning problems are documented in Table 3. In this
+table, the time complexity of the unmentioned methods varies due to numerous factors, making it diﬃcult
+to provide a general expression. Hence, it necessitates a case-by-case assessment, taking into account speciﬁc
+problem characteristics and constraints. Nevertheless, it is important to acknowledge that the comparison of
+UAV path planning methods in terms of the required computational time presents a signiﬁcant challenge,
+primarily due to the impact of diverse factors, including the size and complexity of the environment, as well
+as the desired level of path accuracy. When considering factors such as computation time and path length
+performance, determining the most suitable algorithm for a particular task relies on the speciﬁc requirements
+and constraints inherent to the problem at hand. While some algorithms may be faster but may not always ﬁnd
+the optimal path, others may take longer to compute but can generate more optimal solutions. It is worth noting
+that researchers and developers commonly employ techniques such as search space pruning, precomputation,
+data caching, and parallel processing to optimize the computational time of path planning algorithms [37].
+
+===== PAGE 23 / 40 =====
+2972 S. GHAMBARI ET AL .
+6. A vailable resources
+This section provides a brief overview of the existing databases and simulators that are employed for UAV
+path planning problems and other types of applications relevant to UAVs.
+6.1. Dataset
+The dataset used for the UAV path planning problem depends on the type of mission (indoor/outdoor)
+and application (package delivery, surveillance, agriculture, etc.). According to the literature and based on
+the necessities, researchers utilized 3D elevation map [104, 225, 283], TOP benchmark instances [51, 255], TSP
+libraries [41, 48], spatial data using Open Street Map [107] and Google Earth data [297], Sinusoidal terrain
+model [213], and New York City (NYC) open data [6].
+The DARPA FLAIRS dataset contains airborne sensor data and ground truth annotations for multiple ﬂights
+over various terrains [78]. It is used to test and evaluate path planning algorithms. The MAV Urban Localization
+dataset includes aerial images and LiDAR scans of urban areas, and it is used for UAV navigation, mapping, and
+localization [186]. The RotorS simulator dataset consists of simulated sensor data and ground truth information
+generated using the RotorS UAV simulator [10]. It is used to evaluate path planning algorithms in simulated
+environments. The AirSim dataset provides realistic simulated environments for UAVs to test and evaluate
+various algorithms, including path planning [254].
+6.2. UAVs simulators
+As discussed in Sections 3.2 and 3.3, UAVs diﬀer in the type of application, size, shape, and aerodynamic
+models. Any defects in design, modeling, and UAV aerodynamic behavior endanger the success of a UAV
+mission whilst being so costly and challenging. Hence, to deal with such challenges, developers provided the
+simulators and emulators adapted to the viability standards of UAVs before ﬁnalizing them for airborne missions.
+Based on functionality there exist three types of simulators that are meant for the low-cost training purpose
+(e.g., droneSim Pro [31], Zephyr Sim [222, 329]), research and development purpose ( e.g., HEXAGON [44],
+Simbeeotic [26], SUAAVE [273], JSBSim [28], AirSim [254], RotorS [99], D-MUNS [166], DIMAV [160]), and
+entertainment aspect ( e.g., FlightGear [134, 215], Heli-X [67, 89], Real Drone Simulator [236]). Some of these
+simulators are publicly available, while the other open-source platforms (e.g., Robotic Operating System (ROS)
+[229,230], Open Motion Planning Library (OMPL) [46,274], and Virtual Robot Experimentation Platform (V-
+REP) [95, 201]) are accessible with limited features. Among the mentioned drone simulators, RotorS 5 [99] is
+used for the application of navigation in the military, farming, ﬁlm-making, and ﬁre department domains or
+organizations.
+It is worth mentioning that autonomous UAV navigation systems have the basic elements including map-
+ping, localization, SLAM (Simultaneous Localization and Mapping), path planning, path following, trajectory
+tracking, and obstacle avoidance. Accordingly, the results of three main tasks called mapping, localization, and
+path planning are simultaneously needed to have an autonomous navigation [270]. Before planning a path to
+catch the goal, knowing the environment, as well as the information about the current pose of the UAV would
+be required at the same time (see Fig. 4). This ﬁgure illustrates the relationship between these three tasks
+to perform the mission and the simulator makes this possible easily. A detailed description of accessible UAV
+simulators along with their models, creators, and network-support is provided in [185,279].
+7. Summary and discussions
+After scrutinizing the literature, it can be said that the number of studies concerning UAV path planning
+from diﬀerent perspectives grew dramatically in recent years. In this study, a list of the most commonly used
+path planning techniques for autonomous UAV navigation is provided. Since there exist various techniques in
+this research domain, the ﬁnal decision to choose an appropriate method based on the necessities could be a
+5http://wiki.ros.org/rotors_simulator.
+
+===== PAGE 24 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2973
+Figure 4. Tasks that need to be solved by an autonomous robot at the same time [270].
+challenging issue. It entails an accurate and complete insight into the application of the problem, the available
+hypotheses, and environment modeling. Hence, researchers can deal better with the existing challenges such as
+the eﬃciency in path length, ﬂying time, energy consumption, robustness, etc.
+Due to the simplicity of the classical approaches, they were among the ﬁrst techniques for dealing with UAV
+path planning problems. These techniques are easy to implement and are sometimes suggested for real-time path
+planning. However, these methods are criticized for being trapped in local minima, as well as the ineﬃciency in
+controlling uncertain situations, computational intensiveness, and the lack of accurate sensing mechanisms for
+real-time navigation. In addition, there is always a doubt in the adoption of the classical approach whether a
+feasible solution will be grabbed, or it would be supposed that such a solution does not exist. Although many
+studies have developed and merged new strategies with the classical approaches to improve their performance,
+they are not always the best choice especially in real-time conditions or in large search spaces. Generally,
+the classical approaches have a better navigation performance in known environments and quite often for the
+application of ground robotics instead of aerial robotics.
+On the other hand, we had soft-computing approaches which are applied for path planning both in known
+and unknown environments. The ability to tackle the high level of uncertainty in the search space resulted in
+the wide use of these approaches, making their usage ﬂexible in a real-time situation [1, 14, 24]. Among the
+recently developed techniques, machine learning approaches and metaheuristics are relatively novel and have
+much scope in navigation tasks. They encounter all main concerns and can ﬁnd the best feasible path in a
+relative span of the time frame in large environments that provide better eﬃcacy. Authors of [1] presented a
+comparison between classical and metaheuristics approaches applied for robot motion planning. To have a ﬁnal
+analysis concerning the diﬀerent path planning approaches that were mentioned in this paper, Figure 5 brieﬂy
+summarizes some of the features of these methods.
+8. Future research directions
+The researchers studying UAV path planning problems still face diﬀerent challenges ( e.g., highly nonlinear
+dynamics, unknown and moving obstacles) regarding real-time path planning that needs further investigation.
+Hence, many perspectives can arise from these issues. Undoubtedly, it is of great importance to consider multiple
+criteria as the objective functions for the UAV path planning problem; however, there are still some concerns
+in this domain. The question raised here is whether these criteria should be considered in a single objective
+
+===== PAGE 25 / 40 =====
+2974 S. GHAMBARI ET AL .
+Figure 5. Analysis of path planning methods.
+
+===== PAGE 26 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2975
+framework using the weighted sum approach, or objectives should be formulated and treated in the format
+of a multi-objective optimization problem. Besides, the impact of parameter tuning ( e.g., attitude control)
+for the controller in autonomous UAVs is another important factor. We strongly believe that using automatic
+conﬁgurators for attitude control may bring valuable insight to have a reliable autonomous ﬂight in the future.
+Also, there is still a lack of a standard dataset for UAV path planning problems and it is required to be
+investigated. Furthermore, in most cases, the available computation resources are not compatible with real-
+time procedures and re-planning is essential. Hence, there is a need to develop and design advanced embedded
+hardware technologies in UAVs as well as encourage researchers to propose more eﬃcient strategies.
+9. Conclusion
+In conclusion, this survey paper has provided a comprehensive review of UAV path planning techniques
+found in the literature. By categorizing the methods into classical approaches, soft-computing techniques, and
+hybrid approaches, the paper has eﬀectively presented the technical ideas behind each method, showcased
+successful applications, and provided pseudo-code or diagrams to aid understanding. Additionally, the paper has
+oﬀered a thorough overview of diﬀerent representation strategies for modeling the environment, further enriching
+the knowledge base. Throughout the discussion, the advantages, disadvantages, optimality, and complexity of
+each path planning technique have been carefully analyzed. It is important to note that no path planning
+algorithm can guarantee the discovery of an optimal path in all scenarios. The optimality of an algorithm is
+inﬂuenced by factors such as the problem domain, environmental complexity, problem representation, and the
+algorithm’s inherent characteristics. However, certain algorithms exhibit a higher likelihood of ﬁnding optimal
+paths within speciﬁc contexts. Considering practical considerations such as computational time and optimality
+requirements, the selection of a path planning method becomes a crucial decision. Researchers and practitioners
+must weigh these factors against the speciﬁcations of their problem domain. By understanding the trade-oﬀs
+between diﬀerent algorithms, they can make informed choices that align with their goals and constraints. Lastly,
+this paper has highlighted potential future research directions and provided suggestions for researchers interested
+in further advancing UAV path planning problems. As this ﬁeld continues to evolve, exploring novel techniques,
+reﬁning existing algorithms, and addressing emerging challenges will pave the way for advancements in UAV
+path planning. In summary, this survey paper serves as a valuable resource for understanding the landscape
+of UAV path planning methods. It encapsulates a wealth of knowledge, aids in decision-making processes, and
+provides a solid foundation for future research endeavors in this exciting and dynamic ﬁeld.
+Funding
+This work was supported by the French Agence Nationale de la Recherche under the grant number ANR-16-SEBM-0004.
+Conflict of Interest
+The authors declared that they have no conflicts of interest to this work.
+References
+[1] M.N. Ab Wahab, S. Nefti-Meziani and A. Atyabi, A comparative review on mobile robot path planning: classical
+or meta-heuristic methods? Annu. Rev. Control 50 (2020) 233–252.
+[2] P. Abichandani, H.Y. Benson and M. Kam, Mathematical programming approaches for multi-vehicle motion plan-
+ning: linear, nonlinear, and mixed integer programming. Found. Trends Rob. 2 (2013) 261–338.
+[3] F. Adolf, A. Langer, L.M.P. Silva and F. Thielecke, Probabilistic roadmaps and ant colony optimization for UAV
+mission planning. IFAC Proc. Vol. 40 (2007) 264–269.
+[4] S. Aggarwal and N. Kumar, Path planning techniques for unmanned aerial vehicles: a review, solutions, and
+challenges. Comput. Commun. 149 (2020) 270–299.
+[5] W.G. Aguilar, S. Morales, H. Ruiz and V. Abad, RRT* GL based optimal path planning for real-time navigation
+of UAVs, in International Work-Conference on Artificial Neural Networks. Springer (2017) 585–595.
+
+===== PAGE 27 / 40 =====
+2976 S. GHAMBARI ET AL .
+[6] Z. Ahmad, F. Ullah, C. Tran and S. Lee, Efficient energy flight path planning algorithm using 3-d visibility roadmap
+for small unmanned aerial vehicle. Int. J. Aerosp. Eng. 2017 (2017). DOI: 10.1155/2017/2849745.
+[7] Airbus, Zephyr: the first stratospheric uas of its kind (2022). https://www.airbus.com/en/products-services/
+defence/uas/uas-solutions/zephyr.
+[8] A. Ait Saadi, A. Soukane, Y. Meraihi, A. Benmessaoud Gabis, S. Mirjalili and A. Ramdane-Cherif, UAV path
+planning using optimization approaches: a survey. Arch. Comput. Methods Eng. 29 (2022) 4233–4284.
+[9] D. Alejo, J. Cobano, G. Heredia and A. Ollero, Particle swarm optimization for collision-free 4d trajectory planning
+in unmanned aerial vehicles, in 2013 International Conference on Unmanned Aircraft Systems (ICUAS). IEEE
+(2013) 298–307.
+[10] K. Alexis, RotorS simulator. http://www.kostasalexis.com/rotors-simulator.html.
+[11] Z.A. Ali, H. Zhangang and W.B. Hang, Cooperative path planning of multiple UAVs by using max–min ant colony
+optimization along with cauchy mutant operator. Fluctuation Noise Lett. 20 (2021) 2150002.
+[12] A. Alihodzic, Fireworks algorithm with new feasibility-rules in solving UAV path planning, in 2016 3rd International
+Conference on Soft Computing & Machine Intelligence (ISCMI). IEEE (2016) 53–57.
+[13] A. Alihodzic, E. Tuba, R. Capor-Hrosik, E. Dolicanin and M. Tuba, Unmanned aerial vehicle path planning problem
+by adjusted elephant herding optimization, in 2017 25th Telecommunication Forum (TELFOR). IEEE (2017) 1–4.
+[14] R.E. Allen and M. Pavone, A real-time framework for kinodynamic planning in dynamic environments with appli-
+cation to quadrotor obstacle avoidance. Rob. Auton. Syst. 115 (2019) 174–193.
+[15] I. Alzugaray, L. Teixeira and M. Chli, Short-term UAV path-planning with monocular-inertial slam in the loop, in
+2017 IEEE International Conference on Robotics and Automation (ICRA). IEEE (2017) 2739–2746.
+[16] R. Amadeo, Loon’s bubble bursts – alphabet shuts down internet balloon company (2021). https://arstechnica.
+com/gadgets/2021/01/loons-bubble-bursts-alphabet-shuts-down-internet-balloon-company/ .
+[17] Amazon, Amazon customers in Lockeford, California, will be among the first to receive Prime
+Air drone deliveries in the U.S. (2022). https://www.aboutamazon.com/news/transportation/
+amazon-prime-air-prepares-for-drone-deliveries .
+[18] M.D.S. Arantes, J.D.S. Arantes, C.F.M. Toledo and B.C. Williams, A hybrid multi-population genetic algorithm
+for UAV path planning, in Proceedings of the Genetic and Evolutionary Computation Conference 2016. ACM
+(2016) 853–860.
+[19] M. Arjomandi, S. Agostino, M. Mammone, M. Nelson and T. Zhou, Classification of unmanned aerial vehicles.
+Report for Mechanical Engineering class, University of Adelaide, Adelaide, Australia (2006).
+[20] A. Atyabi and D.M.W. Powers, Review of classical and heuristic-based navigation and path planning approaches.
+Int. J. Adv. Comput. Technol. (IJACT) 5 (2013).
+[21] Y. Bao, X. Fu and X. Gao, Path planning for reconnaissance UAV based on particle swarm optimization, in 2010
+Second International Conference on Computational Intelligence and Natural Computing Proceedings (CINC). IEEE
+(2010) 28–32.
+[22] BBC, Facebook abandons its Project Aquila flying internet plan (2018). https://www.bbc.com/news/
+technology-44624702.
+[23] R.W. Beard, T.W. McLain, M.A. Goodrich and E.P. Anderson, Coordinated target assignment and intercept for
+unmanned air vehicles. IEEE Trans. Rob. Autom. 18 (2002) 911–922.
+[24] A. Behjat, S. Paul and S. Chowdhury, Learning reciprocal actions for cooperative collision avoidance in quadrotor
+unmanned aerial vehicles. Rob. Auton. Syst. 121 (2019) 103270.
+[25] L.P. Behnck, D. Doering, C.E. Pereira and A. Rettberg, A modified simulated annealing algorithm for SUAVs path
+planning. Ifac-Papersonline 48 (2015) 63–68.
+[26] I. Bekmezci, O.K. Sahingoz and S ¸. Temel, Flying ad-hoc networks (FANETs): a survey. Ad Hoc Netw. 11 (2013)
+1254–1270.
+[27] S. Benders and S. Schopferer, A line-graph path planner for performance constrained fixed-wing UAVs in wind
+fields, in 2017 International Conference on Unmanned Aircraft Systems (ICUAS). IEEE (2017) 79–86.
+[28] J. Berndt, JSBSim: an open source flight dynamics model in C++, in AIAA Modeling and Simulation Technologies
+Conference and Exhibit. AIAA (2004) 4923.
+[29] E. Besada-Portas, L. de la Torre, M. Jesus and B. de Andr´ es-Toro, Evolutionary trajectory planner for multiple
+UAVs in realistic scenarios. IEEE Trans. Rob. 26 (2010) 619–634.
+[30] E. Besada-Portas, L. De La Torre, A. Moreno and J.L. Risco-Mart´ ıN, On the performance comparison of multi-
+objective evolutionary UAV path planners. Inf. Sci. 238 (2013) 111–125.
+
+===== PAGE 28 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2977
+[31] Best drone flight simulators(and drone games) of 2018. https://www.dronethusiast.com/
+drone-flight-simulator/.
+[32] J.T. Betts, Survey of numerical methods for trajectory optimization. J. Guidance Control Dyn. 21 (1998) 193–207.
+[33] C. Blum, J. Puchinger, G.R. Raidl and A. Roli, Hybrid metaheuristics in combinatorial optimization: a survey.
+Appl. Soft Comput. 11 (2011) 4135–4151.
+[34] S.A. Bortoff, Path planning for UAVs, in Proceedings of the 2000 American Control Conference. ACC (IEEE Cat.
+No. 00CH36334). IEEE (2000) 364–368.
+[35] I. Boussa¨ ıd, J. Lepagnot and P. Siarry, A survey on optimization metaheuristics. Inf. Sci. 237 (2013) 82–117.
+[36] R.A. Brooks and T. Lozano-Perez, A subdivision algorithm in configuration space for findpath with rotation. IEEE
+Trans. Syst. Man Cybern. 2 (1985) 224–233.
+[37] I. Bulyko and M. Ostendorf, Joint prosody prediction and unit selection for concatenative speech synthesis, in 2001
+IEEE International Conference on Acoustics, Speech, and Signal Processing. Proceedings (Cat. No. 01CH37221).
+IEEE (2001) 781–784.
+[38] A. Bundy and L. Wallen, Breadth-first search, in Catalogue of Artificial Intelligence Tools. Springer (1984) 13.
+[39] M.N. Bygi and M. Ghodsi, 3D visibility graph. Computational Science and its Applications, Kuala Lampur (2007).
+[40] D. Cagigas, Hierarchical D* algorithm with materialization of costs for robot path planning. Rob. Auton. Syst. 52
+(2005) 190–208.
+[41] M. Cakir, 2D path planning of UAVs with genetic algorithm in a constrained environment, in 2015 6th International
+Conference on Modeling, Simulation, and Applied Optimization (ICMSAO). IEEE (2015) 1–5.
+[42] A. Calcara, A. Gilli, M. Gilli, R. Marchetti and I. Zaccagnini, Why drones have not revolutionized war: the enduring
+hider-finder competition in air warfare. Int. Secur. 46 (2022) 130–171.
+[43] S.A. Cambone, K.J. Krieg, P. Pace and W. Linton, Unmanned aircraft systems roadmap 2005–2030.Office Secretary
+Defense 8 (2005) 4–15.
+[44] E. Capello, G. Guglieri and F.B. Quagliotti, UAVs and simulation: an experience on MAVs.Aircraft Eng. Aerospace
+Technol. 81 (2009) 38–50.
+[45] A. Carrio, C. Sampedro, A. Rodriguez-Ramos and P. Campoy, A review of deep learning methods and applications
+for unmanned aerial vehicles. J. Sensors 2017 (2017). DOI: 10.1155/2017/3296874.
+[46] F. Causa and G. Fasano, Navigation-aware path planning for multiple UAVs in urban environment, in 2020
+AIAA/IEEE 39th Digital Avionics Systems Conference (DASC). IEEE (2020) 1–10.
+[47] U. Cekmez, M. Ozsiginan and O.K. Sahingoz, A UAV path planning with parallel ACO algorithm on CUDA
+platform, in 2014 International Conference on Unmanned Aircraft Systems (ICUAS). IEEE (2014) 347–354.
+[48] U. Cekmez, M. Ozsiginan and O.K. Sahingoz, Multi-UAV path planning with parallel genetic algorithms on CUDA
+architecture, in Proceedings of the 2016 on Genetic and Evolutionary Computation Conference Companion. ACM
+(2016) 1079–1086.
+[49] I. Chaari, A. Koubaa, H. Bennaceur, A. Ammar, M. Alajlan and H. Youssef, Design and performance analysis of
+global path planning techniques for autonomous mobile robots in grid environments. Int. J. Adv. Robotic Syst. 14
+(2017) 1729881416663663.
+[50] H. Chang and T. Jin, Command fusion based fuzzy controller design for moving obstacle avoidance of mobile robot,
+in Future Information Communication Technology and Applications. Springer, Dordrecht (2013) 905–913.
+[51] I.M. Chao, B.L. Golden and E.A. Wasil, A fast and effective heuristic for the orienteering problem. Eur. J. Oper.
+Res. 88 (1996) 475–489.
+[52] S.R. Chapala, G.S. Pirati and U.R. Nelakuditi, Determination of coordinate transformations in UAVs, in 2016
+Second International Conference on Cognitive Computing and Information Processing (CCIP). IEEE (2016) 1–5.
+[53] X. Chen and J. Zhang, The three-dimension path planning of UAV based on improved artificial potential field in
+dynamic environment, in 2013 5th International Conference on Intelligent Human-Machine Systems and Cyber-
+netics. IEEE (2013) 144–147.
+[54] D.Z. Chen, R.J. Szczerba and J. Uhran, Planning conditional shortest paths through an unknown environment:
+a framed-quadtree approach, in Proceedings 1995 IEEE/RSJ International Conference on Intelligent Robots and
+Systems. Human Robot Interaction and Cooperative Robots. IEEE (1995) 33–38.
+[55] Y. Chen, J. Han and X. Zhao, Three-dimensional path planning for unmanned aerial vehicle based on linear
+programming. Robotica 30 (2012) 773–781.
+[56] Y. Chen, J. Yu, Y. Mei, Y. Wang and X. Su, Modified central force optimization (MCFO) algorithm for 3D UAV
+path planning. Neurocomputing 171 (2016) 878–888.
+
+===== PAGE 29 / 40 =====
+2978 S. GHAMBARI ET AL .
+[57] T. Chen, G. Zhang, X. Hu and J. Xiao, Unmanned aerial vehicle route planning method based on a star algorithm,
+in 2018 13th IEEE Conference on Industrial Electronics and Applications (ICIEA). IEEE (2018) 1510–1514.
+[58] A.J. Chen, M.J. Sun, Z.H. Wang, N.Z. Feng and Y. Shen, Attitude trajectory tracking of quadrotor UAV using
+super-twisting observer-based adaptive controller. Proc. Inst. Mech. Eng. Part G: J. Aerosp. Eng. 235 (2021)
+1146–1157.
+[59] P. Cheng and S.M. LaValle, Resolution complete rapidly-exploring random trees, in Proceedings 2002 IEEE Inter-
+national Conference on Robotics and Automation (Cat. No. 02CH37292). IEEE (2002) 267–272.
+[60] C.T. Cheng, K. Fallahi, H. Leung and K.T. Chi, Cooperative path planner for UAVs using ACO algorithm with
+gaussian distribution functions, in 2009 IEEE International Symposium on Circuits and Systems. IEEE (2009)
+173–176.
+[61] Y. Cheng, D. Li, W.E. Wong, M. Zhao and D. Mo, Multi-UAV collaborative path planning using hierarchical
+reinforcement learning and simulated annealing. Int. J. Perform. Eng. 18 (2022) 463.
+[62] Z. Chengjun and M. Xiuyun, Spare A * search approach for UAV route planning, in 2017 IEEE International
+Conference on Unmanned Systems (ICUS). IEEE (2017) 413–417.
+[63] S.Y. Choi and D. Cha, Unmanned aerial vehicles using machine learning for autonomous flight; state-of-the-art.
+Adv. Rob. 33 (2019) 265–277.
+[64] D. Choi, K. Lee and D. Kim, Enhanced potential field-based collision avoidance for unmanned aerial vehicles in
+a dynamic environment, in AIAA Scitech 2020 Forum. American Institute of Aeronautics and Astronautics, Inc.
+(2020) 0487.
+[65] H. Cicibas, K.A. Demir and N. Arica, Comparison of 3D versus 4D path planning for unmanned aerial vehicles.
+Defence Sci. J. 66 (2016) 651–664.
+[66] J. Cosgrove, Drones, manned aircraft now a regular staple in california firefighting (2018). https://www.govtech.
+com/dc/drones-manned-aircraft-now-a-regular-staple-in-california-firefighting.html .
+[67] Credits for supporting HELI-X. http://www.heli-x.info/cms/credits/.
+[68] C. Cui, N. Wang and J. Chen, Improved ant colony optimization algorithm for UAV path planning, in 2014 5th
+IEEE International Conference on Software Engineering and Service Science (ICSESS). IEEE (2014) 291–295.
+[69] N. Dadkhah and B. Mettler, Survey of motion planning literature in the presence of uncertainty: considerations
+for UAV guidance. J. Intell. Rob. Syst. 65 (2012) 233–246.
+[70] J. Dai, Y. Wang, C. Wang, J. Ying and J. Zhai, Research on hierarchical potential field method of path planning for
+UAVs, in 2018 2nd IEEE Advanced Information Management, Communicates, Electronic and Automation Control
+Conference (IMCEC). IEEE (2018) 529–535.
+[71] H. Daryanavard and A. Harifi, UAV path planning for data gathering of IoT nodes: ant colony or simulated
+annealing optimization, in 2019 3rd International Conference on Internet of Things and Applications (IoT). IEEE
+(2019) 1–4.
+[72] E. Dasdemir, M. K¨ oksalan and D.T. ¨Ozt¨ urk, A flexible reference point-based multi-objective evolutionary algo-
+rithm: an application to the UAV route planning problem. Comput. Oper. Res. 114 (2020) 104811.
+[73] A. Dashkevich, S. Rosokha and D. Vorontsova, Simulation tool for the drone trajectory planning based on genetic
+algorithm approach, in 2020 IEEE KhPI Week on Advanced Technology (KhPIWeek). IEEE (2020) 387–390.
+[74] L. De Filippis, G. Guglieri and F. Quagliotti, Path planning strategies for UAVs in 3D environments. J. Intell.
+Rob. Syst. 65 (2012) 247–264.
+[75] S.K. Debnath, R. Omar and N.A. Latip, Comparison of different configuration space representations for path
+planning under combinatorial method. Indonesian J. Electr. Eng. Comput. Sci. 1 (2019) 401–408.
+[76] S.K. Debnath, R. Omar and N.B.A. Latip, A review on energy efficient path planning algorithms for unmanned
+air vehicles, in Computational Science and Technology. Springer, Singapore (2019) 523–532.
+[77] S.K. Debnath, R. Omar, S. Bagchi, E.N. Sabudin, M.H.A.S. Kandar, K. Foysol and T.K. Chakraborty, Different
+cell decomposition path planning methods for unmanned air vehicles-a review, in Proceedings of the 11th National
+Technical Seminar on Unmanned System Technology 2019. Springer (2020) 99–111.
+[78] Defence Advanced Research Agency, DARPA’s 60th anniversary. https://www.darpa.mil/attachments/
+DARAPA60_publication-no-ads.pdf.
+[79] R. DeFrangesco and S. DeFrangesco, The Big Book of Drones. CRC Press (2022).
+[80] R. Deits and R. Tedrake, Efficient mixed-integer planning for UAVs in cluttered environments, in 2015 IEEE
+International Conference on Robotics and Automation (ICRA). IEEE (2015) 42–49.
+[81] C. Di Franco and G. Buttazzo, Energy-aware coverage path planning of UAVs, in 2015 IEEE International Con-
+ference on Autonomous Robot Systems and Competitions. IEEE (2015) 111–117.
+
+===== PAGE 30 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2979
+[82] E.W. Dijkstra, A note on two problems in connexion with graphs. Numer. Math. 1 (1959) 269–271.
+[83] Z. Dong, Z. Chen, R. Zhou and R. Zhang, A hybrid approach of virtual force and A * search algorithm for UAV
+path re-planning, in 2011 6th IEEE Conference on Industrial Electronics and Applications (ICIEA). IEEE (2011)
+1140–1145.
+[84] M. Dorigo, M. Birattari and T. Stutzle, Ant colony optimization. IEEE Comput. Intell. Mag. 1 (2006) 28–39.
+[85] H.B. Duan, X.Y. Zhang, J. Wu and G.J. Ma, Max–min adaptive ant colony optimization approach to multi-UAVs
+coordinated trajectory replanning in dynamic and uncertain environments. J. Bionic Eng. 6 (2009) 161–173.
+[86] H. Duan, Y. Yu, X. Zhang and S. Shao, Three-dimension path planning for UCAV using hybrid meta-heuristic
+ACO-DE algorithm. Simul. Model. Pract. Theory 18 (2010) 1104–1115.
+[87] M. Elbanhawi and M. Simic, Sampling-based robot motion planning: a review. IEEE Access 2 (2014) 56–77.
+[88] A. Elfes, Using occupancy grids for mobile robot perception and navigation. Computer 22 (1989) 46–57.
+[89] C. Ellis, The best free drone simulator 2018 – TechRadar. https://www.techradar.com/news/
+the-best-free-drone-simulator .
+[90] X. Fan, Y. Guo, H. Liu, B. Wei and W. Lyu, Improved artificial potential field method applied for AUV path
+planning. Math. Prob. Eng. 2020 (2020) 1–21.
+[91] D. Ferguson and A. Stentz, Using interpolation to improve path planning: the field D * algorithm. J. Field Rob. 23
+(2006) 79–101.
+[92] M. Flint, M. Polycarpou and E. Fernandez-Gaucherand, Cooperative path-planning for autonomous vehicles using
+dynamic programming. IFAC Proc. Vol. 35 (2002) 481–486.
+[93] J.L. Foo, J. Knutzon, J. Oliver and E. Winer, Three-dimensional multi-objective path planner for unmanned aerial
+vehicles using particle swarm optimization, in 48th AIAA ASME ASCE AHS ASC Structures, Structural Dynamics,
+and Materials Conference. AIAA (2007) 1881.
+[94] P.L. Frana and T.J. Misa, An interview with Edsger W. Dijkstra. Commun. ACM 53 (2010) 41–47.
+[95] M. Freese, S. Singh, F. Ozaki and N. Matsuhira, Virtual robot experimentation platform V-REP: a versatile 3D
+robot simulator, in International Conference on Simulation, Modeling, and Programming for Autonomous Robots.
+Springer (2010) 51–62.
+[96] FSD, Drones in humanitarian action. Tech. report. Fondation Suisse de D´ eminage (FSD) (2016).
+[97] Y. Fu, M. Ding and C. Zhou, Phase angle-encoded and quantum-behaved particle swarm optimization applied
+to three-dimensional route planning for UAV. IEEE Trans. Syst. Man Cybern. Part A: Syst. Humans 42 (2012)
+511–526.
+[98] A. F¨ ugenschuh, Aspects of time in mixed-integer (non-)linear optimization. Professur f¨ ur Angewandte Mathematik,
+Helmut-Schmidt-Universit¨ at Hamburg (2015).
+[99] F. Furrer, M. Burri, M. Achtelik and R. Siegwart, Rotors – a modular Gazebo MAV simulator framework, in Robot
+Operating System (ROS). Springer, Cham (2016) 595–625.
+[100] E. Galceran and M. Carreras, A survey on coverage path planning for robotics. Rob. Auton. Syst. 61 (2013)
+1258–1276.
+[101] F. Gao and S. Shen, Online quadrotor trajectory generation and autonomous navigation on point clouds, in 2016
+IEEE International Symposium on Safety, Security, and Rescue Robotics (SSRR). IEEE (2016) 139–146.
+[102] J. Garcia-Bernardo, P.S. Dodds and N.F. Johnson, Quantitative patterns in drone wars. Phys. A: Stat. Mech. App.
+443 (2016) 380–384.
+[103] A. Gasparetto, P. Boscariol, A. Lanzutti and R. Vidoni, Path planning and trajectory planning algorithms: a
+general overview, in Motion and Operation Planning of Robotic Systems. Springer, Cham (2015) 3–27.
+[104] S.A. Gautam and N. Verma, Path planning for unmanned aerial vehicle based on genetic algorithm & artificial
+neural network in 3D, in 2014 International Conference on Data Mining and Intelligent Computing (ICDMIC).
+IEEE (2014) 1–5.
+[105] S. Ghambari, J. Lepagnot, L. Jourdan and L. Idoumghar, A comparative study of meta-heuristic algorithms for
+solving UAV path planning, in 2018 IEEE Symposium Series on Computational Intelligence (SSCI). (2018) 174–181.
+[106] S. Ghambari, L. Idoumghar, L. Jourdan and J. Lepagnot, An improved TLBO algorithm for solving UAV path
+planning problem, in 2019 IEEE Symposium Series on Computational Intelligence (SSCI) (2019) 2261–2268.
+[107] S. Ghambari, L. Idoumghar, L. Jourdan and J. Lepagnot, A hybrid evolutionary algorithm for offline UAV path
+planning, in International Conference on Artificial Evolution (Evolution Artificielle). Springer (2019) 205–218.
+[108] S. Ghoshroy, The X-37B: Backdoor weaponization of space? Bull. At. Sci. 71 (2015) 19–29.
+[109] A.R. Giard, S. Dharba, M. Pachter and P.R. Chandler, Stochastic dynamic rogramming for uncertainty handling
+in UAV operations, in 2007 American Control Conference ACC’07 . IEEE (2007) 1079–1084.
+
+===== PAGE 31 / 40 =====
+2980 S. GHAMBARI ET AL .
+[110] J. Giesbrecht, Global path planning for unmanned ground vehicles. Tech. report. Defence Research and Develop-
+ment Suffield (ALBERTA) (2004).
+[111] D. Glavaˇ ski, M. Volf and M. Bonkovic, Robot motion planning using exact cell decomposition and potential field
+methods, in Proceedings of the 9th WSEAS international conference on Simulation, modelling and optimization.
+World Scientific and Engineering Academy and Society (WSEAS) (2009) 126–131.
+[112] U. Goel, S. Varshney, A. Jain, S. Maheshwari and A. Shukla, Three dimensional path planning for UAVs in dynamic
+environment using glow-worm swarm optimization. Proc. Comput. Sci. 133 (2018) 230–239.
+[113] C. Goerzen, Z. Kong and B. Mettler, A survey of motion planning algorithms from the perspective of autonomous
+UAV guidance. J. Intell. Rob. Syst. 57 (2010) 65.
+[114] M. Golabi, S. Ghambari, J. Lepagnot, L. Jourdan, M. Br´ evilliers and L. Idoumghar, Bypassing or flying above
+the obstacles? A novel multi-objective UAV path planning problem, in 2020 IEEE Congress on Evolutionary
+Computation (CEC). IEEE (2020) 1–8.
+[115] D.E. Goldberg and J.H. Holland, Genetic algorithms and machine learning. Mach. Learn. 3 (1988) 95–99.
+[116] D. Gonz´ alez, J. P´ erez, V. Milan´ es and F. Nashashibi, A review of motion planning techniques for automated
+vehicles. IEEE Trans. Intell. Transp. Syst. 17 (2015) 1135–1145.
+[117] Y. Guan, M. Gao and Y. Bai, Double-ant colony based UAV path planning algorithm, in Proceedings of the 2019
+11th International Conference on Machine Learning and Computing. ACM (2019) 258–262.
+[118] J.A. Guerrero, J.A. Escare˜ no and Y. Bestaoui, Quad-rotor MAV trajectory planning in wind fields, in 2013 IEEE
+International Conference on Robotics and Automation. IEEE (2013) 778–783.
+[119] J.S. Gutmann, M. Fukuchi and M. Fujita, A floor and obstacle height map for 3D navigation of a humanoid robot,
+in Proceedings of the 2005 IEEE International Conference on Robotics and Automation. IEEE (2005) 1066–1071.
+[120] P.E. Hart, N.J. Nilsson and B. Raphael, A formal basis for the heuristic determination of minimum cost paths.
+IEEE Trans. Syst. Sci. Cybern. 4 (1968) 100–107.
+[121] M. Hassanalian and A. Abdelkefi, Classifications, applications, and design challenges of drones: a review. Prog.
+Aerosp. Sci. 91 (2017) 99–131.
+[122] S. Hayat, E. Yanmaz, T.X. Brown and C. Bettstetter, Multi-objective UAV path planning for search and rescue,
+in 2017 IEEE International Conference on Robotics and Automation (ICRA). IEEE (2017) 5569–5574.
+[123] Y. He, Q. Zeng, J. Liu, G. Xu and X. Deng, Path planning for indoor UAV based on ant colony optimization, in
+2013 25th Chinese Control and Decision Conference (CCDC). IEEE (2013) 2919–2923.
+[124] T. Hebecker, R. Buchholz and F. Ortmeier, Model-based local path planning for UAVs. J. Intell. Rob. Syst. 78
+(2015) 127–142.
+[125] H. Heidari and M. Saska, Collision-free trajectory planning of multi-rotor UAVs in a wind condition based on
+modified potential field. Mech. Mach. Theory 156 (2021) 104140.
+[126] S. Hrabar, 3D path planning and stereo-based obstacle avoidance for rotorcraft UAVs, in 2008 IEEE/RSJ Inter-
+national Conference on Intelligent Robots and Systems. IEEE (2008) 807–814.
+[127] T.W. Hsu and J.S. Liu, Design of smooth path based on the conversion between 𝜂 3 spline and bezier curve, in
+2020 American Control Conference (ACC). IEEE (2020) 3230–3235.
+[128] C. Huang and J. Fei, UAV path planning based on particle swarm optimization with global best path competition.
+Int. J. Pattern Recognit. Artif. Intell. 32 (2018) 1859008.
+[129] H. Huang, J. Deng, Y. Lan, A. Yang, X. Deng and L. Zhang, A fully convolutional network for weed mapping of
+unmanned aerial vehicle (UAV) imagery. PloS One 13 (2018) e0196302.
+[130] L. Huo, J. Zhu, G. Wu and Z. Li, A novel simulated annealing based strategy for balanced UAV task assignment
+and path planning. Sensors 20 (2020) 4769.
+[131] Y.K. Hwang and N. Ahuja, Gross motion planning – a survey. ACM Comput. Surv. (CSUR) 24 (1992) 219–291.
+[132] D. Ibrahim, An overview of soft computing. Proc. Comput. Sci. 102 (2016) 34–38.
+[133] B.T. Ingersoll, J.K. Ingersoll, P. DeFranco and A. Ning, UAV path-planning using Bezier curves and a receding
+horizon approach, in AIAA Modeling and Simulation Technologies Conference. American Institute of Aeronautics
+and Astronautics, Inc. (2016) 3675.
+[134] Introduction FlightGear flight simulator. http://home.flightgear.org/about/.
+[135] I. Iswanto, O. Wahyunggoro and A.I. Cahyadi, Quadrotor path planning based on modified fuzzy cell decomposition
+algorithm. TELKOMNIKA (Telecommun. Comput. Electron. Control) 14 (2016) 655–664.
+[136] V. Jamshidi, V. Nekoukar and M.H. Refan, Analysis of parallel genetic algorithm and parallel particle swarm
+optimization algorithm UAV path planning on controller area network. J. Control Autom. Electr. Syst. 31 (2020)
+129–140.
+
+===== PAGE 32 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2981
+[137] Y. Jang, Y. Lee and H.J. Kim, Navigation-assistant path planning within a MAV team, in 2020 IEEE/RSJ Inter-
+national Conference on Intelligent Robots and Systems (IROS). IEEE (2020) 1436–1443.
+[138] P.T. Jardine, S. Givigi and S. Yousefi, Parameter tuning for prediction-based quadcopter trajectory planning using
+learning automata. IFAC-PapersOnLine 50 (2017) 2341–2346.
+[139] A.L. Jennings, R. Ordonez and N. Ceccarelli, Dynamic programming applied to UAV way point path planning in
+wind, in 2008 IEEE International Conference on Computer-Aided Control Systems. IEEE (2008) 215–220.
+[140] W. Jing, D. Deng, Y. Wu and K. Shimada, Multi-UAV coverage path planning for the inspection of large and
+complex structures, in 2020 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). IEEE
+(2020) 1480–1486.
+[141] M. Jones, S. Djahel and K. Welsh, Path-planning for unmanned aerial vehicles with environment complexity
+considerations: a survey. ACM Comput. Surv. 55 (2023) 1–39.
+[142] A. Jorge, L. Torgo, P. Brazdil, R. Camacho and J. Gama, Knowledge Discovery in Databases: PKDD 2005:
+9th European Conference on Principles and Practice of Knowledge Discovery in Databases, October 3–7, 2005,
+Proceedings. Vol. 3721. Springer Porto, Portugal (2005).
+[143] J.L. Junell, E.J. Van Kampen, C.C. de Visser and Q.P. Chu, Reinforcement learning applied to a quadrotor
+guidance law in autonomous flight, in AIAA Guidance, Navigation, and Control Conference. American Institute
+of Aeronautics and Astronautics, Inc. (2015) 1990.
+[144] G. Kahn, A. Villaflor, V. Pong, P. Abbeel and S. Levine, Uncertainty-aware reinforcement learning for collision
+avoidance. Preprint arXiv:1702.01182 (2017).
+[145] F. Kamrani and R. Ayani, Using on-line simulation for adaptive path planning of UAVs, in 11th IEEE International
+Symposium on Distributed Simulation and Real-Time Applications (DS-RT’07). IEEE (2007) 167–174.
+[146] E.M. Kan, M.H. Lim, Y.S. Ong, A.H. Tan and S.P. Yeo, Extreme learning machine terrain-based navigation for
+unmanned aerial vehicles. Neural Comput. App. 22 (2013) 469–477.
+[147] S. Karaman and E. Frazzoli, Sampling-based algorithms for optimal motion planning. Int. J. Rob. Res. 30 (2011)
+846–894.
+[148] L.E. Kavraki, P. Svestka, J.C. Latombe and M.H. Overmars, Probabilistic roadmaps for path planning in high-
+dimensional configuration spaces. IEEE Trans. Rob. Autom. 12 (1996) 566–580.
+[149] L.E. Kavraki, J.C. Latombe, R. Motwani and P. Raghavan, Randomized query processing in robot path planning.
+J. Comput. Syst. Sci. 57 (1998) 50–60.
+[150] E. Kayacan and R. Maslim, Type-2 fuzzy logic trajectory tracking control of quadrotor VTOL aircraft with elliptic
+membership functions. IEEE/ASME Trans. Mech. 22 (2017) 339–348.
+[151] J. Kennedy and R. Eberhart, Particle swarm optimization, in Proceedings of ICNN’95-International Conference
+on Neural Networks. IEEE (1995) 1942–1948.
+[152] P. Kermani and A.A. Afzalian, Flight path planning using ga and fuzzy logic considering communication constraints,
+in 2014 7th International Symposium on Telecommunications (IST). IEEE (2014) 6–11.
+[153] H. Kesteloo, Thermal drone finds missing woman in seconds (2021). https://dronexl.co/2021/11/14/
+thermal-drone-finds-missing-woman/ .
+[154] O. Khatib, Real-time obstacle avoidance for manipulators and mobile robots, in Autonomous Robot Vehicles.
+Springer, Stanford, CA (1986) 396–404.
+[155] F. Kiani, A. Seyyedabbasi, R. Aliyev, M.U. Gulle, H. Basyildiz and M.A. Shah, Adapted-RRT: novel hybrid
+method to solve three-dimensional path planning problem using sampling and metaheuristic-based algorithms.
+Neural Comput. App. 33 (2021) 15569–15599.
+[156] I. Kim, S. Shin, J. Wu, S.D. Kim and C.G. Kim, Obstacle avoidance path planning for UAV using reinforcement
+learning under simulated environment, in IASER 3rd International Conference on Electronics, Electrical Engineer-
+ing, Computer Science, Okinawa (2017) 34–36.
+[157] E. King, Y. Kuwata and J.P. How, Experimental demonstration of coordinated control for multi-vehicle teams.
+Int. J. Syst. Sci. 37 (2006) 385–398.
+[158] M. Kloetzer, C. Mahulea and R. Gonzalez, Optimizing cell decomposition path planning for mobile robots using
+different metrics, in 2015 19th International Conference on System Theory, Control and Computing (ICSTCC).
+IEEE (2015) 565–570.
+[159] S. Koenig, C. Tovey and Y. Smirnov, Performance bounds for planning in unknown terrain. Artif. Intell. 147
+(2003) 253–279.
+[160] J. Kok and J. Chahl, A low-cost simulation platform for flapping wing MAVs, in Bioinspiration, Biomimetics, and
+Bioreplication 2015. International Society for Optics and Photonics (2015) 94290L.
+
+===== PAGE 33 / 40 =====
+2982 S. GHAMBARI ET AL .
+[161] S. Konatowski and P. Paw lowski, Application of the ACO algorithm for UAV path planning. Przeglad Elektrotech-
+niczny 95 (2019) 115–118.
+[162] M.H. Korayem, M. Nazemizadeh and H.R. Nohooji, Optimal point-to-point motion planning of non-holonomic
+mobile robots in the presence of multiple obstacles. J. Brazilian Soc. Mech. Sci. Eng. 36 (2014) 221–232.
+[163] S. Kurnaz, O. Cetin and O. Kaynak, Adaptive neuro-fuzzy inference system based autonomous flight control of
+unmanned air vehicles. Expert Syst. App. 37 (2010) 1229–1234.
+[164] Y. Kuwata and J. How, Three dimensional receding horizon control for UAVs, in AIAA Guidance, Navigation, and
+Control Conference and Exhibit. American Institute of Aeronautics and Astronautics, Inc. (2004) 5144.
+[165] J. Kwak and Y. Sung, Autonomous UAV flight control for GPS-based navigation. IEEE Access 6 (2018) 37947–
+37955.
+[166] W.G. La, S. Park and H. Kim, D-MUNS: Distributed multiple UAVs’ network simulator, in 2017 Ninth International
+Conference on Ubiquitous and Future Networks (ICUFN). IEEE (2017) 15–17.
+[167] N.B.A. Latip, R. Omar and S.K. Debnath, Optimal path planning using equilateral spaces oriented visibility graph
+method. Int. J. Electr. Comput. Eng. (IJECE) 7 (2017) 3046–3051.
+[168] J.C. Latombe, Exact cell decomposition, in Robot Motion Planning. Springer, Boston, MA (1991) 200–247.
+[169] J.C. Latombe, Robot Motion Planning. Vol. 124. Springer Science & Business Media Stanford (2012).
+[170] S.M. LaValle, Planning Algorithms. Cambridge University Press (2006).
+[171] S.M. LaValle, Rapidly-Exploring Random Trees: A New Tool for Path Planning. Citeseer (1998).
+[172] D. Lee and D.H. Shim, RRT-based path planning for fixed-wing UAVs with arrival time and approach direction
+constraints, in 2014 International Conference on Unmanned Aircraft Systems (ICUAS). IEEE (2014) 317–328.
+[173] G. Lei, M.Z. Dong, T. Xu and L. Wang, Multi-agent path planning for unmanned aerial vehicle based on threats
+analysis, in 2011 3rd International Workshop on Intelligent Systems and Applications. IEEE (2011) 1–4.
+[174] G. Li, A. Yamashita, H. Asama and Y. Tamura, An efficient improved artificial potential field based regression
+search method for robot path planning, in 2012 IEEE International Conference on Mechatronics and Automation.
+IEEE (2012) 1227–1232.
+[175] P. Li and H. Duan, Path planning of unmanned aerial vehicle based on improved gravitational search algorithm.
+Sci. Chin. Technol. Sci. 55 (2012) 2712–2719.
+[176] Y. Li, H. Chen, M.J. Er and X. Wang, Coverage path planning for UAVs based on enhanced exact cellular
+decomposition method. Mechatronics 21 (2011) 876–885.
+[177] Y. Li, W. Wei, Y. Gao, D. Wang and Z. Fan, PQ-RRT *: An improved path planning algorithm for mobile robots.
+Expert Syst. App. 152 (2020) 113425.
+[178] S.R. Lindemann and S.M. LaValle, Current issues in sampling-based motion planning, in Robotics Research. The
+Eleventh International Symposium. Springer (2005) 36–54.
+[179] Y. Liu and Y. Zhao, A virtual-waypoint based artificial potential field method for UAV path planning, in 2016
+IEEE Chinese Guidance, Navigation and Control Conference (CGNCC). IEEE (2016) 949–953.
+[180] A. Loquercio, A.I. Maqueda, C.R. Del-Blanco and D. Scaramuzza, Dronet: learning to fly by driving. IEEE Rob.
+Autom. Lett. 3 (2018) 1088–1095.
+[181] Z. Ma, J. Hu, Y. Niu and H. Yu, Reactive obstacle avoidance method for a UAV, in Deep Learning for Unmanned
+Systems. Springer, (2021) 83–108.
+[182] T.T. Mac, C. Copot, A. Hernandez and R. De Keyser, Improved potential field method for unknown obstacle
+avoidance using UAV in indoor environment, in 2016 IEEE 14th International Symposium on Applied Machine
+Intelligence and Informatics (SAMI). IEEE (2016) 345–350.
+[183] D.G. Macharet, A.A. Neto and M.F.M. Campos, Feasible UAV path planning using genetic algorithms and b´ ezier
+curves, in Brazilian Symposium on Artificial Intelligence. Springer (2010) 223–232.
+[184] E. Magid, R. Lavrenov and I. Afanasyev, Voronoi-based trajectory optimization for UGV path planning, in 2017
+International Conference on Mechanical, System and Control Engineering (ICMSC). IEEE (2017) 383–387.
+[185] A. Mairaj, A.I. Baba and A.Y. Javaid, Application specific drone simulators: recent advances and challenges.Simul.
+Modell. Pract. Theory 94 (2019) 100–117.
+[186] A.L. Majdik, Y. Albers-Schoenberg and D. Scaramuzza, MAV urban localization from google street view data, in
+2013 IEEE/RSJ International Conference on Intelligent Robots and Systems. IEEE (2013) 3979–3986.
+[187] E. Masehian and M. Amin-Naseri, A voronoi diagram-visibility graph-potential field compound algorithm for robot
+path planning. J. Rob. Syst. 21 (2004) 275–300.
+[188] F. Matoui, B. Boussaid and M.N. Abdelkrim, Distributed path planning of a multi-robot system based on the
+neighborhood artificial potential field approach. Simulation 95 (2019) 637–657.
+
+===== PAGE 34 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2983
+[189] P. M´ aty´ as and N. M´ at´ e, Brief history of UAV development.Rep¨ ul´ estudom´ anyi K¨ ozlem´ enyek31 (2019) 155–166.
+[190] T. McLain and R. Beard, Trajectory planning for coordinated rendezvous of unmanned air vehicles, in AIAA
+Guidance, navigation, and control conference and exhibit. American Institute of Aeronautics and Astronautics,
+Inc. (2000) 4369.
+[191] M. McNabb, Amazon drone delivery: a brief history of the patents, problems and progress from the dronelife arc-
+hives (2022). https://dronelife.com/2022/06/20/amazon-drone-delivery-a-brief-history-of-the-patents-
+problems-and-progress-from-the-dronelife-archives/.
+[192] F.L.L. Medeiros and J.D.S. Da Silva, A Dijkstra algorithm for fixed-wing UAV motion planning based on terrain
+elevation, in Brazilian Symposium on Artificial Intelligence. Springer (2010) 213–222.
+[193] A.A. Meera, M. Popovi´ c, A. Millane and R. Siegwart, Obstacle-aware adaptive informative path planning for
+UAV-based target search, in 2019 International Conference on Robotics and Automation (ICRA). IEEE (2019)
+718–724.
+[194] R.A. Meyers, Encyclopedia of Complexity and Systems Science. Springer New York (2009).
+[195] Microdrones, Drones in construction: Watch this 3 minute case study (2022). https://www.microdrones.com/en/
+content/drones-in-construction-watch-this-3-minute-case-study/ .
+[196] S. Mittal and K. Deb, Three-dimensional offline path planning for UAVs using multiobjective evolutionary algo-
+rithms, in 2007 IEEE Congress on Evolutionary Computation. IEEE (2007) 3195–3202.
+[197] J. Modares, F. Ghanei, N. Mastronarde and K. Dantu, UB-ANC planner: energy efficient coverage path planning
+with multiple drones, in 2017 IEEE International Conference on Robotics and Automation (ICRA). IEEE (2017)
+6182–6189.
+[198] J. Mou, T. Hu, P. Chen and L. Chen, Cooperative mass path planning for marine man overboard search. Ocean
+Eng. 235 (2021) 109376.
+[199] V. Narayanan, M. Phillips and M. Likhachev, Anytime safe interval path planning for dynamic environments, in
+2012 IEEE/RSJ International Conference on Intelligent Robots and Systems. IEEE (2012) 4708–4715.
+[200] M. Needham and A.E. Hodler, Graph Algorithms: Practical Examples in Apache Spark and NEO4J. O’Reilly
+Media Sebastopol, CA, USA (2019).
+[201] A.A.R. Newaz, F.A. Pratama and N.Y. Chong, Exploration priority based heuristic approach to UAV path planning,
+in 2013 IEEE RO-MAN. IEEE (2013) 521–526.
+[202] L.R. Newcome, Unmanned Aviation: A Brief History of Unmanned Aerial Vehicles. American Institute of Aero-
+nautics and Astronautics Reston, VA, USA (2004).
+[203] I.K. Nikolos and A.N. Brintaki, Coordinated UAV path planning using differential evolution, in Proceedings of the
+2005 IEEE International Symposium on, Mediterrean Conference on Control and Automation Intelligent Control.
+IEEE (2005) 549–556.
+[204] I.K. Nikolos, K.P. Valavanis, N.C. Tsourveloudis and A.N. Kostaras, Evolutionary algorithm based offline/online
+path planner for UAV navigation. IEEE Trans. Syst. Man Cybern. Part B (Cybern.) 33 (2003) 898–912.
+[205] H. Niu, A. Savvaris, A. Tsourdos and Z. Ji, Voronoi-visibility roadmap-based path planning algorithm for unmanned
+surface vehicles. J. Navig. 72 (2019) 850–874.
+[206] K. Nonami, F. Kendoul, S. Suzuki, W. Wang and D. Nakazawa, Autonomous Flying Robots: Unmanned Aerial
+Vehicles and Micro Aerial Vehicles. Springer Science & Business Media Japan (2010).
+[207] O. Nowers, D.J. Duxbury, J. Zhang and B.W. Drinkwater, Novel ray-tracing algorithms in NDE: application of
+Dijkstra and A * algorithms to the inspection of an anisotropic weld. NDT & E Int. 61 (2014) 58–66.
+[208] U. Orozco-Rosas, O. Montiel and R. Sep´ ulveda, Mobile robot path planning using membrane evolutionary artificial
+potential field. Appl. Soft Comput. 77 (2019) 236–251.
+[209] A. Otto, N. Agatz, J. Campbell, B. Golden and E. Pesch, Optimization approaches for civil applications of
+unmanned aerial vehicles (UAVs) or aerial drones: a survey. Networks 72 (2018) 411–458.
+[210] R.P. Padhy, S. Verma, S. Ahmad, S.K. Choudhury and P.K. Sa, Deep neural network for autonomous UAV
+navigation in indoor corridor environments. Proc. Comput. Sci. 133 (2018) 643–650.
+[211] J. Pan and D. Manocha, Efficient configuration space construction and optimization for motion planning. Engi-
+neering 1 (2015) 046–057.
+[212] L. Paulino, C. Hannum, A.S. Varde and C.J. Conti, Search methods in motion planning for mobile robots, in
+Intelligent Systems and Applications, edited by K. Arai. Springer International Publishing (2022) 802–822.
+[213] Y.V. Pehlivano˘ glu, A new particle swarm optimization method for the path planning of UAV in 3D environment.
+J. Aeron. Space Technol. 5 (2012) 1–14.
+
+===== PAGE 35 / 40 =====
+2984 S. GHAMBARI ET AL .
+[214] M. P´ erez-Ortiz, J.M. Pe˜ na, P.A. Guti´ errez, J. Torres-S´ anchez, C. Herv´ as-Mart´ ınez and F. L´ opez-Granados, Select-
+ing patterns and features for between-and within-crop-row weed mapping using UAV-imagery. Expert Syst. App.
+47 (2016) 85–94.
+[215] A.R. Perry, The flightgear flight simulator, in Proceedings of the USENIX Annual Technical Conference. Vol. 686.
+USENIX (2004) 1–12.
+[216] P.O. Pettersson and P. Doherty, Probabilistic roadmap based path planning for an autonomous unmanned aerial
+vehicle, in Proc. of the ICAPS-04 Workshop on Connecting Planning Theory with Practice. American Association
+for Artificial Intelligence (2004).
+[217] P.O. Pettersson and P. Doherty, Probabilistic roadmap based path planning for an autonomous unmanned heli-
+copter. J. Intell. Fuzzy Syst. 17 (2006) 395–405.
+[218] A. Plioutsias, N. Karanikas and M.M. Chatzimihailidou, Hazard analysis and safety requirements for small drone
+operations: to what extent do popular drones embed safety? Risk Anal. 38 (2018) 562–584.
+[219] M. Popovi´ c, G. Hitz, J. Nieto, I. Sa, R. Siegwart and E. Galceran, Online informative path planning for active
+classification using UAVs, in 2017 IEEE International Conference on Robotics and Automation (ICRA). IEEE
+(2017) 5753–5758.
+[220] S. Poudel and S. Moh, Hybrid path planning for efficient data collection in UAV-aided WSNS for emergency
+applications. Sensors 21 (2021) 2839.
+[221] S. Primatesta, M. Scanavino, G. Guglieri and A. Rizzo, A risk-based path planning strategy to compute optimum
+risk path for unmanned aircraft systems over populated areas, in 2020 International Conference on Unmanned
+Aircraft Systems (ICUAS). IEEE (2020) 641–650.
+[222] A. Pruitt, Hone your drone piloting skills with the Zephyr simulator – TechRepublic. https://tinyurl.com/
+y8g4byaf.
+[223] A. Puente-Castro, D. Rivero, A. Pazos and E. Fernandez-Blanco, A review of artificial intelligence applied to path
+planning in UAV swarms. Neural Comput. App. 34 (2022) 153–170.
+[224] Z. Qadir, F. Ullah, H.S. Munawar and F. Al-Turjman, Addressing disasters in smart cities through UAVs path
+planning and 5G communications: a systematic review. Comput. Commun. 168 (2021) 114–135.
+[225] Z. Qi, Z. Shao, Y.S. Ping, L.M. Hiot and Y.K. Leong, An improved heuristic algorithm for UAV path planning in
+3D environment, in 2010 Second International Conference on Intelligent Human-Machine Systems and Cybernetics.
+IEEE (2010) 258–261.
+[226] H. Qiu and H. Duan, A multi-objective pigeon-inspired optimization approach to UAV distributed flocking among
+obstacles. Inf. Sci. 509 (2020) 515–529.
+[227] C. Qu, W. Gai, J. Zhang and M. Zhong, A novel hybrid grey wolf optimizer algorithm for unmanned aerial vehicle
+(UAV) path planning. Knowl.-Based Syst. 194 (2020) 105530.
+[228] L. Quan, L. Han, B. Zhou, S. Shen and F. Gao, Survey of UAV motion planning. IET Cyber-Syst. Rob. 2 (2020)
+14–21.
+[229] M. Quigley, K. Conley, B. Gerkey, J. Faust, T. Foote, J. Leibs, R. Wheeler and A.Y. Ng, ROS: an open-source
+robot operating system, in ICRA Workshop on Open Source Software. Kobe, Japan (2009) 5.
+[230] Y. Qui˜ nonez, F. Barrera, I. Bugue˜ no and J. Bekios-Calfa, Simulation and path planning for quadcopter obstacle
+avoidance in indoor environments using the ROS framework, in International Conference on Software Process
+Improvement. Springer (2017) 295–304.
+[231] A.H. Qureshi and Y. Ayaz, Intelligent bidirectional rapidly-exploring random trees for optimal motion planning in
+complex cluttered environments. Rob. Auton. Syst. 68 (2015) 1–11.
+[232] M. Radmanesh and M. Kumar, Grey wolf optimization based sense and avoid algorithm for UAV path planning
+in uncertain environment using a Bayesian framework, in 2016 International Conference on Unmanned Aircraft
+Systems (ICUAS). IEEE (2016) 68–76.
+[233] M. Radmanesh, M. Kumar, P.H. Guentert and M. Sarim, Overview of path-planning and obstacle avoidance
+algorithms for UAVs: a comparative study. Unmanned Syst. 6 (2018) 95–118.
+[234] P.L. Raeva, J. ˇSedina and A. Dlesk, Monitoring of crop fields using multispectral and thermal imagery from UAV.
+Eur. J. Remote Sens. 52 (2019) 192–201.
+[235] C. Ramirez-Atencia, G. Bello-Orgaz, M.D. R-Moreno and D. Camacho, Solving complex multi-UAV mission plan-
+ning problems using multi-objective genetic algorithms. Soft Comput. 21 (2017) 4883–4900.
+[236] Real drone simulator. http://www.realdronesimulator.com/.
+[237] A. Rejeb, K. Rejeb, S. Simske and H. Treiblmaier, Humanitarian drones: a review and research agenda. Internet
+Things 16 (2021) 100434.
+
+===== PAGE 36 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2985
+[238] Q. Ren, Y. Yao, G. Yang and X. Zhou, Multi-objective path planning for UAV in the urban environment based
+on CDNSGA-II, in 2019 IEEE International Conference on Service-Oriented System Engineering (SOSE). IEEE
+(2019) 350–3505.
+[239] V. Roberge, M. Tarbouchi and G. Labont´ e, Comparison of parallel genetic algorithm and particle swarm optimiza-
+tion for real-time UAV path planning. IEEE Trans. Ind. Inf. 9 (2012) 132–141.
+[240] V. Roberge, M. Tarbouchi and G. Labont´ e, Fast genetic algorithm path planner for fixed-wing military UAV using
+GPU. IEEE Trans. Aerosp. Electron. Syst. 54 (2018) 2105–2117.
+[241] S.J. Russell, Artificial Intelligence a Modern Approach. Pearson Education, Inc. (2010).
+[242] R.A. Saeed, D.R. Recupero and P. Remagnino, A boundary node method for path planning of mobile robots. Rob.
+Auton. Syst. 123 (2020) 103320.
+[243] B. Sah, R. Gupta and D. Bani-Hani, Analysis of barriers to implement drone logistics. Int. J. Logistics Res. App.
+24 (2021) 531–550.
+[244] A.K. Saha, M.K. Arora, R.P. Gupta, M. Virdi and E. Csaplovics, GIS-based route planning in landslide-prone
+areas. Int. J. Geog. Inf. Sci. 19 (2005) 1149–1175.
+[245] J.L. Sanchez-Lopez, M. Wang, M.A. Olivares-Mendez, M. Molina and H. Voos, A real-time 3D path planning
+solution for collision-free navigation of multirotor aerial robots in dynamic environments. J. Intell. Rob. Syst. 93
+(2019) 33–53.
+[246] T. Sangyam, P. Laohapiengsak, W. Chongcharoen and I. Nilkhamhang, Path tracking of UAV using self-tuning
+PID controller based on fuzzy logic, in Proceedings of SICE Annual Conference 2010. IEEE (2010) 1265–1269.
+[247] N. Sariff and N. Buniyamin, An overview of autonomous mobile robot path planning algorithms, in 2006 4th
+Student Conference On Research and Development. IEEE (2006) 183–188.
+[248] J. Saunders, B. Call, A. Curtis, R. Beard and T. McLain, Static and dynamic obstacle avoidance in miniature air
+vehicles, in Infotech@ Aerospace. American Institute of Aeronautics and Astronautics, Inc. (2005) 6950.
+[249] K. Sayler, A World of Proliferated Drones: A Technology Primer. A World of Proliferated Drones Series . Center
+for a New American Security (2015).
+[250] F. Schøler, A. la Cour-Harbo and M. Bisgaard, Generating approximative minimum length paths in 3B for UAVs,
+in 2012 IEEE Intelligent Vehicles Symposium (IV). IEEE (2012) 229–233.
+[251] T. Schouwenaars, B. De Moor, E. Feron and J. How, Mixed integer programming for multi-vehicle path planning,
+in 2001 European Control Conference (ECC). IEEE (2001) 2603–2608.
+[252] R. Schroer, UAVs: The future. [A century of powered flight: 1903–2003]. IEEE Aerosp. Electron. Syst. Mag. 18
+(2003) 61–63.
+[253] J. Sfeir, M. Saad and H. Saliah-Hassane, An improved artificial potential field approach to real-time mobile robot
+path planning in an unknown environment, in 2011 IEEE International Symposium on Robotic and Sensors Envi-
+ronments (ROSE). IEEE (2011) 208–213.
+[254] S. Shah, D. Dey, C. Lovett and A. Kapoor, Airsim: high-fidelity visual and physical simulation for autonomous
+vehicles, in Field and Service Robotics. Springer (2018) 621–635.
+[255] K. Shang, S. Karungaru, Z. Feng, L. Ke and K. Terada, A GA-ACO hybrid algorithm for the multi-UAV mis-
+sion planning problem, in 2014 14th International Symposium on Communications and Information Technologies
+(ISCIT). IEEE (2014) 243–248.
+[256] Z. Shang, J. Bradley and Z. Shen, A co-optimal coverage path planning method for aerial scanning of complex
+structures. Expert Syst. App. 158 (2020) 113535.
+[257] S. Shao, Y. Peng, C. He and Y. Du, Efficient path planning for UAV formation via comprehensively improved
+particle swarm optimization. ISA Trans. 97 (2020) 415–430.
+[258] D. Sharma and N. Kumar, A review on machine learning algorithms, tasks and applications. Int. J. Adv. Res.
+Comput. Eng. Technol. (IJARCET) 6 (2017) 2278–1323.
+[259] H. Shen and P. Li, Unmanned aerial vehicle (UAV) path planning based on improved pre-planning artificial potential
+field method, in 2020 Chinese Control And Decision Conference (CCDC). IEEE (2020) 2727–2732.
+[260] Z. Shi and W.K. Ng, A collision-free path planning algorithm for unmanned aerial vehicle delivery, in 2018 Inter-
+national Conference on Unmanned Aircraft Systems (ICUAS). IEEE (2018) 358–362.
+[261] K. Shi, Z. Wu, B. Jiang and H.R. Karimi, Dynamic path planning of mobile robot based on improved simulated
+annealing algorithm. J. Franklin Inst. 360 (2023) 4378–4398.
+[262] Z. Shiller, Off-line and on-line trajectory planning, in Motion and Operation Planning of Robotic Systems. Springer,
+Cham (2015) 29–62.
+
+===== PAGE 37 / 40 =====
+2986 S. GHAMBARI ET AL .
+[263] R. Shivgan and Z. Dong, Energy-efficient drone coverage path planning using genetic algorithm, in 2020 IEEE 21st
+International Conference on High Performance Switching and Routing (HPSR). IEEE (2020) 1–6.
+[264] H. Shorakaei, M. Vahdani, B. Imani and A. Gholami, Optimal cooperative path planning of unmanned aerial
+vehicles by a parallel genetic algorithm. Robotica 34 (2016) 823–836.
+[265] J.D. Silva Arantes, M.D. Silva Arantes, C.F. Motta Toledo, O.T. J´ unior and B.C. Williams, Heuristic and genetic
+algorithm approaches for UAV path planning under critical situation. Int. J. Artif. Intell. Tools 26 (2017) 1760008.
+[266] S. Skiena, Implementing Discrete Mathematics: Combinatorics and Graph Theory with Mathematica. Vol. 1.
+Addison-Wesley Reading, MA (1990).
+[267] C. Snow, Why drones are the future of the internet of things-sUAS news-the business of drones (2019).
+[268] B. Song, G. Qi and L. Xu, A survey of three-dimensional flight path planning for unmanned aerial vehicle, in 2019
+Chinese Control and Decision Conference (CCDC). IEEE (2019) 5010–5015.
+[269] A. Sonmez, E. Kocyigit and E. Kugu, Optimal path planning for UAVs using genetic algorithm, in 2015 Interna-
+tional Conference on Unmanned Aircraft Systems (ICUAS). IEEE (2015) 50–55.
+[270] C. Stachniss, Robotic Mapping and Exploration. Vol. 55. Springer Freiburg, Germany (2009).
+[271] A. Stentz, Optimal and efficient path planning for partially-known environments, in Proceedings of the 1994 IEEE
+International Conference on Robotics and Automation. IEEE (1994) 3310–3317.
+[272] R. Storn and K. Price, Differential evolution – a simple and efficient heuristic for global optimization over continuous
+spaces. J. Global Optim. 11 (1997) 341–359.
+[273] Suaave.org. http://web4.cs.ucl.ac.uk/research/suaave/.
+[274] I.A. Sucan, M. Moll and L.E. Kavraki, The open motion planning library. IEEE Rob. Auto. Mag. 19 (2012) 72–82.
+[275] P. Sujit and R. Beard, Multiple UAV path planning using anytime algorithms, in 2009 American Control Conference.
+IEEE (2009) 2978–2983.
+[276] X. Sun and S. Koenig, The fringe-saving A * search algorithm – a feasibility study, in IJCAI. Vol. 7. (2007) 2391–
+2397.
+[277] H.C. Sun and H.Y. Zhu, Study on path planning for UAV based on probabilistic roadmap method. J. Syst. Simul.
+11 (2006) 3050–3053.
+[278] X. Sun, S. Koenig and W. Yeoh, Generalized adaptive A *, in Proceedings of the 7th International Joint Conference
+on Autonomous Agents And Multiagent Systems. Vol. 1. International Foundation for Autonomous Agents and
+Multiagent Systems (2008) 469–476.
+[279] Y. Sun, H. Meng, W.W. Li, D. Zhu and Z.L. Li, Study on UAV path planning simulation. Adv. Mater. Res . 765
+(2013) 452–455.
+[280] Z. Sun, J. Wu, J. Yang, Y. Huang, C. Li and D. Li, Path planning for GEO-UAV bistatic sar using constrained
+adaptive multiobjective differential evolution. IEEE Trans. Geosci. Remote Sens. 54 (2016) 6444–6457.
+[281] H. Sun, J. Qi, C. Wu and M. Wang, Path planning for dense drone formation based on modified artificial potential
+fields, in 2020 39th Chinese Control Conference (CCC). IEEE (2020) 4658–4664.
+[282] R.S. Sutton and A.G. Barto, Reinforcement Learning: An Introduction. MIT Press (2018).
+[283] R.J. Szczerba, P. Galkowski, I.S. Glicktein and N. Ternullo, Robust algorithm for real-time route planning. IEEE
+Trans. Aerosp. Electron. Syst. 36 (2000) 869–878.
+[284] L. Tai and M. Liu, Towards cognitive exploration through deep reinforcement learning for mobile robots. Preprint
+arXiv:1610.01733 (2016).
+[285] R. Tarjan, Depth-first search and linear graph algorithms. SIAM J. Comput. 1 (1972) 146–160.
+[286] G. Tartaglione and M. Ariola, Obstacle avoidance via landmark clustering in a path-planning algorithm, in 2018
+Annual American Control Conference (ACC). IEEE (2018) 2776–2781.
+[287] L. Techy and C.A. Woolsey, Minimum-time path planning for unmanned aerial vehicles in steady uniform winds.
+J. Guidance Control Dyn. 32 (2009) 1736–1746.
+[288] H. Tong, Path planning of UAV based on voronoi diagram and DPSO. Proc. Eng. 29 (2012) 4198–4203.
+[289] H.H. Triharminto, A.S. Prabuwono, T.B. Adji, N.A. Setiawan and N.Y. Chong, UAV dynamic path planning for
+intercepting of a moving target: a review, in FIRA RoboWorld Congress. Springer (2013) 206–219.
+[290] E. Tsardoulias, A. Iliakopoulou, A. Kargakos and L. Petrou, A review of global path planning methods for occu-
+pancy grid maps regardless of obstacle density. J. Intell. Rob. Syst. 84 (2016) 829–858.
+[291] T. Turker, O.K. Sahingoz and G. Yilmaz, 2D path planning for UAVs in radar threatening environment using
+simulated annealing algorithm, in 2015 International Conference on Unmanned Aircraft Systems (ICUAS). IEEE
+(2015) 56–61.
+
+===== PAGE 38 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2987
+[292] V. Usenko, L. von Stumberg, A. Pangercic and D. Cremers, Real-time trajectory replanning for MAVs using
+uniform B-splines and a 3D circular buffer, in 2017 IEEE/RSJ International Conference on Intelligent Robots and
+Systems (IROS). IEEE (2017) 215–222.
+[293] K.P. Valavanis and G.J. Vachtsevanos, Future of unmanned aviation, in Handbook of Unmanned Aerial Vehicles.
+Springer, Dordrecht (2015) 2993–3009.
+[294] K.P. Valavanis and G.J. Vachtsevanos, Handbook of Unmanned Aerial Vehicles. Vol. 1. Springer Dordrecht (2015).
+[295] S. Vemprala and S. Saripalli, Vision based collaborative path planning for micro aerial vehicles, in 2018 IEEE
+International Conference on Robotics and Automation (ICRA). IEEE (2018) 3889–3895.
+[296] B. Vizv´ ari, M. Golabi, A. Nedjati, F. G¨ um¨ u¸ sbu˘ ga and G. Izbirak, Top-down approach to design the relief system
+in a metropolitan city using UAV technology, part I: the first 48 h. Nat. Hazards 99 (2019) 571–597.
+[297] Y. Volkan Pehlivanoglu, O. Baysal and A. Hacioglu, Path planning for autonomous UAV via vibrational genetic
+algorithm. Aircraft Eng. Aerosp. Technol. 79 (2007) 352–359.
+[298] X. Wang, V. Yadav and S. Balakrishnan, Cooperative UAV formation flying with obstacle/collision avoidance.
+IEEE Trans. Control Syst. Technol. 15 (2007) 672–679.
+[299] Y. Wang, D. Mulvaney, I. Sillitoe and E. Swere, Robot navigation by waypoints. J. Intell. Rob. Syst. 52 (2008)
+175–207.
+[300] Y. Wang, P. Bai, X. Liang, W. Wang, J. Zhang and Q. Fu, Reconnaissance mission conducted by UAV swarms
+based on distributed pso path planning algorithms. IEEE Access 7 (2019) 105086–105099.
+[301] Y. Wang, F. He and X. Deng, Multi-aircraft cooperative path planning for maneuvering target detection. J. Ind.
+Manage. Optim. 18 (2022) 1935.
+[302] L. Wei, H. Peng, Z. Zheng and C. Kaiyuan, Fbcri based real-time path planning for unmanned aerial vehicles in
+unknown environments with uncertainty. Robot 35 (2013) 641–650.
+[303] N. Wen, X. Su, P. Ma, L. Zhao and Y. Zhang, Online UAV path planning in uncertain and hostile environments.
+Int. J. Mach. Learn. Cybern. 8 (2017) 469–487.
+[304] J. Wilburn, M. Perhinschi and B. Wilburn, Enhanced modified voronoi algorithm for UAV path planning and
+obstacle avoidance. Int. Rev. Aerosp. Eng. 6 (2013) 54–63.
+[305] X. Wu, W. Bai, Y. Xie, X. Sun, C. Deng and H. Cui, A hybrid algorithm of particle swarm optimization, metropolis
+criterion and rts smoother for path planning of UAVs. Appl. Soft Comput. 73 (2018) 735–747.
+[306] X. Wu, L. Xu, R. Zhen and X. Wu, Biased sampling potentially guided intelligent bidirectional RRT * algorithm
+for UAV path planning in 3D environment. Math. Prob. Eng. 2019 (2019) 1–12.
+[307] M. Wu, W. Chen and X. Tian, Optimal energy consumption path planning for quadrotor UAV transmission tower
+inspection based on simulated annealing algorithm. Energies 15 (2022) 8036.
+[308] Y. Xu and T. Kanade, Space Robotics: Dynamics and Control. Vol. 188. Springer Science & Business Media Boston,
+MA (1992).
+[309] Z. Xu, D. Deng and K. Shimada, Autonomous UAV exploration of dynamic environments via incremental sampling
+and probabilistic roadmap. IEEE Rob. Autom. Lett. 6 (2021) 2729–2736.
+[310] H.S. Yahia and A.S. Mohammed, Path planning optimization in unmanned aerial vehicles using meta-heuristic
+algorithms: a systematic review. Environ. Monit. Assess. 195 (2023) 30.
+[311] F. Yan, Y.S. Liu and J.Z. Xiao, Path planning in complex 3D environments using a probabilistic roadmap method.
+Int. J. Autom. Comput. 10 (2013) 525–533.
+[312] K. Yang and S. Sukkarieh, 3D smooth path planning for a UAV in cluttered natural environments, in 2008
+IEEE/RSJ International Conference on Intelligent Robots and Systems. IEEE (2008) 794–800.
+[313] Q. Yang and S.J. Yoo, Optimal UAV path planning: sensing data acquisition over IoT sensor networks using
+multi-objective bio-inspired algorithms. IEEE Access 6 (2018) 13671–13684.
+[314] L. Yang, J. Qi, J. Xiao and X. Yong, A literature review of UAV 3D path planning, in 2014 11th World Congress
+on Intelligent Control and Automation (WCICA). IEEE (2014) 2376–2381.
+[315] P. Yang, K. Tang, J.A. Lozano and X. Cao, Path planning for single unmanned aerial vehicle by separately evolving
+waypoints. IEEE Trans. Rob. 31 (2015) 1130–1146.
+[316] S. Yang, S. Yang and X. Yi, An efficient spatial representation for path planning of ground robots in 3D environ-
+ments. IEEE Access 6 (2018) 41539–41550.
+[317] P. Yao and H. Wang, Dynamic adaptive ant lion optimizer applied to route planning for unmanned aerial vehicle.
+Soft Comput. 21 (2017) 5475–5488.
+[318] P. Yao, H. Wang and H. Ji, Multi-UAVs tracking target in urban environment by model predictive control and
+improved grey wolf optimizer. Aerosp. Sci. Technol. 55 (2016) 131–143.
+
+===== PAGE 39 / 40 =====
+2988 S. GHAMBARI ET AL .
+[319] C. Yin, Z. Xiao, X. Cao, X. Xi, P. Yang and D. Wu, Offline and online search: UAV multiobjective path planning
+under dynamic urban environment. IEEE Int. Things J. 5 (2017) 546–558.
+[320] C. YongBo, M. YueSong, Y. JianQiao, S. XiaoLong and X. Nuo, Three-dimensional unmanned aerial vehicle path
+planning using modified wolf pack search algorithm. Neurocomputing 266 (2017) 445–457.
+[321] S. You, C. Wan and R. Dai, Iterative learning optimization for UAV path planning with avoidance zones, in 2019
+American Control Conference (ACC). IEEE (2019) 2759–2764.
+[322] C. Yu and Z. Wang, UAV path planning using GSO-DE algorithm, in 2013 IEEE International Conference of IEEE
+Region 10 (TENCON 2013). IEEE (2013) 1–4.
+[323] G. Yu, H. Song and J. Gao, Unmanned aerial vehicle path planning based on TLBO algorithm. Int. J. Smart
+Sensing Intell. Syst. 7 (2014) 1310–1325.
+[324] X. Yu, C. Li and J. Zhou, A constrained differential evolution algorithm to solve UAV path planning in disaster
+scenarios. Knowl.-Based Syst. 204 (2020) 106209.
+[325] X. Yu, C. Li and G.G. Yen, A knee-guided differential evolution algorithm for unmanned aerial vehicle path
+planning in disaster management. Appl. Soft Comput. 98 (2021) 106857.
+[326] Y. Yuan, Z. Xingshe, Z. Kailong and D. Dong, Dynamic trajectory planning for unmanned aerial vehicle based on
+sparse A* search and improved artificial potential field. Control Theory Appl. 27 (2010) 953–959.
+[327] X. Yue and W. Zhang, UAV path planning based on 𝑘-means algorithm and simulated annealing algorithm, in
+2018 37th Chinese Control Conference (CCC). IEEE (2018) 2290–2295.
+[328] Z. Zeng, K. Sammut, L. Lian, F. He, A. Lammas and Y. Tang, A comparison of optimization techniques for AUV
+path planning in environments with ocean currents. Rob. Auton. Syst. 82 (2016) 61–72.
+[329] Zephyr Sim. https://zephyr-sim.com/.
+[330] X. Zhang, J. Chen, B. Xin and H. Fang, Online path planning for UAV using an improved differential evolution
+algorithm. IFAC Proc. Vol. 44 (2011) 6349–6354.
+[331] X. Zhang, J. Chen, B. Xin and Z. Peng, A memetic algorithm for path planning of curvature-constrained UAVs
+performing surveillance of multiple ground targets. Chin. J. Aeron. 27 (2014) 622–633.
+[332] B. Zhang, W. Liu, Z. Mao, J. Liu and L. Shen, Cooperative and geometric learning algorithm (CGLA) for path
+planning of UAVs with limited information. Automatica 50 (2014) 809–820.
+[333] B. Zhang, Z. Mao, W. Liu and J. Liu, Geometric reinforcement learning for path planning of UAVs. J. Intell. Rob.
+Syst. 77 (2015) 391–409.
+[334] C. Zhang, X. Zhou, H. Zhao, A. Dai and H. Zhou, Three-dimensional fuzzy control of mini quadrotor UAV trajectory
+tracking under impact of wind disturbance, in 2016 International Conference on Advanced Mechatronic Systems
+(ICAMechS). IEEE (2016) 372–377.
+[335] C. Zhang, H. Liu and Y. Tang, Analysis for UAV heuristic tracking path planning based on target matching, in
+2018 9th International Conference on Mechanical and Aerospace Engineering (ICMAE). IEEE (2018) 34–39.
+[336] D. Zhang, Y. Xu and X. Yao, An improved path planning algorithm for unmanned aerial vehicle based on RRT-
+connect, in 2018 37th Chinese Control Conference (CCC). IEEE (2018) 4854–4858.
+[337] H.Y. Zhang, W.M. Lin and A.X. Chen, Path planning for the mobile robot: a review. Symmetry 10 (2018) 450.
+[338] X. Zhang, X. Lu, S. Jia and X. Li, A novel phase angle-encoded fruit fly optimization algorithm with mutation
+adaptation mechanism applied to UAV path planning. Appl. Soft Comput. 70 (2018) 371–388.
+[339] S. Zhang, T. Xu, H. Cheng and F. Liang, Collision avoidance of fixed-wing UAVs in dynamic environments based
+on spline-RRT and velocity obstacle, in 2020 International Conference on Unmanned Aircraft Systems (ICUAS).
+IEEE (2020) 48–58.
+[340] Y. Zhao, Z. Zheng and Y. Liu, Survey on computational-intelligence-based UAV path planning. Knowl.-Based Syst.
+158 (2018) 54–64.
+[341] Z. Zhou, H. Duan, P. Li and B. Di, Chaotic differential evolution approach for 3D trajectory planning of unmanned
+aerial vehicle, in 2013 10th IEEE International Conference on Control and Automation (ICCA) . IEEE (2013)
+368–372.
+[342] X. Zhou, K. Xie, K. Huang, Y. Liu, Y. Zhou, M. Gong and H. Huang, Offsite aerial path planning for efficient
+urban scene reconstruction. ACM Trans. Graphics (Proc. SIGGRAPH ASIA 2020) 39 (2020) 192:1–192:16.
+[343] X. Zhou, Z. Yi, Y. Liu, K. Huang and H. Huang, Survey on path and view planning for UAVs. Virtual Reality
+Intell. Hardware 2 (2020) 56–69.
+[344] D. Zhuoning, Z. Rulin, C. Zongji and Z. Rui, Study on UAV path planning approach based on fuzzy virtual force.
+Chin. J. Aeron. 23 (2010) 341–350.
+
+===== PAGE 40 / 40 =====
+UA V PATH PLANNING TECHNIQUES 2989
+[345] Zipline, Protecting Ghana’s election: instant agility with Zipline’s autonomous delivery network (2021). https:
+//assets.ctfassets.net/pbn2i2zbvp41/3yrQaMNdJ1u1J2aSEucjzt/4412ea5d12896d15b7eb41a2212d0295/
+Zipline_Ghana_PPE_Global_Healthcare_Feb-2021.pdf.
+Please help to maintain this journal in open access!
+This journal is currently published in open access under the Subscribe to Open model
+(S2O). We are thankful to our subscribers and supporters for making it possible to
+publish this journal in open access in the current year, free of charge for authors and
+readers.
+Check with your library that it subscribes to the journal, or consider making a personal donation to
+the S2O programme by contacting subscribers@edpsciences.org.
+More information, including a list of supporters and financial transparency reports,
+is available at https://edpsciences.org/en/subscribe-to-open-s2o.

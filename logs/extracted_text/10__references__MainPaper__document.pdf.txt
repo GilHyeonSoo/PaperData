@@ -1,0 +1,959 @@
+SOURCE: references/MainPaper/document.pdf
+PAGES: 16
+
+
+
+===== PAGE 1 / 16 =====
+Vol.:(0123456789)
+CEAS Aeronautical Journal (2025) 16:905–920 
+https://doi.org/10.1007/s13272-024-00789-9
+ORIGINAL PAPER
+Evaluation of collision detection and avoidance methods for urban air 
+mobility through simulation
+Isha Panchal1 · Sophie F. Armanini1,2 · Isabel C. Metz3
+Received: 24 May 2024 / Revised: 23 October 2024 / Accepted: 28 October 2024 / Published online: 6 December 2024 
+© The Author(s) 2024
+Abstract
+Urban Air Mobility is a new concept of regional aviation that has been growing in popularity as a solution to the issue of 
+ever-increasing ground traffic. Electric vehicles with vertical take-off and landing capabilities are developed by numerous 
+market companies as a result of the push toward environmentally sustainable aviation. The next stage in this development 
+process would be to define the concept of operation of these conceptual aircraft and then to integrate them with the exist-
+ing airspace once they are airborne. In addition to coordinating with conventional air traffic and other Urban Air Mobility 
+vehicles, collision avoidance with uncooperative airspace users has to be addressed. Birds and drones of all sizes pose a 
+serious risk to these low-flying aircraft. Innovative collision detection and avoidance techniques need to be employed due to 
+the non-cooperative nature of these airspace users and different performance characteristics of Urban Air Mobility vehicles 
+compared to classical fixed-wing aircraft. The aim of this study is to evaluate the concept of one such system by means of 
+fast-time simulations. This system builds, similarly to the Airborne Collision Avoidance System, on safety envelopes and 
+rule-based collision avoidance to prevent collisions with non-cooperative airspace members. The system is designed to work 
+with all aircraft configurations used for Urban Air Mobility operations. To assess its influence on safety and capacity, different 
+scenarios are modeled by varying parameters, such as intruder type, location, flight path. The parameters assessed are dif-
+ferences in flight time and closest point of approach with and without the collision avoidance system in place. Moreover, the 
+influence of different configurations of Urban Air Mobility aircraft on these parameters is analyzed. The results show that the 
+separation between the ownship and intruder is increased substantially which leads to safe operations at bearable delay costs.
+Keywords Air taxi · Birds · Drones · eVTOL · Conflict detection & resolution · Urban air mobility · Air traffic management
+1 Introduction
+Thanks to the recent urbanization, most people today live 
+in cities [1]. Once nearby villages have developed into sub-
+urban areas as a result of rapid growth of cities, these areas 
+increase as well. Additionally, there has been a substantial 
+increase in travel time in ground-based transportation sys-
+tems which is expected to further increase, especially during 
+peak times [2, 3]. To address this issue, numerous mobility 
+options are being researched. Urban Air Mobility (UAM) 
+is a potential solution that is hypothesized to meet various 
+transportation needs by providing fast and on-demand travel 
+options within and between (sub-)urban areas [4 ].
+However, trying to solve one problem, by adding an addi-
+tional segment to the already dense airspace, could lead to other 
+challenges. The cruising altitudes of UAM aircraft, referring 
+to air taxis carrying up to four passengers in this paper, are 
+expected between 1,500 and 4,000 ft and cruise velocities rang-
+ing from 110 to 322 km/h [5, 6]. These are the altitude bands 
+most abundant with birds and drones [7, 8]. These pose a danger 
+to the safe operation of UAM aircraft due to their non-coopera-
+tive characteristics in collision resolution as well as the limited 
+impact resistance requirements of UAM aircraft [9, 10]. An 
+earlier paper by the authors proposed a concept for a UAM Col-
+lision Avoidance System (UAM-CAS) for UAM aircraft con-
+sidering these non-co-operating airspace members (NCOAMs) 
+[11]. This UAM-CAS extends concepts for conventional conflict 
+ * Isabel C. Metz 
+ isabel.metz@dlr.de
+1 TUM School of Engineering and Design, Technical 
+University of Munich, Munich, Germany
+2 Department of Aeronautics, Imperial College London, 
+London, UK
+3 Institute of Flight Guidance, German Aerospace Center DLR, 
+Braunschweig, Germany
+
+===== PAGE 2 / 16 =====
+906 I. Panchal et al.
+detection and resolution with non-cooperative airspace users 
+such as drones (e.g. [29], [30] by additionally considering birds 
+as potential opponents.
+The main element of the concept is an operational decision 
+tree including measures for strategic avoidance prior to flight 
+and measures for tactical as well as emergency avoidance dur-
+ing flight. Similar to the concept of Aircraft Collision Avoid-
+ance System (ACAS) of traditional aviation [12], different 
+levels of avoidance maneuvers are performed when an UAM 
+aircraft’s safety envelope is penetrated by an intruder. Thereby, 
+three-dimensional safety envelopes for the four most common 
+configurations multicopter, lift to cruise, tilt rotor and vectored 
+thrust were designed. A detailed description can be found in the 
+previous work of the authors [11].
+This work focuses on the evaluation of the concept men-
+tioned therein. In the context of the work, ’Evaluation’ refers 
+to the process of rigorously analyzing the collision avoid-
+ance system for Urban Air Mobility (UAM) vehicles through 
+simulations. The goal is to determine how well the system 
+works in preventing collisions, its impact on flight safety, 
+and its effects on operational efficiency. It is not to be con-
+fused with ’Validation’, which would typically refer to the 
+process of verifying that the conclusions drawn from a study, 
+or the models and simulations used, accurately represent 
+reality and can be trusted for practical use. It’s about ensur-
+ing that the system or method being tested not only works as 
+designed but also produces credible and reliable outcomes 
+when applied to real-world scenarios. It was only possible to 
+perform virtual simulations in the scope of this work. Vari-
+ous reasonable assumptions were made in the models used, 
+but an effort was made to be as close to real-life applications.
+While it is considered as crucial to introduce operational 
+measures to prevent collision between UAM aircraft and 
+NCOAMs—birds or drones—any solution must also take into 
+account economical aspects [10]. In the United States, the Fed-
+eral Aviation Administration estimates that flight delays cost air-
+lines 22 billion US Dollars yearly. More than half of the flights 
+in the United States are late (taking account minor delays such 
+as 5 minute or 10 minute delays) [ 13, 14]. In Europe, a flight 
+delay costs 100 euros per minute on average [15]. This includes 
+everything from extra fuel burn to compensation for passengers. 
+UAM, which is envisioned as a solution to long queues of on-
+ground traffic, needs to perform within a tight time schedule to 
+prove its efficiency over conventional solutions. The use-case 
+of an inter-city or intra-city air taxi is largely dependent on the 
+time-saving aspect. Therefore, even delays of few minutes can 
+be a make-or-break scenario. Moreover, with the current genera-
+tion of electric on-board batteries, the maximum time of flight 
+is limited. Therefore, it is crucial, to not only assess the safety 
+impact of any novel concept but also its influence on capacity 
+and punctuality of operations.
+The aim of this study is to evaluate the proposed concept 
+of UAM-CAS and to analyze the efficacy of its design. For 
+this purpose, a sample flight plan of a shuttle service from an 
+airport to a city center represents an UAM use-case [16] and 
+simulated with various conditions in the BlueSky Open Air 
+Traffic Simulator [17]. The simulations included the intru-
+sion of predictable as well as unpredictable non-co-operating 
+airspace member (NCOAM) at different locations along the 
+flight planned route. To evaluate the influence of different 
+safety envelopes, the scenarios were simulated for the four 
+aircraft configurations considered in the original concept.
+In the upcoming Sect.  2, the methodology to design and 
+build the simulations is explained in detail. The parameters 
+to be evaluated are presented. In Sect. 3, the results obtained 
+from the simulations for all four configurations are stated 
+and discussed. Finally, in Sect.  4, the results are evaluated 
+and a summary along with the future scope is presented.
+2  Methods
+In the following Sect. 2.1, details on how the elements of the 
+UAM-CAS are converted into simulation logic is explained. 
+Section  2.2 provides more details about the simulation envi-
+ronment used. Section  2.3 shows the breakdown of the vari-
+ous variables and groups into four topical islands supporting 
+the generalization of the UAM-CAS. In Sect. 2.4, the various 
+phases of the flight and relevant functions which are carried 
+out are introduced. Finally, Sect. 2.5 presents the parameters 
+chosen to evaluate the results from the simulations.
+2.1  UAM‑CAS
+This section provides an overview of the UAM-CAS developed 
+in the authors’ previous work [11], to be evaluated within this 
+study to obtain proof of concept. An in-depth description can 
+be found in the original study alongside a visualization of the 
+overall avoidance system as shown in Fig. 1.
+The UAM-CAS is based on safety envelopes, similar to 
+the concept of ACAS used in conventional aviation [12]. 
+The safety envelopes are composed of the caution, warn-
+ing, and collision envelopes as seen in Fig.  2. Whenever an 
+intruder penetrates one of these envelopes, a certain action is 
+initiated. The actions are organized in a decision tree which 
+is divided into strategic, tactical and emergency branches. 
+The strategic phase takes place prior to the flight and as 
+such during the ground phase. In case that NCOAMs are 
+detected close to the take-off area and their movement clas-
+sified as critical, the departure is delayed. The tactical and 
+emergency phases are active in the airborne phase once the 
+aircraft has initiated its flight. This is also the case when the 
+safety envelopes are activated. An automated tactical maneu-
+ver is started when an intruder enters the warning zone of the 
+safety envelope. If the automated maneuver is not success-
+ful, the human pilot must take control to avoid the entering 
+
+===== PAGE 3 / 16 =====
+907
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+into the collision zone. This is termed as the emergency 
+maneuver. The size of the safety envelopes strongly depends 
+from the aircraft—the key characteristics to consider are the 
+size as well as the agility of individual configuration. The 
+four configurations most often proposed for the use of UAM 
+operations, namely multicopter, lift to cruise, tilt rotor and 
+vectored thrust are considered in this study. 
+It is to be noted that in the theoretical study of the con -
+cept [11], the authors suggested a different arrangement of 
+the safety envelope zones for forward and vertical flight: 
+Intersecting circles meeting at a common point for forward 
+flight and concentric circles for vertical flight. In contrast, 
+the zones are organized as concentric circles for all phases 
+of flight to facilitate the simulations within this work. The 
+arrangement of concentric circles throughout the flight can 
+lead to a slightly increased flight time.
+2.2  BlueSky Open Air Traffic Simulator
+To evaluate the presented concept of an UAM-CAS, its 
+functionality was simulated in a fast-time simulator. For 
+this purpose, the BlueSky Open Source Air Traffic simulator 
+developed by Delft University of Technology was selected. 
+BlueSky is an open source simulator used for research in 
+Fig. 1  Decision tree showing the ground and airborne phases of the 
+UAM-CAS, source: [11], used with permission
+Fig. 2  Collision, warning and caution envelopes for various configurations in forward and vertical flight, source: [11], used with permission
+
+===== PAGE 4 / 16 =====
+908 I. Panchal et al.
+domains of air traffic management and to optimize air traf-
+fic flow [17]. Its open source character as well as the option 
+to add functionalities in independent plugins made it suit-
+able as a platform for this study. Relying on existing plugins 
+for the representation of bird movement as well as collision 
+detection in the simulator [18], multiple plugins were devel-
+oped within this work to represent the UAM-CAS. These 
+included plugins for collision avoidance, the visualization 
+of aircraft and intruders with their flight paths as well as the 
+definition of the safety envelopes depending on the UAM 
+aircraft configuration.
+During runtime, the simulation itself is operated from the 
+main simulation window of BlueSky. An additional window 
+provides the user with the current state of the UAM-CAS, 
+currently active automated avoidance maneuvers or, in case 
+of an emergency maneuver, the request for execution by the 
+operator. During the simulation, all relevant parameters were 
+logged and stored for analysis.
+2.3  Variables of UAM‑CAS: Four Islands
+The simulation tasks were divided into four topical sub-tasks 
+called ISLANDS. Once defined, the individual components 
+covered by each island can be swapped easily in case the 
+same analysis needs to be performed for any other location 
+or flight characteristics. Figure 3 shows the islands and their 
+relations [11]. 
+Island 1 is related to the flight path. Island 2 contains all 
+characteristics of the ownship which need to be considered. 
+Island 3 deals with intruder and their types. Island 4 contains 
+the definition of the collision avoidance maneuvers. Out of 
+the four islands, three are standalone and can be populated 
+with content without any dependencies on the other islands. 
+The last island 4 covering the maneuvers overlaps with the 
+other three islands. 
+1) ISLAND 1- Geography and Flight Path: In this island, 
+all parameters related to the geography are taken into 
+consideration. This includes, among others, the posi-
+tion of the take-off and the landing vertiports, preferred 
+and alternate routes to be flown and alternate landing 
+vertiports.
+2) ISLAND 2- Aircraft Type: This island deals with the 
+ownship aircraft. The configuration to be considered 
+must be clearly defined. For this study, the four configu-
+rations like the multicopter, lift to cruise, tilt rotor and 
+vectored thrust were modeled based on the pre-existing 
+open-source kinematic aircraft performance model in 
+BlueSky [19, 20] as well as information from Electric 
+Vertical Take Off and Landing (eVTOL) manufacturers 
+[21–24], as described in detail in [11]. Only the motion 
+of the ownship through space is considered without 
+reference to any study of external forces. Based on the 
+configuration, the dimensions of the safety envelope also 
+Fig. 3  UAM-CAS tasks grouped in four islands
+
+===== PAGE 5 / 16 =====
+909
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+differ. Some elements of the tactical collision avoidance 
+logic are dependent on the information of the configura-
+tion of the ownship. These are contained in that island 
+as well.
+3) ISLAND 3- Intruder Type and its Location: This island 
+deals with the intruder and related factors like its type, 
+trajectory and location of occurrence. All intruders 
+are NCOAMs. The NCOAMs can display predictable 
+behavior or can be unpredictable. Drone obeying Right 
+of Way rules of the sky or birds flying away from the 
+ownship due to noise or size is considered predictable 
+behavior [25]. The intruder namely a drone or a bird 
+is programmed to appear at various locations head-on, 
+from the left or right or on the same path as the own-
+ship. These directions are considered so that they can 
+be linked to the conventional Right of Way rules of air. 
+The trajectory of the intruder is pre-defined for repeat-
+ability. Birds were assumed to be appearing on the route 
+from the vicinity of Isar River, where they might be nest-
+ing owing to their conservation of their natural habitat. 
+Drones appeared in the vicinity of the Allianz arena, 
+where they might be used for photography.
+4) ISLAND 4- Avoidance Maneuvers: This island defines 
+the collision avoidance maneuvers which are required to 
+avoid encounters with NCOAMs. The incorporation of 
+the required maneuvers within BlueSky is described in 
+section  2.4
+2.4  Simulation Set‑up and Scenarios
+After implementing all information pertaining to the four 
+islands in BlueSky, the scenarios are defined. The selected 
+flight plan represents a shuttle service from the airport of 
+Munich (EDDM V1) to the main railway station of Munich 
+(MUC HBF V2). For an alternate landing site, various loca-
+tions, such as the top of high-rise buildings, helipads of hos-
+pitals, and big community grounds, are possible. For the 
+demonstration in this study, the helipad on the Oberschleis-
+sheim airport (EDNX) was selected as the dedicated alter -
+nate vertiport V3 (EDNX V3). Figure  4 shows an overview 
+of the flight routes. 
+The general scenario, which is performed for each con -
+figuration, is set up as follows: the UAM-CAS starts with 
+a pre-flight strategic maneuver for an UAM aircraft at 
+V1(EDDM). Before take-off, the pilot scans for intruders 
+using available systems like avian Radio Detection And 
+Ranging (RADAR) or Notice to Airmen (NOTAM). If 
+intruder activity is detected on the regular route 1 and active 
+for over five minutes, the scanning process is repeated for 
+the alternate route 2 via V3. If that intruder activity pertains 
+for over five minutes on route 2, the take-off is postponed 
+for later consideration. Although longer, this approach is 
+a preferable compromise to entirely canceling the flight. 
+After take-off, the aircraft climbs to 1000 ft (304.8 m) above 
+ground level (AGL). For the vertical phases, the climb rate 
+of 1.7 m/s is applied for all configurations [21– 24]. Once 
+the ownship reaches 1,000 ft, the forward flight phase of the 
+mission is initiated. For the the forward flight, cruise speed 
+of 78 m/s is applied. The flight is continued until an intruder 
+appears which triggers the tactical or even emergency phase 
+(Table  1) .
+According to the decision tree, the strategic move is exe-
+cuted on the ground and prior to flight. There are different 
+steps that need to be taken in the tree’s strategic maneuver 
+branch, depending on whether and where birds are present 
+(see Fig.  5). It is assumed that a UAM aircraft with a vec-
+tored thrust configuration is waiting at EDDM V1 for take-
+off. The pilot scans the surroundings to ensure an obstacle-
+free take-off path. It is anticipated that the pilot will have 
+access to NOTAM or, if available, real-time sensing systems 
+like avian RADAR, to obtain information about the invaders’ 
+whereabouts. After analyzing this data, the pilot must wait 
+five minutes in case that intruder activity was observed or 
+reported on route 1. If there are no trespassers, the pilot can 
+initiate the departure on time. The pilot may contemplate 
+taking off and flying route 2 if the intruder activity on route 
+1 does not stop after five minutes. However, route 2 will also 
+Fig. 4  Vertiports, ownship with safety envelopes, available routes and 
+location of intruders in scenarios 1–14 on the map view in BlueSky
+
+===== PAGE 6 / 16 =====
+910 I. Panchal et al.
+undergo a similar check for intruder activity before to take-
+off. The pilot will have to wait an additional five minutes if 
+it turns out that route 2 is the subject of intruder activity. 
+The pilot can take off using the alternate path if there are no 
+trespassers. After five minutes, the pilot must check route 2 
+again for signs of intruder activity. If the trespassers are still 
+at the take-off location, the decision would be made to delay 
+take-off and think about taking off later. This comprises the 
+Delay on Ground which were listed in Table  3. 
+Once the ownship is airborne, it flies toward V2. To eval-
+uate the collision avoidance methods, NCOAMs which vary 
+in type (drone or bird), their predictability and direction of 
+approach would appear at a pre-defined time and pre-defined 
+co-ordinates (locations 1–4 in Fig.  4). In every scenario, one 
+ownship encounters one NCOAM. Once the NCOAM pen-
+etrates the warning envelope, the automated tactical maneu-
+ver begins. The ownship hovers or changes its direction of 
+flight (based on its configuration). If this does not solve the 
+problem, the human pilot has to intervene to avoid the colli-
+sion. This is termed as the emergency maneuver. Once safe 
+separation is ensured between the NCOAM and ownship, 
+the mission is continued and the ownship will continue fly-
+ing toward V2. The tactical and emergency maneuvers may 
+cause disruptions in the original flight plan and can lead 
+to increased flight time. This raise is used as indicator of 
+the efficacy of UAM-CAS and is thus considered as Delay 
+in Air. For an overall evaluation, the ground and airborne 
+delays were added to get the Total Delay of Flight (Table 4).
+When the ownship is at V1 and ready to depart, one of 
+the strategic maneuver’s five branches must be true for 
+take-off. For instance, as seen in Fig.  6, in the case of a 
+vectored thrust ownship, it’s assumed no intruder activity 
+is near the airport, making branch 1 true. If the ownship 
+encounters intruders after take-off, it refers to the tactical 
+maneuver segment for collision avoidance, offering seven 
+options. Assuming the ownship faces a head-on conflict 
+with a drone on route 1 and identifies it, the ownship, 
+being of vectored thrust configuration, will turn right as 
+dictated by branch 7 of the tactical segment. The conflict 
+may resolve, or an emergency maneuver might be needed, 
+with two possible outcomes in this segment. If there are no 
+substantial issues, the pilot continues to V2. Summarizing, 
+Table 1  Theoretical flight 
+values of flight parameters of 
+the vectored thrust ownship
+Horizontal cruise Vertical climb Vertical descent Theoretical 
+value for total 
+flight
+Distance on route 1: dR1 (m) 26000 304.8 304.8 26610
+Distance on route 2: dR2 (m) 30000 304.8 304.8 30610
+Ground speed of vectored thrust 
+ownship: SVT  (m/s)
+78 1.7 1.7
+Time for route 1: tR1 = dR1∕SVT (s) 333.33 179.29 179.29 692
+Time for route 2: tR2 = dR2∕SVT (s) 384.61 179.29 179.29 744
+Fig. 5  The various locations of the intruder with respect to the ownship along with indication on whether they pose a danger
+
+===== PAGE 7 / 16 =====
+911
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+one true branch from each maneuver segment is required, 
+leading to a total of 70 possible combinations (5 strategic 
+options * 7 tactical options * 2 emergency options). This 
+study simulates five scenarios for strategic maneuvers, 
+seven for tactical, and two for emergency, considering 14 
+cases in total. The total flight time is calculated by adding 
+the times from these individual segments. 
+In the first 13 scenarios, the automated systems along 
+with the human pilot act to resolve the conflict as per the 
+steps mentioned in the UAM-CAS logic. In scenario 14, 
+the conflict is not resolved by tactical and emergency 
+maneuvers and the intruder collides with the UAM air -
+craft. This scenario is included to investigate the conse-
+quences of a failure of the UAM-CAS. Table  2  provides 
+an overview of all scenarios as well as a detailed descrip-
+tion of the airborne-phase maneuvers. The scenarios are 
+simulated for all 4 configurations.
+UAM-CAS takes into consideration the individual flight 
+physics and handling quality depending on individual 
+aircraft configurations, particularly in terms of collision 
+avoidance. Each configuration has its strengths and weak -
+nesses, impacting collision avoidance capabilities and 
+efficiency in different flight phases. For this study, the 
+four configurations currently dominating the market are 
+considered [21– 24]:
+• Multicopter: This configuration is characterized by mul-
+tiple propellers in a single plane. This configuration is 
+most efficient for vertical operations but less so for cruise 
+flight due to the absence of wings.
+• Lift to Cruise: This configuration merges multicopter 
+capabilities with those of standard aircraft for vertical 
+take-off and cruise flight, offering a compromise between 
+efficiency and noise emission.
+• Tilt Rotor: This configuration utilizes slowly rotating 
+multi-blade propellers to mitigate disadvantages, but 
+faces challenges in technological complexity and transi-
+tion flight dynamics.
+• Vectored Thrust: Similar to tilt rotors but with enclosed 
+motors forming a jet, offering advantages in long-range 
+flights but requiring significant energy for hovering.
+2.5  Test parameters to be evaluated
+The 14 scenarios which were implemented in BlueSky, are 
+a set of different situations that can happen during the flight 
+of a UAM airport shuttle. To analyze the efficient operation 
+of the UAM-CAS, the following parameters were evaluated 
+in this study.
+Closest point of approach To evaluate the efficacy of the 
+UAM-CAS, one of the parameters to be analyzed from the 
+series of simulations is the Closest Point of Approach (CPA) 
+of the intruder with respect to the ownship. This is the short-
+est distance between the ownship and the intrusion observed 
+Fig. 6  Simulation screen view with Anaconda command prompt on the left and map view of BlueSky on the right of scenario 5
+
+===== PAGE 8 / 16 =====
+912 I. Panchal et al.
+throughout the simulation. The scenarios were set up to result 
+in a collision (i.e., CPA = 0 m) without any intervention by 
+UAM-CAS. Hence, the recorded increase in CPA can be inter-
+preted as the safety measure.
+Time of simulated flight TS(S) and Delay in Air DA(S) 
+Based on the distance and performance data of the aircraft, the 
+theoretical total time of flight is calculated. For each scenario, 
+a mission is simulated in BlueSky without any disturbance 
+from the intruders. This is done to evaluate the performance 
+model of the ownship used for the simulations. As is to be 
+expected, the total time of this simulated undisturbed flight is 
+exactly same as the theoretical total time of flight, the theoreti-
+cal total time of flight serves as a benchmark to evaluate each 
+of the scenarios requiring collision avoidance due to intruders.
+3  Results and discussion
+To evaluate the utility of the proposed UAM-CAS system, 
+two parameters were evaluated namely CPA and total time of 
+simulated flight TS(S).
+As described, the delays were calculated for the ground 
+(strategic) and airborne (tactical and emergency) phase sepa-
+rately before combining them to obtain the values for the total 
+delay.
+3.1  Ground phase
+3.1.1  Delay on ground: DS (S)
+The ground phase consists of the amount of time the aircraft 
+has spent on the ground at V1, ready for departure. The 
+Table 2  Description of airborne phase maneuvers for each intruder scenario
+Intruder scenario Automated avoidance maneuver once 
+intruder enters caution envelope
+Emergency maneuver once intruder 
+enters warning envelope
+Sce-
+nario 
+num-
+ber
+Type Intent / Behavior Location 
+of con-
+flict
+Direction
+1 Drone predictable 1 right Hover at position, Forward velocity = 
+0, Drone has RoW
+2 Drone unpredictable 1 right Hover at position, Forward velocity = 
+0, Drone has RoW
+Turn left
+3 Drone predictable 1 left Continue flight, Ownship has RoW
+4 Drone unpredictable 1 left Continue flight, Ownship has RoW Turn right toward V3- EDNX
+5 Drone predictable 1 head-on Ownship of configuration - 4, turn 
+right
+6 Drone unpredictable 1 head-on Ownship of configuration-4, turn 
+right
+Continue going right toward V3- 
+EDNX
+7 Drone predictable 1 same direction If ahead of ownship, drone has RoW, 
+change path
+8 Drone unpredictable 1 same direction If ahead of ownship, drone has RoW, 
+change path
+Increase separation and continue on 
+parallel path
+9 Bird predictable 1 head-on Hover and descent to 800 ft, Forward 
+velocity = 0
+10 Bird unpredictable 1 head-on Hover and descent to 800 ft, Forward 
+velocity = 0
+Turn right toward V3-EDNX
+11 Drone unpredictable 2 head-on Ownship of configuration - 4, turn 
+right
+Continue going toward V2- MUC HBF
+12 Drone unpredictable 3 head-on Ownship of configuration - 4, turn 
+right
+Continue going toward V2- MUC HBF
+13 Drone unpredictable 4 head-on Ownship of configuration - 4, turn 
+right
+Continue going toward V3- EDNX
+14 Bird unpredictable 1 head-on Hover and descent to 800 ft, Forward 
+velocity = 0
+Turn right toward V3-EDNX
+
+===== PAGE 9 / 16 =====
+913
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+delay in duration between ready for departure and effective 
+departure is caused by intruder activity in the vicinity of the 
+vertiport and is independent of the aircraft configuration. 
+As shown in Table  3 , there are five different outcomes pos-
+sible as discussed in the previous work of the authors [11]. 
+The best case to fly route-1 is at the scheduled departure 
+time. The worst case to fly route-1 is with a delay of 300 s 
+( or 5 min). In case that the aircraft has to switch to route 
+2 due to intruder activity on route 1, take-off takes place 
+the earliest after 360 s (6 min). If there is intruder activ -
+ity on route 2 as well, then the take-off is delayed by 660 s 
+(11 min) which is represented by scenario 12 and 13. In the 
+worst case, the take-off is postponed to a later time if there 
+is continued presence of intruders even on route 2 as well. 
+As it can be seen in Table  2, the ownship flies on route 1 
+toward V2 in scenarios 1–11 and 14. Therefore, it is implied 
+that in scenarios, the worst case ground delay of 300 s would 
+be considered and in scenarios 12–13, a worst case ground 
+delay of 660 s would be considered. As the ownship is not 
+yet moving, the parameter of CPA is not relevant. The delay 
+calculated in Table  3 needs to be added to the delay of the 
+airborne phase to evaluate the total flight delay.
+3.2  Airborne phase
+3.2.1  Closest point of approach (CPA)
+In Fig.  7, the CPA values for scenarios with UAM-CAS and 
+without UAM-CAS are compared for a vectored thrust own-
+ship to analyze the safety effect of the UAM-CAS. It can be 
+observed that except in scenario 10, in all other scenarios, 
+there is a substantial increase in CPA when the UAM-CAS 
+is active. This drop can be as high as 98 %. This indicates the 
+value of an UAM-CAS to maintain a safe separation between 
+aircraft NCOAMs. Without such a system, an intruder can 
+come dangerously close to the ownship, causing a near miss 
+if not a collision. 
+In Scenario 10, a bird was encountered head-on en-
+route V2. The automated tactical maneuver was to hover 
+and descent to 800 ft, with zero forward velocity. Although 
+hovering is an energy-intensive maneuver, it was chosen 
+due to the unpredictable behavior of the bird. In this sce-
+nario, the tactical maneuver did not resolve the conflict 
+but made it even worse. The ownship got too close to the 
+intruder which resulted in the CPA being low. The human 
+operator took over and performed the emergency maneu-
+ver and brought the ownship to safety (Fig.  8). 
+After the in-depth analysis of the concept, the influ-
+ence of the configuration is studied. It has been assumed 
+that multicopter and lift to cruise configurations would use 
+hover as a means of collision avoidance, whereas the tilt 
+rotor and vectored thrust would turn (mostly right) to get 
+out of harm’s way. Multicopter and lift to cruise configu-
+rations have major thrust-generating components in the 
+vertical axis, whereas tilt rotor and vectored thrust have 
+thrust production mainly in the horizontal axis. This gives 
+the respective aircraft more control in the thrust axis and 
+therefore the collision avoidance is chosen in this manner. 
+When looking at Fig.  9, it can be observed that, CPA has 
+indeed increased for all four types of ownships. As defined 
+in [11], multicopter and lift to cruise ownships descended 
+to avoid a head-on collision with drones, whereas own-
+ships of tilt rotor and vectored thrust type turned right. 
+Both of these techniques resulted in successfully evading 
+the intruder. The tilt rotor boasts the most extensive 3D 
+envelopes, closely trailed by the vectored thrust configu-
+ration. However, there’s a noticeable contrast in envelope 
+dimensions between the multicopter and tilt rotor. The 
+caution envelope of the multicopter, which is the biggest 
+of the three envelopes, is even smaller than the warning 
+envelopes of the other three configurations. This would 
+imply that if a uniform envelope dimension were adopted 
+for all the four configurations, than the multicopter would 
+have to change direction of flight, velocity or altitude a lot 
+earlier before the danger of the intruder was imminent, 
+leading to inefficient flight performance. Unlike commer -
+cial aviation, where aircraft within the same category typi-
+cally shares similar configurations, the UAM landscape 
+presents a varied scenario. This underscores the necessity 
+of adopting a configuration-specific approach for UAM.
+3.2.2  Simulated flight time TS (S) and Delay in Air DA(S)
+From Fig.  10 for the vectored thrust ownship, it can be 
+observed that the total time of simulated flight for most 
+scenarios (except scenario 1 and 2) is nearly equal to the 
+total time of theoretical flight with no intruders present 
+Table 3  Outcome and causes in 
+strategic avoidance in ground 
+phase
+Possible outcomes Cause Delay (sec)
+Scheduled Departure on Route 1 NCOAM headed to Route 1 or in inner circle 0
+Departure after delay of 5 min on Route 1 NCOAM stays in vicinity of Route 1 300
+Departure after delay of 6 min on Route 2 NCOAM headed to Route 2 360
+Departure after delay of 11 min on Route 2 NCAOM stays in the vicinity of Route 2 660
+Flight is postponed NCOAM activity has not cleared infinite
+
+===== PAGE 10 / 16 =====
+914 I. Panchal et al.
+(maximum difference of 93 s) Therefore, by adapting the 
+proposed UAM-CAS, the ownship can maintain safe sepa-
+ration from intruders without substantially prolonging the 
+total flight time. As seen in Fig.  11, in scenario 1 and 2, the 
+delay in flight is quite high, with a maximum difference 
+of 531 s. This is due to the fact that the intruder, in this 
+case, a drone entering the safety envelope from the right 
+with respect to the motion of the ownship, lingers in the 
+vicinity of the ownship for a longer time. The intruder, in 
+this case a drone, coming from the right has Right of Way 
+and therefore the tactical avoidance maneuver of a UAM 
+aircraft (regardless of the configuration), to avoid collision 
+with this type of an intruder is to hover in place. As long 
+as the intruder is in the vicinity of the ownship, it will 
+continue hovering. The time of hover might be a critical 
+factor for eVTOL aircraft as the energy required to hover 
+Fig. 7  Closest point of approach with UAM-CAS and without UAM-CAS for each intruder scenario
+Table 4  Values of total delay for entire mission of different scenarios
+Intruder scenario Delay Information
+Scenario 
+number
+Type Intent / behavior Location of 
+conflict
+Direction Max delay in 
+ground phase: 
+DG(s)
+Delay in airborne 
+phase: DA(s)
+Total delay dur-
+ing entire mission: 
+DT (s)= DG + DA
+1 Drone predictable 1 right 300 531 831
+2 Drone unpredictable 1 right 300 513 813
+3 Drone predictable 1 left 300 1 301
+4 Drone unpredictable 1 left 300 3 303
+5 Drone predictable 1 head-on 300 29 329
+6 Drone unpredictable 1 head-on 300 62 362
+7 Drone predictable 1 same direction 300 64 364
+8 Drone unpredictable 1 same direction 300 60 360
+9 Bird predictable 1 head-on 300 32 332
+10 Bird unpredictable 1 head-on 300 38 338
+11 Drone unpredictable 2 head-on 300 3 303
+12 Drone unpredictable 3 head-on 660 42 702
+13 Drone unpredictable 4 head-on 660 11 671
+14 Bird unpredictable 1 head-on 300 105 405
+
+===== PAGE 11 / 16 =====
+915
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+is more than the energy required for forward flight [ 26]. 
+Therefore, the avoidance behavior needs to be optimized. 
+Moreover, as seen in Fig.  12, the total time of simulated 
+flight is almost similar or slightly more (maximum differ -
+ence of 33 s) for scenarios with unpredictable intruders as 
+compared to scenarios with predictable intruders. High-
+lighting the influence of configuration, the delay in flight 
+for the multicopter and lift to cruise configurations is more 
+when compared to the other two configurations. This may 
+be due to the fact that multicopter and lift to cruise use 
+Fig. 8  Comparison of CPA for 
+predictable and unpredictable 
+intruders
+Fig. 9  Comparison of CPA for all four types of ownships. The black bar shows the value of CPA for the vectored thrust ownship without an 
+active UAM-CAS
+
+===== PAGE 12 / 16 =====
+916 I. Panchal et al.
+combination of hover and descend maneuvers to resolve 
+the conflict which is evident from Fig.  10.
+If the delay is compared for all ownship types, as in 
+Fig.  13, it can be observed that the delay is the highest for 
+multicopter followed by lift to cruise ones. Ownships of 
+multicopter and lift to cruise configurations transition into 
+hover in case of the threat of head-on collision with a drone. 
+Therefore, the aforementioned increase in the delay could be 
+due to long hover times. The delay is the least for the tilt-
+rotor configuration of the ownship. To avoid the intruder, the 
+tilt rotor descends and this could be an influencing factor in 
+the reduced delay.
+Fig. 10  Total time of simulated flight for each intruder scenario
+Fig. 11  Delay for each intruder scenario in the airborne phase. Note: Detailed description of the scenarios can be found in Table  2
+
+===== PAGE 13 / 16 =====
+917
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+3.2.3  Total delay for the entire mission DT (S)
+The delay components of the ground phase and the airborne 
+phase were summed up as shown in Table  4 to find the total 
+delay for the entire mission for the vectored thrust own-
+ship. In scenarios 1–11, the ownship flew on route 1, and as 
+shown in Fig.  3, the worst-case delay for that route is five 
+minutes. Therefore, DG(S) is 300 s for scenarios 1-11 and 
+14. The ground phase delay is now added to the delay of the 
+airborne phase DA(s) . For example, in scenario 9, the own-
+ship faced a delay of 300 s on the ground and then another 
+32 s to evade the head-on bird during flight, resulting in total 
+delay for the entire mission to be 332 s. The maximum total 
+delay DT (S) for all scenarios is obtained as shown in Table 4. 
+In a similar manner, for route 2, the worst-case ground phase 
+delay DG(S) is 660 s which corresponds to scenario 12 and 
+13. The values are visualized in Fig. 14. It can be observed 
+that the delay of the ground phase is the largest component 
+Fig. 12  Comparison of total 
+time of simulated flight for 
+predictable and unpredictable 
+intruders
+Fig. 13  Comparison of delay in the airborne phase for all four types of ownships. Note: Detailed description of the scenarios can be found in 
+Table 2
+
+===== PAGE 14 / 16 =====
+918 I. Panchal et al.
+and substantially delays the airport shuttle operations when 
+compared to the airborne delay. Hence, emphasis should be 
+put on measures to minimize ground delays.
+4  Conclusions
+Within this study, a previously proposed UAM-CAS concept 
+was evaluated and its efficacy was analyzed. Therefore, the 
+parameters of CPA and delay were assessed for the four most 
+common UAM aircraft configuration. From Sect.  3, it can 
+be concluded that the ground phase is responsible for larger 
+delays than the airborne phase. This could be counteracted 
+by reducing the take-off delay duration of five minutes in 
+case of critical NCOAM movement. In addition, patterns 
+and time windows during which intruders are the most active 
+near V1 should be studied and strategies be developed based 
+on the situation present at the intended departure time. Sys-
+tems like avian RADAR could facilitate the required detec-
+tion and monitoring of birds [27, 28]. A prerequisite is a 
+solid ground infrastructure with sufficient capacity for the 
+harassment of wildlife and solutions to protect the area from 
+NCOAMs.
+On the other hand, with an average delay of 107 s, the air-
+borne delays are mostly negligible, even at this early concept 
+state. However, solutions to shorten the delays due to unpre-
+dictable intruders need to be found. This is especially true 
+for the multicopter and lift to cruise configurations which 
+hover in case of observed intruders. In addition to requiring 
+a lot of power, the delays also quickly accumulate. Hence, 
+alternative avoidance maneuvers should be developed to 
+counter the ground delays and analyzed with regard to their 
+impact on safety and efficiency. For example, a workaround 
+in these scenarios could be to re-evaluate the situation after 
+a threshold time and avoid the conflict in air through change 
+in heading or altitude. Such alternative maneuvers should 
+be assessed in the context of the maneuvering capabilities 
+of the different configurations and evaluated again through 
+simulation. For the other scenarios and configurations, the 
+delays are reasonable and UAM aircraft can be operated 
+with the current generation of batteries when UAM-CAS is 
+active. Moreover, the proposed maneuvers themselves can 
+be successfully carried out. From Fig. 9, it can be concluded 
+that using UAM-CAS, the CPA can be reduced substantially 
+by an average of 72 %.
+For an UAM-CAS like the one proposed here to be imple-
+mented, several prerequisites need to be fulfilled. First, sen-
+sors on the ground or in the air to reliably detect and identify 
+NCOAMs are required. Second, to predict their movement 
+in the near future to decide about the necessity of avoidance 
+maneuvers, models need to be developed and thoroughly 
+tested. Lastly, these elements, alongside the suggested 
+refinements to the UAM-CAS should be evaluated for vari-
+ous conditions, such as aircraft configurations, terrain char-
+acteristics or weather. Additionally, factors like detection of 
+false positives and true negatives, as well as delayed report-
+ing when conflicts cannot be resolved immediately, must be 
+taken into account. The predictability was also considered 
+without any difficulties. It was assumed that the on-board 
+sensors would be precise and functional throughout the mis-
+sion. No uncertainties were taken into this work. Ensuring 
+Fig. 14  Maximum total delay comprising of the ground phase component as well as the airborne phase component for each scenario for the 
+entire mission
+
+===== PAGE 15 / 16 =====
+919
+Evaluation of collision detection and avoidance methods for urban air mobility through…
+satisfactory sensor reliability in reality would be paramount 
+in future work.
+The avoidance maneuvers could be further refined based 
+on latest aircraft performance data. By performing further 
+tests with other UAM configurations and with a bigger sam-
+ple size of scenarios, more reliable results can be achieved. 
+UAM-CAS could act as a basis for a novel Collision Detect 
+and Resolution (CDR) method for eVTOL flight. Based on 
+the evaluation of technological advancement, there is poten-
+tial to explore the requirements for autonomous CDR. How-
+ever, this exploration must be substantiated through rigorous 
+testing, given the inherent high level of risk involved. Fur -
+thermore, it’s conceivable that future iterations of existing 
+UAM aircraft may exhibit improved performance character-
+istics, necessitating a reevaluation of previously presented 
+calculations.
+In the hypothetical flight scenario, intruders were 
+addressed singularly and only once per flight. For instance, 
+the consideration of a flock of birds as an intruder is one 
+such example. In this study, the discussion regarding birds 
+focuses on individual instances. Further simulations could 
+explore additional combinations and frequencies, evaluating 
+actions outlined in the UAM-CAS logic. Refinement of the 
+3D safety envelope is also feasible, allowing for more pre-
+cise shapes such as tear drop-like configurations instead of 
+circles to take into consideration the effect of relative motion 
+during forward flight. This study proposes a pathway for the 
+future integration of UAM, offering a potential avenue for 
+realization in the near term
+Author contributions I.P. set up the conceptual framework of the paper 
+and performed the simulations. She led the writing of the manuscript. 
+S.F.A. contributed to the study design as well as to the writing and 
+revising of the manuscript. I.C.M contributed to the setting up of the 
+simulations, the study design as well as to the writing and revising of 
+the manuscript.
+Funding Open Access funding enabled and organized by Projekt 
+DEAL.
+Declarations 
+Conflict of interest All authors certify that they have no affiliations 
+with or involvement in any organization or entity with any financial 
+interest or non-financial interest in the subject matter or materials dis-
+cussed in this manuscript. The authors have no co+nflict of interest to 
+declare that are relevant to the content of this article.
+Open Access This article is licensed under a Creative Commons Attri-
+bution 4.0 International License, which permits use, sharing, adapta-
+tion, distribution and reproduction in any medium or format, as long 
+as you give appropriate credit to the original author(s) and the source, 
+provide a link to the Creative Commons licence, and indicate if changes 
+were made. The images or other third party material in this article are 
+included in the article’s Creative Commons licence, unless indicated 
+otherwise in a credit line to the material. If material is not included in 
+the article’s Creative Commons licence and your intended use is not 
+permitted by statutory regulation or exceeds the permitted use, you will 
+need to obtain permission directly from the copyright holder. To view a 
+copy of this licence, visit http://creativecommons.org/licenses/by/4.0/.
+References 
+ 1. Law, C. M.: “The growth of urban population in england and 
+wales, 1801-1911,” Transactions of the Institute of British Geog-
+raphers, pp. 125–143, (1967)
+ 2. Bhatta, B.: Causes and Consequences of Urban Growth and 
+Sprawl. Berlin, Heidelberg: Springer Berlin Heidelberg, (2010). 
+[Online]. https:// doi. org/ 10. 1007/ 978-3- 642- 05299-6_2
+ 3. Leduc, G.: et al., “Road traffic data: Collection methods and 
+applications,” Working Papers on Energy, Transport and Climate 
+Change, vol. 1, no. 55, pp. 1–55, (2008)
+ 4. Igbinobaro, O. V.: “Urban air mobility: Envisioning uam as an 
+integrated form of future transport-a las vegas case study,” (2022). 
+[Online]. https:// digit alsch olars hip. unlv. edu/ arch_ grad_ capst ones/ 
+42
+ 5. Deloitte, “National Aeronautics and Space Administration 
+(NASA) UAM Vision Concept of Operations (ConOps) UAM 
+Maturity Level (UML) 4,” 2020. [Online]. Available: https:// ntrs. 
+nasa. gov/ api/ citat ions/ 20205 011091/ downl oads/ UAM
+ 6. Patterson, M. D., Antcliff, K. R., Kohlman, L. W.: “A proposed 
+approach to studying urban air mobility missions including an 
+initial exploration of mission requirements,” in Annual Forum 
+and Technology Display, no. NF1676L-28586, (2018)
+ 7. Dokter, A.M., Liechti, F., Stark, H., Delobbe, L., Tabary, P., Hol-
+leman, I.: Bird migration flight altitudes studied by a network 
+of operational weather radars. J. R. Soc. Interface 8 (54), 30–43 
+(2011)
+ 8. Tang, L., Shao, G.: Drone remote sensing for forestry research and 
+practices. J.For. Res. 26, 791–797 (2015)
+ 9. European Union Aviation Safety Agency, “Proposed means of 
+complinace with the special condition vtol,” 2020, doc No: MOC 
+SC-VTOL. Online: https:// www. easa. europa. eu/ sites/ defau lt/ files/ 
+dfu/ propo sed_ moc_ sc_ vtol_ issue_1. pdf, accessed on 19 January 
+2022
+ 10. Metz, I. C., Henschaw, C., Harmon, L.: “Flying in the strike zone: 
+Urban air mobility and wildlife strike prevention,” Journal of 
+AHS, vol. 69, (2024)
+ 11. Panchal, I., Metz, I. C., Ribeiro, M., Armanini, S.: “Urban air 
+traffic management for collision avoidance with non-cooperative 
+airspace users,” in 33rd Congress of the International Council of 
+the Aeronautical Sciences (2022), (2022)
+ 12. Williams, E.: “Airborne collision avoidance system,” in Proceed-
+ings of the 9th Australian workshop on Safety critical systems and 
+software-Volume 47, (2004), pp. 97–110
+ 13. Rapajic, J.: Beyond airline disruptions: Thinking and managing 
+anew. Routledge, (2018)
+ 14. Ball, M., Barnhart, C., Dresner, M., Hansen, M., Neels, K., 
+Odoni, A., Peterson, E., Sherry, L., Trani, A., Zou, B.: “Total 
+delay impact study: a comprehensive assessment of the costs and 
+impacts of flight delay in the united states,” (2010)
+ 15. Z. Rezo, S. Steiner, and N. Brnjac, “Cost analysis of air traffic flow 
+disruptions in europe,” in Aviation Management and Economics 
+Conference (AMEC), vol. 6, 2019
+ 16. Asmer, L., Pak, H., Shivaprakasha, P., Schuchardt, B., Weiand, 
+P., Meller, F., Torens, C., Becker, D., Zhu, C., Schweiger, K., 
+Volkert, A., Jaksche, R.:“Urban air mobility use cases, missions 
+and technology scenarios for the horizonuam project,” 08 (2021)
+ 17. Hoekstra, J. M., Ellerbroek, J.: “Bluesky atc simulator project: an 
+open data and open source approach,” in Proceedings of the 7th 
+
+===== PAGE 16 / 16 =====
+920 I. Panchal et al.
+international conference on research in air transportation, vol. 
+131. FAA/Eurocontrol USA/Europe, (2016), p. 132
+ 18. Metz, I.C., Mühlhausen, T., Ellerbroek, J., Kügler, D., Van Gas-
+teren, H., Kraemer, J., Hoekstra, J.M.: Simulation model to calcu-
+late bird-aircraft collisions and near misses in the airport vicinity. 
+Aerospace 5(4), 112 (2018)
+ 19. J. Sun, J. Ellerbroek, and J. M. Hoekstra, “Wrap: An open-source 
+kinematic aircraft performance model,” Transportation Research 
+Part C: Emerging Technologies, vol. 98, pp. 118–138, 2019. 
+[Online]. Available: https:// www. scien cedir ect. com/ scien ce/ artic 
+le/ pii/ S0968 090X1 83060 89
+ 20. Sun, J., Hoekstra, J. M., Ellerbroek, J.: “Openap: An open-source 
+aircraft performance model for air transportation studies and sim-
+ulations,” Aerospace, vol. 7, no. 8, (2020). [Online]. Available: 
+https:// www. mdpi. com/ 2226- 4310/7/ 8/ 104
+ 21. “Volocopter GmbH 2019 ,” https:// www. voloc opter. com/ wp- conte 
+nt/ uploa ds/ 20220 607_ VoloC ity_ Specs. pdf, 2019
+ 22. “Eve Air Mobility Eve V3 (concept Design) ,” https:// evtol. news/ 
+embra er/, 2022
+ 23. “Joby Aviation S4 ,” https:// evtol. news/ joby- s4, 2022
+ 24. “Lilium Jet ,” https:// evtol. news/ lilium, 2022
+ 25. International Civil Aviation Organization, Rules of the Air, Annex 
+2, tenth edition (2005)
+ 26. Finger, D. F., Braun, C., Bil, C.: “A review of configuration 
+design for distributed propulsion transitioning vtol aircraft,” in 
+Asia-Pacific International Symposium on Aerospace Technology-
+APISAT, (2017), pp. 3–5
+ 27. McKee, J., Shaw, P., Dekker, A., Patrick, K.: “Approaches to 
+wildlife management in aviation,” Problematic wildlife: A cross-
+disciplinary approach, pp. 465–488, (2016)
+ 28. Metz, I.C., Ellerbroek, J., Mühlhausen, T., Kügler, D., Hoekstra, 
+J.M.: The bird strike challenge. Aerospace 7(3), 26 (2020)
+ 29. Peinecke, N., Schalk, L.M.: “Detect and avoid for unmanned air-
+craft in very low level airspace,” in Automated Low-Altitude Air 
+Delivery, pp. 333–351. Springer, Cham (2022)
+ 30. Filippone, E., Corraro, F., Corraro, G., Ciniglio, U., Shaw, C., Pas-
+tor, E., Peinecke, N.: Definition of a remain well clear volume for 
+IFR-RPAS integration in airspace classes D-G in Europe. AIAA 
+SCITECH 2023 Forum.  https:// doi. org/ 10. 2514/6. 2023- 1590
+Publisher's Note Springer Nature remains neutral with regard to 
+jurisdictional claims in published maps and institutional affiliations.

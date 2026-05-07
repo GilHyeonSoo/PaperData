@@ -1,0 +1,1932 @@
+SOURCE: references/MainPaper/drones-07-00491.pdf
+PAGES: 22
+
+
+
+===== PAGE 1 / 22 =====
+Citation: Zhang, J.; Zhang, H.; Zhou,
+J.; Hua, M.; Zhong, G.; Liu, H.
+Adaptive Collision Avoidance for
+Multiple UAVs in Urban
+Environments. Drones 2023, 7, 491.
+https://doi.org/10.3390/
+drones7080491
+Academic Editor: Pablo
+Rodríguez-Gonzálvez
+Received: 5 July 2023
+Revised: 20 July 2023
+Accepted: 23 July 2023
+Published: 27 July 2023
+Copyright: © 2023 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license (https://
+creativecommons.org/licenses/by/
+4.0/).
+drones
+Article
+Adaptive Collision Avoidance for Multiple UA Vs in
+Urban Environments
+Jinpeng Zhang 1,2 , Honghai Zhang 1,2, *, Jinlun Zhou 1,2 , Mingzhuang Hua 2,3 , Gang Zhong 1,2
+ and Hao Liu 2,4
+1 College of Civil Aviation, Nanjing University of Aeronautics and Astronautics, Nanjing 211106, China;
+zjp0401@nuaa.edu.cn (J.Z.); jinlunzhou@nuaa.edu.cn (J.Z.); zg1991@nuaa.edu.cn (G.Z.)
+2 National Key Laboratory of Air Trafﬁc Flow Management, Nanjing University of Aeronautics
+and Astronautics, Nanjing 211106, China; huamingzhuang@nuaa.edu.cn (M.H.); hliu@nuaa.edu.cn (H.L.)
+3 College of General Aviation and Flight, Nanjing University of Aeronautics and Astronautics,
+Liyang 213300, China
+4 College of Science, Nanjing University of Aeronautics and Astronautics, Nanjing 211106, China
+* Correspondence: honghaizhang@nuaa.edu.cn; Tel.: +86-13914766151
+Abstract: The increasing number of unmanned aerial vehicles (UAVs) in low-altitude airspace is
+seriously threatening the safety of the urban environment. This paper proposes an adaptive collision
+avoidance method for multiple UAVs (mUAVs), aiming to provide a safe guidance for UAVs at
+risk of collision. The proposed method is formulated as a two −layer resolution framework with
+the considerations of speed adjustment and rerouting strategies. The ﬁrst layer is established as
+a deep reinforcement learning (DRL) model with a continuous state space and action space that
+adaptively selects the most suitable resolution strategy for UAV pairs. The second layer is developed
+as a collaborative mUAV collision avoidance model, which combines a three-dimensional conﬂict
+detection and conﬂict resolution pool to perform resolution. To train the DRL model, in this paper, a
+deep deterministic policy gradient (DDPG) algorithm is introduced and improved upon. The results
+demonstrate that the average time required to calculate a strategy is 0.096 s, the success rate reaches
+95.03%, and the extra ﬂight distance is 26.8 m, which meets the real-time requirements and provides
+a reliable reference for human intervention. The proposed method can adapt to various scenarios,
+e.g., different numbers and positions of UAVs, with interference from random factors. The improved
+DDPG algorithm can also signiﬁcantly improve convergence speed and save training time.
+Keywords: urban air trafﬁc management; collision risk; adaptive collision avoidance; deep
+reinforcement learning; multiple unmanned aerial vehicles
+1. Introduction
+Urban low-altitude airspace is an important natural resource that possesses great socio-
+economic value, and rational management of urban airspace is of great signiﬁcance in alle-
+viating trafﬁc congestion and reducing the rate of ground trafﬁc accidents [1,2]. As the main
+subjects of urban air trafﬁc, unmanned aerial vehicles (UAVs) have attracted widespread
+attention due to their ﬂexibility, convenience, and low cost. By the end of 2022, China
+had 700,000 registered UAV owners, 15,130 companies operating UAVs,958,000 registered
+UAVs, and about 57,000 h of average daily ﬂight [ 3]. It can be foreseen that with the
+development of urban air trafﬁc, the types of tasks performed by UAVs will inevitably tend
+to diversify, showing great promise in ﬁelds such as tourism, rescue, and logistics, and with
+this comes an increase in urban air trafﬁc ﬂow and the complication of ﬂight situations.
+As the number and size of UAVs increases, their operation in urban airspace will
+present additional security threats. The dense distribution of buildings, the complex
+structure of the airspace, and the high density of aircraft make it extremely easy for
+accidents such as dangerous approaches or even collisions to occur. Therefore, in the face
+of limited airspace resources, means of effectively avoiding risk of collision have become a
+Drones 2023, 7, 491. https://doi.org/10.3390/drones7080491 https://www.mdpi.com/journal/drones
+
+===== PAGE 2 / 22 =====
+Drones 2023, 7, 491 2 of 22
+primary issue that needs to be addressed in order to build urban air trafﬁc demonstration
+areas and develop the low-altitude economy. However, the traditional collision avoidance
+algorithms lack sufﬁcient success rates, and do not satisfy the safety interval criteria and
+real-time requirements in multi-target and high-density urban scenarios. In addition, these
+methods generate collision avoidance trajectories based on discrete state space, and the
+selectable actions are also discrete, and are not able to adequately reﬂect the ﬂexibility
+of UAVs.
+To address these problems, we propose an innovative two−layer resolution framework
+for mUAVs based on DRL, which can adaptively provide avoidance strategies for UAVs
+based on continue action space and ensure that each UAV has decision-making capability,
+thus signiﬁcantly improving the success rate and computational efﬁciency.
+1.1. Related Prior Work
+Many studies have been performed proposing methods for UAV collision avoidance.
+In general, existing methods can be grouped into the following three categories: heuristic
+optimization methods, optimal control theory methods, and artiﬁcial intelligence methods.
+(1) Heuristic optimization methods
+Heuristic optimization methods divide the conﬂict process into a series of discrete
+state spaces and then perform an optimal search for approximate solutions in a certain coop-
+erative manner [4], and primarily include the swarm intelligence optimization method [5]
+A*, D*. Zeng et al. combined the ant colony algorithms and the A* algorithm to solve the
+unmanned ground vehicle (UGV) scheduling planning problem, avoiding conﬂicts during
+simultaneous path planning for UGVs at a lower cost [6]. Zhao et al. considered collision
+probability and the intention information of intruders, using the A* algorithm to optimize
+trajectory planning to avoid collision risks [ 7]. Yun et al. applied the enhanced D* lite
+algorithm in the ﬁeld of robot path navigation in unknown dynamic environments [8]. Fur-
+thermore, these methods are usually combined with other algorithms to solve the conﬂict
+problem, such as clustering methods [9] and Legendre Pseudo spectral Method [10].
+(2) Optimal control theory methods
+The optimal control theory methods select the permissible control rate according to
+the kinematic model or the time domain mathematical model so that the UAV operates
+according to the constraints and thus achieves collision avoidance. These methods mainly
+include three aspects of mixed-integer linear programming, nonlinear optimization, and
+dynamic programming. Radmanesh et al. proposed fast-dynamic Mixed Integer Linear
+Programming (MILP) for the path planning of UAVs in various ﬂight formations, focusing
+on avoiding typical UAVs from colliding with any intruder aircraft [ 11]. De Waen et al.
+targeted complex scenarios with multiple obstacles, and divided the MILP problem into
+many smaller MILP subproblems for trajectory modeling, which ensures the scalability of
+MILP to solve conﬂict problems [12]. Alonso-Ayuso et al. developed an exact mixed-integer
+nonlinear optimization model based on geometric construction for tackling the aircraft
+conﬂict detection and resolution problem [13].
+Heuristic-based search methods are reliable and effective for achieving collision avoid-
+ance and are able to resolve conﬂicts among small numbers of UAVs, which is the most
+common case in practice today. However, this method is not very suitable for mUAV
+conﬂicts, especially when the airspace is crowded, in which case the collision avoidance
+paths generated may suffer from secondary conﬂict problems. The optimal control methods
+take the minimum interval between UAVs as the optimization condition, and its relatively
+complex theory will lead to a decrease in anti-interference capability and an increase in
+computation, so it is not able to meet the real-time requirements.
+(3) Artiﬁcial intelligence methods
+The widespread use of artiﬁcial intelligence (AI) in recent years has provided new
+ideas and implementation paths. Reinforcement learning (RL) is the study of how an
+agent can interact with the environment to learn a policy that maximizes the expected
+
+===== PAGE 3 / 22 =====
+Drones 2023, 7, 491 3 of 22
+cumulative reward for a task. When RL is combined with the powerful understanding
+ability of deep learning, it is clear that it possesses better decision-making efﬁciency than
+humans in a nearly inﬁnite state space [14,15]. The application of DPL to the ﬁeld of UAV
+collision avoidance can solve the problems presented by the methods described above,
+while achieving better avoidance in urban airspace with variable environmental states and
+meeting strict real-time requirements.
+The authors of [16,17] developed a Q-learning algorithm to design the dynamic move-
+ment of UAVs, but there is no assurance that it can handle high-dimensional input data.
+Singla et al. proposed a deep recurrent Q-network with temporal attention to realize the
+indoor autonomous ﬂight of a UAV [ 18]. In [ 19], the DDQN algorithm was applied to
+ship navigation to achieve multi-ship collision avoidance in crowded waters. Li et al.
+designed a tactical conﬂict resolution method for air logistics transportation based on the
+D3QN algorithm, enabling UAVs to successfully avoid non-cooperative targets [20]. The
+value-based algorithms (e.g., D3QN and DDQN) can adapt to complex state spaces, but
+cannot provide satisfactory solutions for continuous control problems. The emergence
+of police-based RL has solved such problems; one of the most widely used and mature
+approaches in practice is the DDPG algorithm proposed by DeepMind [21]. For example,
+references [22–25] addressed the trajectory optimization in a two UAV scenario based on
+the DDPG algorithm. Ribeiro et al. [ 22] utilized a geometric approach to model conﬂict
+detection between two UAVs and trained the agent in conjunction with the DDPG algo-
+rithm to generate a resolution strategy. The authors of [23,24] utilized the DDPG algorithm
+to solve the UAV path following problem, taking into account the conﬂict risks during
+movement. In [25], a proper heading angle was obtained using the DDPG algorithm before
+the aircraft reached the boundary of the sector to avoid collisions. Alternatively, Proximal
+Policy Optimization (PPO) methods can be used in aircraft collision avoidance, and have
+shown a certain level of performance [26].
+In summary, although a variety of UAV collision avoidance methods have been devel-
+oped based on DRL, there are still several gaps in terms of actual application: (1) Scholars
+have typically rasterized the entire airspace when designing the state space [ 16,17,22],
+which has some speciﬁc limitations: UAVs can only move to an adjacent raster, which
+limits the action dimensions of UAVs, and is not able to adequately reﬂect their ﬂexibility.
+The use of a discrete state space would cause a waste of airspace resources, and the whole
+raster area may become a no-ﬂy zone due to some small buildings, thus reducing the space
+available for UAV ﬂights. (2) The dimensional advantage is also an important factor in
+measuring the performance of the method, with most existing UAV collision avoidance
+methods borrowing from ground trafﬁc, and thus the dimensional range is limited to 2D,
+which does not match the actual operation situation in the airspace, while also limiting
+the UAV avoidance actions that can be selected [ 18,20,26]. (3) When the DRL theory is
+applied to mUAV collision avoidance, in the existing literature, only one UAV is regarded
+as the agent, and the other UAVs are regarded as dynamic obstacles without resolution
+ability [20]; their tracks are previously planned. In actual operation, conﬂicts may arise
+from any UAV , so each UAV should have the ability to make their own decisions.
+1.2. Our Contributions
+To solve the above problems, in this paper, a more practical collision avoidance method
+for mUAVs is developed. The primary contributions of this study are the following:
+(1) In this paper, an adaptive decision-making framework for mUAV collision avoidance
+is proposed. The adaptive framework enables UAVs to autonomously determine the
+avoidance action to be taken in 3D space, providing the UAVs with more options for
+extrication strategies when faced with static or dynamic obstacles. This framework
+combines the conﬂict resolution pool in order to transform mUAV conﬂicts into UAV
+pairs for avoidance, controlling the computational complexity at the polynomial level,
+thereby providing a new idea for mUAV collision avoidance.
+
+===== PAGE 4 / 22 =====
+Drones 2023, 7, 491 4 of 22
+(2) A DRL model for UAV pairs is designed based on a continuous action space and state
+space, reﬂecting the maneuverability of UAVs and avoiding wastage of urban airspace
+resources. The model endows each UAV with decision-making ability, and utilizes a
+ﬁxed sector format to explore conﬂicting obstacles, thus simplifying the state of the
+agent and making it more adaptable to dense urban building environments.
+(3) The DDPG algorithm is introduced to train the agent, and its convergence speed is
+enhanced by proposing the mechanism of destination area dynamic adjustment.
+A summary of surveys related to DRL methods in the ﬁeld of UAV collision avoidance
+is provided in Table 1. The table shows that this research represents the ﬁrst study to
+resolve mUAV conﬂicts in a 3D environment based on continuous state and action space.
+Table 1. Related work on conﬂict resolution based on DRL.
+Ref. Methods Type State and Action Space Action Multi-UA V Environment
+[16] Q-leaning Value-based Discrete/Discrete choosing from
+4 possible directions NO 2D
+[17] Q-leaning Value-based Discrete/Discrete choosing from
+7 possible directions YES 3D
+[18] DDQN Value-based Continuous/Discrete choosing from
+3 possible directions NO 2D
+[20] D3QN Value-based Continuous/Discrete choosing acceleration;
+choosing yaw angular velocity YES 2D
+[22] DDPG police-based Discrete/Continuous
+choosing heading
+angle(max:15◦/s); choosing
+acceleration (1.0 kts/s)
+NO 2D
+[23] DDPG police-based Continuous/Continuous choosing altitude,
+heading angle NO 3D
+[24] DDPG police-based Continuous/Continuous choosing heading angle
+(−30◦, 30◦) NO 2D
+[26] PPO police-based Continuous/Continuous
+choosing heading angle
+(−30◦, 30◦),and speed
+[0 m/s, 40 m/s]
+NO 2D
+This
+paper
+Improved
+DDPG police-based Continuous/Continuous choosing velocity, heading
+angle, and altitude YES 3D
+The rest of the paper is organized as follows. In Section 2, the two−layer resolution
+framework is presented, and the methods for collision avoidance of UAV pairs and mUAVs
+are proposed. In Section 3, the improved DDPG algorithm is proposed for training the
+agent. In Section 4, the validity of the method is veriﬁed using a designed city scenario. In
+Section 5, some conclusions and summaries are presented. The table in the abbreviations
+section shows the main symbols used in this paper.
+2. Problem Formulation
+In this section, we propose a two−layer resolution framework (Figure 1) and divide
+the problem formulation of mUAV collision avoidance into two parts: collision avoidance
+between UAV pairs, and collaborative mUAV collision avoidance. Firstly, the collision
+avoidance agent training model is designed based on DPL, and the agent can assign avoid-
+ance actions for UAV pairs in real time and complete collision avoidance for both dynamic
+obstacles (between UAVs) and static obstacles (buildings). Secondly, the collaborative
+mUAV collision avoidance model is proposed, in which mUAV conﬂicts are transformed
+into the form of UAV pairs and then the agent is used to deconﬂict them one by one.
+The collision zero model of the UAV and building are generated as described in an ex-
+isting study [27], and are elliptical and cylindrical shapes, as shown inEquations (1) and (2).
+Du =
+{
+r ∈ R3 : rT Ar ≤ 1, A−1 = diag
+(
+au2, bu2, hu2
+)}
+(1)
+Do =
+{
+(x, y, z) ∈ R3 : x2 + y2 ≤ Ro2, z ≤ ho
+}
+(2)
+
+===== PAGE 5 / 22 =====
+Drones 2023, 7, 491 5 of 22
+where au, bu, hu are the semi-axes of the ellipsoid, respectively, and Ro, ho are the radius
+and height of the cylinder.
+Drones 2023, 7, x FOR PEER REVIEW  5  of  22 
+ 
+mUAV collision avoidance model is proposed, in which mUAV conﬂicts are transformed 
+into the form of UA V pairs and then the agent is used to deconﬂict them one by one.  
+        Current moment UAV flight status:     {u 1,u2,u3, ... ,un}
+   Conflict risk detection:  
+UAS vs UAS UAS vs Building
+Conflict resolution pool
+ 
+ 
+UAS1 vs UAS2
+UAS2 vs UAS3
+. . .
+ 
+ 
+ 
+UAS4
+UAS5
+UAS6
+...
+Priority: σ1 
+UAS2 and UAS3
+Priority: σ2 
+UAS1 and UAS2
+Priority: σ3 
+UAS4 and UAS5
+Priority: σ4 
+UAS5 and UAS6
+...
+Act ion of 
+UASi
+Turn right or turn left
+ Action of 
+UASj
+      Climb or descend Acceleration 
+Turn right or turn left Climb or descend   Acceleration 
+  St ra te gy for e lem ent 1  St ra te gy for  e lem ent 2  St ra te gy for  e lem ent 3  St ra te gy for  e lem ent 4
+velocity vector
+...
+The UAS execute avoidance strategies, airspace status shifts
+distance decision
+       
+Environmental receiver
+...
+(; )s 
+DDPG
+ heading angle: 
+         [-3°,3°]
+Action
+ altitude adjust: 
+         [-1,1]
+  speed adjust:
+         [-3,3]
+ flight state vector
+ interaction vector
+    building vector
+State
+Agent
+       
+Reward 
+ destin atio n int ent  building collision 
+UAS collision  additional reward
+Status on conflict 
+UAS pai r
+Action1
+Action2
+status updates
+The first layer
+The second layer
+ 
+Figure 1. Overall workﬂow of the two−layer resolution framework. 
+The collision zero model of the UA V and building are generated as described in an 
+existing study  [27], and are  elliptical and  cylindrical shapes, as  shown in Equations (1) 
+and (2). 
+ 
+31 2 2 2:1 , , ,T
+uu u uDr R r A rAd i a g a b h      (1) 
+ 
+32 2 2(, ,) : , oooDx y z R x y R z h      (2) 
+where au, bu, hu are the semi‐axes of the ellipsoid, respectively, and Ro, ho are the radius and 
+height of the cylinder. 
+2.1. First Layer: DRL‐Based Method for Collision Avoidance between UA Vs in a UA V Pair 
+In this section, the ﬁrst layer of the framework is designed, and the agent training 
+model is constructed with respect to three aspects: state space, action space, and reward 
+function. 
+2.1.1. Continuous State Space 
+According to the explanation in the previous section, we replace the rasterized space 
+with a continuous state space. The agent state vector includes the following three parts: 
+(1) The ﬂight state vector of the UAV, including six attributes (φ: heading angle; V: hori‐
+zontal speed; Z: the altitude of UA V; φg: relative heading angle of the destination to 
+Figure 1. Overall workﬂow of the two−layer resolution framework.
+2.1. First Layer: DRL-Based Method for Collision Avoidance between UAVs in a UAV Pair
+In this section, the ﬁrst layer of the framework is designed, and the agent train-
+ing model is constructed with respect to three aspects: state space, action space, and
+reward function.
+2.1.1. Continuous State Space
+According to the explanation in the previous section, we replace the rasterized space
+with a continuous state space. The agent state vector includes the following three parts:
+(1) The ﬂight state vector of the UAV , including six attributes ( ϕ: heading angle;
+V: horizontal speed; Z: the altitude of UAV; ϕg: relative heading angle of the desti-
+nation to UAV; dg: the horizontal distance of the destination to UAV), as shown in
+Figure 2. These attributes are able to accurately reﬂect the current ﬂight status of the
+UAV , and the agent guides the UAV to its destination based on the ﬂight status vector.
+(2) Interaction vectors between UAV pairs (ϕus: the difference in heading angle; Zus: the
+difference in altitude;dus: the horizontal distance between two UAVs). These attributes
+
+===== PAGE 6 / 22 =====
+Drones 2023, 7, 491 6 of 22
+reﬂect the position and heading relationships between the UAVs in a UAV pair, and the
+agent avoids collision between UAVs in a UAV pair based on the interaction vectors.
+(3) Building vectors. There are lots of buildings in the urban airspace, and if all building
+information is put into the agent, this will result in high state vector dimensionality
+and affect the speed of convergence. In this paper, considering the detection range of
+the UAV in the horizontal direction, a ﬂight sector is used to map obstacles affecting
+ﬂight into a ﬁxed-length vector, and these are regarded as the obstacle vectors, as
+shown in Figure 2.
+Drones 2023, 7, x FOR PEER REVIEW  6  of  22 
+ 
+UAV; dg:  the horizontal distance  of  the destination to  UA V), as shown  in  Figure 2. 
+These attributes are able to accurately reﬂect the current ﬂight status of the UAV, and 
+the agent guides the UA V to its destination based on the ﬂight status vector. 
+(2) Interaction vectors between UA V pairs (φus: the diﬀerence in heading angle; Zus: the 
+diﬀerence in altitude; dus: the horizontal distance between two UA Vs). These attrib‐
+utes reﬂect the position and heading relationships between the UA Vs in a UA V pair, 
+and the agent avoids collision between UA Vs in a UA V pair based on the interaction 
+vectors. 
+(3) Building vectors. There are lots of buildings in the urban airspace, and if all building 
+information is put into the agent, this will result in high state vector dimensionality 
+and aﬀect the speed of convergence. In this paper, considering the detection range of 
+the UA V in the horizontal direction, a ﬂight sector is used to map obstacles aﬀecting 
+ﬂight  into  a  ﬁxed‐length  vector,  and  these  are  regarded  as  the  obstacle  vectors,  as 
+shown in Figure 2. 
+X
+1
+
+2
+8
+2d
+2d
+1d detd
+2
+2iodd 
+1
+1iodd  12 tio dedd 
+1g
+tZ
+1
+tV
+1
+t
+1
+t
+g
+1
+t
+gd
+Y
+Z
+1
+tZ
+t
+usZ
+2
+tV
+us
+t
+t
+usd
+
+7
+ 
+(a)  (b) 
+Figure 2. The diagram of the agent state vector. (a) Flight state vector. (b) Obstacle vectors. 
+The detection area is supposed to be a circle with the location as the center and the 
+detection distance as the radius, that is, the agent can obtain the position information of 
+obstacles  in  this  area.  Starting  from  the  heading  angle  and  rotating  counterclockwise, 
+every 45° is divided into one sector, and a total of eight sectors can be obtained. The dis‐
+tance between the UA V and all obstacles in each sector is calculated, and the closest dis‐
+tance is one of the attributes; if there are no obstacles in the sector, the value of this attrib‐
+ute corresponds to the detection distance. Supposing that there are j obstacles in sector m, 
+then: 
+  
+
+12
+,, , , ,  
+,, ,
+jj j j t t t j
+iom iom iom iom i i i u o det
+j
+iom iom iom iom
+dm i n x y z x y zR R d
+dm i n d d d
+  
+ 
+  (3) 
+where Ru denotes the collision zone radius of the UA V,  𝑅௢
+௝  denotes the collision zone ra‐
+dius of building j, ddet denotes the UA V detection distance,  𝑑௜௢௠
+௝    denotes the distance at‐
+tribute between UA V and building j, diom denotes the distance attribute of sector m, so the 
+obstacle vector of UA V is: [dio1, dio2, …, dio8]. 
+In summary, the state vector received by the agent from the environment at moment 
+t is: 
+11 1 2 2 11 1 1 1 1 8 2 1 2 8
+Inf teraction   State  St of UAS of UAS1 and UAS2  of  UAS1 o U AtS 2ae
+, , , , , , ,..., , , , , ,..., , ,...,
+g
+Obstacles
+tttt t t t t t t t t t t t
+t g g g us us us o o o oSV Z Z d dZ d d d d d  
+
+ 
+
+      , tSS   (4) 
+Figure 2. The diagram of the agent state vector. (a) Flight state vector. (b) Obstacle vectors.
+The detection area is supposed to be a circle with the location as the center and the
+detection distance as the radius, that is, the agent can obtain the position information of
+obstacles in this area. Starting from the heading angle and rotating counterclockwise, every
+45◦ is divided into one sector, and a total of eight sectors can be obtained. The distance
+between the UAV and all obstacles in each sector is calculated, and the closest distance
+is one of the attributes; if there are no obstacles in the sector, the value of this attribute
+corresponds to the detection distance. Supposing that there are j obstacles in sector m, then:
+dj
+iom = min
+(
+(
+xj
+iom, yj
+iom, zj
+iom
+)
+−
+(
+xt
+i, yt
+i, zt
+i
+) − Ru − Rj
+o, ddet
+)
+diom = min
+(
+d1
+iom, d2
+iom, · · · , dj
+iom
+) (3)
+where Ru denotes the collision zone radius of the UAV ,Rj
+o denotes the collision zone radius
+of building j, ddet denotes the UAV detection distance, dj
+iom denotes the distance attribute
+between UAV and building j, diom denotes the distance attribute of sector m, so the obstacle
+vector of UAV is: [dio1, dio2, . . ., dio8].
+In summary, the state vector received by the agent from the environment at moment
+t is:
+St =
+
+ϕt
+1, Vt
+1 , Zt
+1, ϕt
+g1, Zt
+g1, dt
+g1
+  
+State of UAS1
+, ϕt
+2, . . . ,dt
+g2
+  
+State of UAS2
+, ϕt
+us, Zt
+us, dt
+us  
+Interaction of UAS
+, dt
+1o1, . . . ,dt
+1o8, dt
+2o1, . . . ,dt
+2o8  
+Obstacles of UAS1 and UAS2
+
+, St ∈ S (4)
+2.1.2. Continuous Action Space
+When modeling the UAV action space based on deep reinforcement learning, the
+control of the UAV is usually achieved based on adjusting spatial position, velocity, or
+acceleration. For the continuous state space and the ﬂexibility of UAVs, in this paper, the
+continuous action space is designed based on adjusting the velocity and the maneuver-
+ing methods of UAVs are simpliﬁed, and are summarized into three processes: heading
+
+===== PAGE 7 / 22 =====
+Drones 2023, 7, 491 7 of 22
+adjustment, altitude adjustment, and speed adjustment (∆ϕ: alteration in heading angle;
+∆Z: alteration in altitude; ∆V: alteration in horizontal speed), where at each time step,
+∆ϕ ∈ [−3◦, 3◦], ∆Z ∈ [−1 m, 1 m],∆V ∈ [−2 m/s, 2 m/s]. Thus, the action space of the
+agent at moment t is:
+At =
+
+∆ϕ1, ∆Z1, ∆V1  
+Action of UAS1
+, ∆ϕ2, ∆Z2, ∆V2  
+Action of UAS2
+
+, At ∈ A (5)
+2.1.3. Reward Function Design
+The reward is a scalar feedback signal given by the environment that shows how well
+an agent performs at performing a certain strategy at a certain step. The reward function is
+a key component of the DRL framework. The purpose of the agent interacting with the
+environment is to maximize its reward value, so designing a suitable reward function for
+the agent can improve training performance and lead to faster convergence.
+In this paper, we consider the shortest path to the destination, avoid collision between
+UAV pair, avoid collision between UAV and building, avoid the UAV ﬂying out of the
+speciﬁc area, set four reward functions, and use artiﬁcially designed “dense” rewards to
+achieve a dynamic balance between near-term and long-term rewards, which can mitigate
+the sparse reward problem in DRL.
+(1) Destination intent reward: when there are no obstacles in the sector of the UAV pair,
+the destination intent reward is used to ensure that the UAV takes the shortest path to
+the destination. The entire movement of the UAV is divided into multiple “intensive”
+actions, and the reward function is set for them to ensure that each action of the UAV
+affects the ﬁnal reward value, thus contributing to the improvement of the overall
+strategy, as shown in Equation (6):
+ri
+1 =
+
+
+
+0.5 ϕt
+gi ∈ [0◦, 10◦] or ϕt
+gi ∈ [350◦, 360◦]
+0.1 ϕt
+gi ∈ (10◦, 20◦] or ϕt
+gi ∈ [340◦, 350◦)
+0 ϕt
+gi ∈ (20◦, 90◦] or ϕt
+gi ∈ [270◦, 340◦)
+−0.1 else
+ri
+2 =
+(
+dt−1
+gi − dt
+gi
+)
++
+(
+Zt−1
+gi − Zt
+gi
+)
+Ri
+d = ri
+1 + ri
+2
+(6)
+(2) Building collision avoidance reward: when there are obstacles in the sector of the UAV
+pair, it is necessary to ensure that the UAVs avoid colliding with buildings while ﬂying
+to their destinations; therefore, we need to balance the two tasks, and the reward
+function at this time is shown in Equation (7).
+ri
+1 =
+
+
+
+0.5 ϕt
+gi ∈ [0◦, 10◦] or ϕt
+gi ∈ [350◦, 360◦]
+0.1 ϕt
+gi ∈ (10◦, 20◦] or ϕt
+gi ∈ [340◦, 350◦)
+0 else
+ri
+2 =
+(
+dt−1
+gi − dt
+gi
+)
++
+(
+Zt−1
+gi − Zt
+gi
+)
+ri
+3 =
+(
+dt
+iom − dt−1
+iom
+)
++
+(
+dt
+iom/ddet − 1
+)
+Ri
+d = ri
+1 + ri
+2 + ri
+3
+(7)
+(3) UAV collision avoidance reward: the UAV collision avoidance reward is used to avoid
+collisions between the UAV and other UAVs. A UAV alert area is set up, and UAV
+
+===== PAGE 8 / 22 =====
+Drones 2023, 7, 491 8 of 22
+collision avoidance is made the main task when there are other UAVs within the alert
+area, as shown in Equation (8).
+rij
+1 =
+
+
+
+−0.1 ·
+
+
+→
+Vt
+i ·
+→
+Vt
+j⏐⏐⏐⏐
+→
+Vt
+i
+⏐⏐⏐⏐·
+⏐⏐⏐⏐
+→
+Vt
+j
+⏐⏐⏐⏐
+
+−1 dt
+us < ddet and Z t
+us < 4 · Hu  
+Alerting Zone
+0 else
+rij
+2 =
+{(
+dt
+us − dt−1
+us
+)
++
+(
+Zt
+us − Zt−1
+us
+)
++
+( dtus
+ddet
++ Ztus
+4·Hu − 2
+)
+Alerting
+0 else
+Rij
+uu = rij
+1 + rij
+2
+(8)
+where
+→
+Vt
+i is the direction vector of the velocity of the UAV at momentt.
+(4) Additional reward: There are four ﬁnal states of the UAV: reaching the destination,
+ﬂying out of the control area, colliding with obstacles, and colliding with other drones.
+This additional reward is used to provide a relatively large reward or penalty value
+when the UAV reaches its ﬁnal state, which can be used to guide the UAV to its
+destination and avoid bad events such as collisions or loss of control, as shown in
+Equation (9).
+Ri
+ex =
+
+
+
+12 : Ui
+des ∈ Di
+u
+−6 : Drive out of control area
+−6 : Dj
+o ∩ Di
+u ̸= ∅
+−6 : Dj
+u ∩ Di
+u ̸= ∅
+(9)
+In summary, the reward function received by the agent per unit of time is as follows:
+Rt = Ri
+d + Rij
+uu + Ri
+ex ∀i, j ∈ {1, 2} (10)
+2.1.4. The Interaction between the Agent and the Environment
+In reinforcement learning, the interaction between the agent and its environment is
+often modeled by a Markovian decision process. This process can be represented by a
+four-tuple (S, A, R, γ), where S is the current state of the agent Equation (4), A is the action
+taken by the agent (Equation (5)), R is the reward value obtained by the agent after taking
+the current action, γ ∈ [0, 1] is a discount factor, which is a constant, as shown in Figure 3.
+Drones 2023, 7, x FOR PEER REVIEW  8  of  22 
+ 
+(3) UAV  collision  avoidance  reward:  the  UAV  collision  avoidance  reward  is  used  to 
+avoid collisions between the UA V and other UA Vs. A UA V alert area is set up, and 
+UAV collision avoidance is made the main task when there are other UA Vs within 
+the alert area, as shown in Equation (8). 
+  
+1
+11
+2
+0.1 -1        4
+0                                  
++2 4
+tt
+ij tt
+us det us uij tt
+ij
+tt
+tt t t us us
+us us us usij
+d
+nr
+e
+Ale i
+tu
+tn g  Z o e
+VV d< d a n d Z Hr VV
+else
+dZdd ZZr dH
+
+        
+
+     
+   
+      
+12
+   
+0                                                                           
+ij ij ij
+uu
+Alerting
+else
+Rr r
+
+ 
+
+
+ 
+(8) 
+where  t
+iV
+ 
+  is the direction vector of the velocity of the UAV at moment t. 
+(4) Additional reward: There are four ﬁnal states of the UAV: reaching the destination, 
+ﬂying  out  of  the  control  area,  colliding  with  obstacles,  and  colliding  with  other 
+drones. This additional reward is used to provide a relatively large reward or penalty 
+value when the UA V reaches its ﬁnal state, which can be used to guide the UAV to 
+its destination and avoid bad events such as collisions or loss of control, as shown in 
+Equation (9). 
+12   :  
+6 :  Drive out of control area
+6: 
+6: 
+ii
+des u
+i
+ex ji
+ou
+ji
+uu
+UD
+R
+DD
+DD
+ 
+
+   
+  
+  (9) 
+In summary, the reward function received by the agent per unit of time is as follows: 
+    , 1, 2ii j i
+td u u e xRRR R i j      (10) 
+2.1.4. The Interaction between the Agent and the Environment 
+In reinforcement learning, the interaction between the agent and its environment is 
+often  modeled  by  a  Markovian  decision  process.  This  process  can  be  represented  by  a 
+four‐tuple  ሺ𝑆, 𝐴, 𝑅, 𝛾ሻ, where S is the current state of the agent (Equation (4)), A is the ac‐
+tion taken by the agent (Equation (5)), R is the reward value obtained by the agent after 
+taking the current action,  𝛾∈ሾ0,1ሿ  is a discount factor, which is a constant, as shown in 
+Figure 3. 
+Agent Environment
+UAS1 UAS2
+   Markov trajectory:  S0   A0   R0   S1   A1   R1   S2   A2   R2     S3   A3   R3       ...
+St
+St+1
+A1,t A2,tA1,t+1 A2,t+1
+AtAt+1
+Rt
+Rt+1
+   Training data:         ...Data1 Data2 Data3  
+Figure 3. The interaction mode between the agent and the environment. 
+Assuming  a  discrete  time  domain  𝑡∈ ሼ0, 1, 2,⋯ ሽ ,  the  agent  starts  from  the  initial 
+state S0 and observes the environment state  𝑆௧∈𝑆   at a certain time node t, taking action 
+Figure 3. The interaction mode between the agent and the environment.
+Assuming a discrete time domain t ∈ {0, 1, 2, · · ·}, the agent starts from the initial
+state S0 and observes the environment state St ∈ S at a certain time node t, taking action
+At ∈ A based on the state and speciﬁc decision-making policy, and the next state is
+transferred to St+1, while the agent receives an immediate reward Rt = R(St, At). All
+the variables obtained from the Markov decision process can be recorded as a trajectory
+
+===== PAGE 9 / 22 =====
+Drones 2023, 7, 491 9 of 22
+τ = (S0, A0, R0, S1, A1, R1, · · ·), and each segment of the trajectory can be intercepted to
+form a set of training data for the subsequent training of the Target-network and Evaluate-
+network in the algorithm.
+2.2. Second Layer: Collaborative Collision Avoidance for mUAVs
+2.2.1. Three-Dimensional Conﬂict Detection
+To ensure mUAV safety, the conﬂict risk of each UAV needs to be detected, and then
+targeted for resolution. The conﬂict risk is detected based on the velocity vector and
+distance; the risk includes two types: UAV vs. UAV and UAV vs. building.
+For conﬂict detection between the UAVs in a UAV pair, subscriptsS and R designate
+the stochastic UAV and the reference UAV , respectively, in any UAV pair, PR denotes
+the position of the reference UAV ,PS denotes the position of the stochastic UAV , and the
+velocities of the reference UAV and the stochastic UAV at the current moment areVR, VS.
+In the process of modeling, deﬁning a combined collision zone, which is assigned to
+the reference UAV so that the stochastic UAV can be regarded as a particle. The parameters
+of combined collision region D are:
+HD = 2Hu = 2
+√
+3hu RD = 2Ru = 2
+√
+3au (11)
+A 3D collision coordinate system is established with the origin ﬁxed at the position of
+the reference UAV; the relative position and velocity of the UAV pair are:∆Puu = PS − PR,
+∆Vuu = VS − VR. It is assumed that ∆l is the extension of the relative velocity ∆Vuu, and if
+the intersection of ∆l and the combined collision region D is non-empty, i.e., ∆l ∩ D ̸= ∅,
+then the UAV pair meets the condition of conﬂict in the relative velocity dimension; then,
+the spatial distance of the UAV pair is calculated, and if the spatial distance is less than the
+threshold while satisfying the relative velocity conﬂict condition, it can be determined that
+there is a collision risk for this UAV pair.
+For conﬂict detection between UAVs and buildings, the combined collision zone is
+also deﬁned. Since buildings are ﬁxed, it is only necessary to consider whether the velocity
+extension line of the UAV intersects the combined collision region, and then the spatial
+distance between the UAV and building is considered to determine the conﬂict, as shown
+in Figure 4.
+Drones 2023, 7, x FOR PEER REVIEW  9  of  22 
+ 
+𝐴௧∈  A based on the state and speciﬁc decision‐making policy, and the next state is trans‐
+ferred to  𝑆௧ାଵ, while the agent receives an immediate reward  𝑅௧ൌ𝑅ሺ𝑆௧, 𝐴௧ሻ. All the vari‐
+ables  obtained  from  the  Markov  decision  process  can  be  recorded  as  a  trajectory  𝜏ൌ
+ሺ𝑆଴, 𝐴଴, 𝑅଴, 𝑆ଵ, 𝐴ଵ, 𝑅ଵ, ⋯ ሻ, and each segment of the trajectory can be intercepted to form a 
+set of training data for the subsequent training of the Target‐network and Evaluate‐net‐
+work in the algorithm. 
+2.2. Second Layer: Collaborative Collision Avoidance for mUAVs 
+2.2.1. Three‐Dimensional Conﬂict Detection 
+To ensure mUAV safety, the conﬂict risk of each UA V needs to be detected, and then 
+targeted for resolution. The conﬂict risk is detected based on the velocity vector and dis‐
+tance; the risk includes two types: UA V vs. UA V and UA V vs. building. 
+For conﬂict detection between the UA Vs in a UA V pair, subscripts S and R designate 
+the stochastic UA V and the reference UA V, respectively, in any UA V pair, PR denotes the 
+position of the reference UAV, PS denotes the position of the stochastic UAV, and the ve‐
+locities of the reference UA V and the stochastic UA V at the current moment are VR, VS. 
+In the process of modeling, deﬁning a combined collision zone, which is assigned to 
+the reference UA V so that the stochastic UAV can be regarded as a particle. The parame‐
+ters of combined collision region D are: 
+22 3 2 2 3Du u D u uH Hh R Ra     (11) 
+A 3D collision coordinate system is established with the origin ﬁxed at the position 
+of the reference UAV; the relative position and velocity of the UA V pair are:  ∆𝑃௨௨ൌ𝑃ௌെ
+𝑃ோ,  ∆𝑉௨௨ൌ𝑉ௌെ𝑉ோ. It is assumed that  ∆𝑙  is the extension of the relative velocity  ∆𝑉௨௨, and 
+if the intersection of  ∆𝑙  and the combined collision region D is non‐empty, i.e.,  ∆𝑙 ∩ 𝐷 ്
+∅, then the UA V pair meets the condition of conﬂict in the relative velocity dimension; 
+then, the spatial distance of the UA V pair is calculated, and if the spatial distance is less 
+than the threshold while satisfying the relative velocity conﬂict condition, it can be deter‐
+mined that there is a collision risk for this UA V pair. 
+For conﬂict detection between UA Vs and buildings, the combined collision zone is 
+also deﬁned. Since buildings are ﬁxed, it is only necessary to consider whether the velocity 
+extension line of the UA V intersects the combined collision region, and then the spatial 
+distance between the UA V and building is considered to determine the conﬂict, as shown 
+in Figure 4. 
+Random UAV
+Reference UAV
+Δl
+1dd
+Potential risk 
+area
+ΔVuu
+Combined 
+collision zone 
+Combined 
+collision zone 
+Ru
+Hu
+Potential risk 
+area Random UAV
+1dd
+VR
+UAV vs. UAV UAV vs. Building
+Building
+ 
+Figure 4. The diagram of three‐dimensional conﬂict detection. 
+2.2.2. Conﬂict Resolution Pool 
+Based on the UA V conﬂict detection method in the previous section, we propose the 
+concept of a conﬂict resolution pool, where the UAVs detected as being at risk are stored 
+as the objects of the collision avoidance agent. For UA V‐to‐UA V conﬂicts, the elements in 
+Figure 4. The diagram of three-dimensional conﬂict detection.
+2.2.2. Conﬂict Resolution Pool
+Based on the UAV conﬂict detection method in the previous section, we propose the
+concept of a conﬂict resolution pool, where the UAVs detected as being at risk are stored
+as the objects of the collision avoidance agent. For UAV-to-UAV conﬂicts, the elements in
+the pool are UAV pairs, and for UAV-to-building conﬂicts, the elements are single UAVs,
+while the distances of UAVs at risk are deposited in the pool as the priorities of conﬂict
+
+===== PAGE 10 / 22 =====
+Drones 2023, 7, 491 10 of 22
+resolution, with smaller distances indicating higher levels of risk and a more urgent need
+for collision avoidance, as shown in Equation (12).
+P =
+
+
+
+(u1, u2) : σ12  
+Setelements
+, · · · ,
+(
+ui, uj
+)
+: σij
+  
+Con f lict drone pairs
+, u3 : σ3, · · · , ul : σl  
+Conﬂict with buildings
+
+
+
+σij = 1
+dij
+, σl = 1
+dl
+(12)
+where (ui, uj) is the conﬂict UAV pair,ul is the UAV in conﬂict with the building, σ is the
+priority, and d is the spatial distance.
+The conﬂict resolution pool transforms mUAV conﬂicts into UAV pairs for avoidance,
+which simpliﬁes the cooperative collision avoidance problem to a great extent. If a trajectory
+search-based approach is used to calculate the safe path for each UAV individually, the
+search space will grow exponentially with the number of UAVs, and when the number
+exceeds a certain value, the complexity of the algorithm will be too high to be able to solve
+the problem within an acceptable time. The conﬂict resolution pool prevents the resolution
+energy being wasted on temporarily safe UAVs, so that the computational complexity of
+the method can be controlled at the polynomial level, and the ability to perform collision
+avoidance will be further improved.
+2.2.3. Collaborative Resolution Process for mUAVs
+In this section, we propose a working model for this method by combining the concepts
+of the collision avoidance agent, three-dimensional conﬂict detection, and the conﬂict
+resolution pool.
+Assuming that there are n UAVs in the urban airspace, the speciﬁc steps are as follows:
+Step 1: A pool K is built, consisting of all UAVs in the airspace, which is initialized for
+each timestamp:
+K = {u1, u2, u3, · · · , un} (13)
+Step 2: The three-dimensional conﬂict detection method is used to detect UAVs at
+risk, which are stored in the conﬂict resolution pool S, and then the priorities of the pool
+elements are calculated.
+Step 3: The UAV pair with the highest priority is selected, as follows:
+(i, j) = argmax
+(i,j)
+(σij ) (14)
+If the UAV pairs are all in the poolK, the reinforcement learning agent is used to assign
+avoidance actions to them. For UAVs that are not in K, the actions assigned to it by the
+agent are ignored, and the original actions are kepts unchanged. Meanwhile, this UAV pair
+is removed from pool S.
+Step 4: When there are no UAV pairs in the conﬂict resolution poolS, the two UAVs
+with the highest priorities that are in conﬂict with the building are selected and a UAV pair
+is formed, as follows:
+(m, n) : m = argmax
+l
+(σl), n = argmax
+l′
+(σl′ ), m ̸= n (15)
+The agent is used to assign avoidance actions to them, and the corresponding UAVs
+are removed from conﬂict resolution pool S.
+Step 5: The UAVs that have been assigned avoidance actions are removed from
+pool K until S = ∅, and for the UAVs that are still in pool K, their original actions are
+kept unchanged.
+Figure 5 shows the process of collaborative collision avoidance.
+
+===== PAGE 11 / 22 =====
+Drones 2023, 7, 491 11 of 22
+Drones 2023, 7, x FOR PEER REVIEW  11  of  22 
+ 
+Esta blish a wai ting 
+resolution set K
+Esta blish resolution set  
+1
+2
+3 4
+5
+6
+7
+8
+7
+element  1
+5
+element  2
+element  3
+78priority 
+56priority 
+3
+4
+Agent distribution avoidance action
+Next t ime  period, upda te the set K
+element  5element  4
+1
+1
+2
+5
+1
+2
+6
+8
+3
+4
+9 9
+St a t e ( s )
+i iV iZ gi giZ gid
+us usZ usd
+1iod 2iod 3iod 8iod
+i=1,2   
+Flight  state 
+Inter c ation s tate
+i=1,2   
+O b st ac l e  s t at e 
+...
+...
+...
+1 
+1Z 
+1V
+2 
+2Z 
+2V
+Action of 
+UAS1
+Action of 
+UAS2
+Agent  
+Ful ly -c onn ec te d ne t work Acti on( s)
+5 7
+6
+8
+78priority 
+ 
+Figure 5. Diagram of collaborative collision resolution. 
+3. Improved Algorithm for Agent Training 
+3.1. Deep Deterministic Policy Gradient 
+Faced with a continuous state space and action space, in this paper, the DDPG algo‐
+rithm is taken to train the collision avoidance agent for the UA V pair. The DDPG algo‐
+rithm utilizes four neural networks in the actor‐critic framework: policy network ( (; )s 
+),  Q  network  ( (, ; )Qsa   ),  target  policy  network  ( (; )s    ),  and  target  Q  network  (
+(, ; )Qsa 
+). 
+The actor calculates the optimal action for the current state based on the learned pol‐
+icy function ( ()is ). The critic estimates the value function ( (, )Qs a ) given the state and 
+the action, which provides an expected accumulated future reward for this state–action 
+pair. In addition, the critic is responsible for calculating the loss function (i.e., TD error) 
+that is used in the learning process for both the policy network and the Q‐network. To 
+update the critic network, similar to Q‐learning, the Bellman equation [28] is used: 
+11(, (; ) ; )tt t ttarget R Q S S   
+   (16) 
+Then, the loss function is deﬁned, and the argument is updated to minimize the loss 
+between the original Q and the target: 
+2
+1
+1 (( , ; ) )
+n
+tt t
+t
+Loss target Q S an 
+
+    (17) 
+The actor utilizes the policy network ( (; )s  ) to select the best action, which maxim‐
+izes the value function. The objective function in updating the actor is to maximize the 
+expected return: 
+,( )() ( ( , | ) | )
+ttss a sJQ s a
+     (18) 
+According to the chain rule, the gradient of the objective function Q concerning the 
+actor parameters can be obtained: 
+() ( ) ( ,) aJ sQ s a      (19) 
+Then, for mini‐batch data, the mean of the sum of gradients is taken: 
+Figure 5. Diagram of collaborative collision resolution.
+3. Improved Algorithm for Agent Training
+3.1. Deep Deterministic Policy Gradient
+Faced with a continuous state space and action space, in this paper, the DDPG algo-
+rithm is taken to train the collision avoidance agent for the UAV pair. The DDPG algorithm
+utilizes four neural networks in the actor-critic framework: policy network (π(s; θ)), Q net-
+work (Q(s, a; ω)), target policy network (π(s; θ−)), and target Q network (Q(s, a; ω−)).
+The actor calculates the optimal action for the current state based on the learned policy
+function (πθ(si)). The critic estimates the value function (Qω(s, a)) given the state and the
+action, which provides an expected accumulated future reward for this state–action pair. In
+addition, the critic is responsible for calculating the loss function (i.e., TD error) that is used
+in the learning process for both the policy network and the Q-network. To update the critic
+network, similar to Q-learning, the Bellman equation [28] is used:
+target t = Rt + γQ(St+1, π(St+1; θ−); ω−) (16)
+Then, the loss function is deﬁned, and the argument is updated to minimize the loss
+between the original Q and the target:
+Loss = 1
+n
+n
+∑
+t=1
+(target t − Q(St, at; ω))2 (17)
+The actor utilizes the policy network ( π(s; θ)) to select the best action, which maxi-
+mizes the value function. The objective function in updating the actor is to maximize the
+expected return:
+J(θ) = E(Q(s, a
+⏐⏐⏐ω)
+⏐⏐⏐s=st,a=πθ (st)) (18)
+According to the chain rule, the gradient of the objective function Q concerning the
+actor parameters can be obtained:
+∇θ J(θ) ≈ ∇ θπθ(s)∇aQ(s, a) (19)
+Then, for mini-batch data, the mean of the sum of gradients is taken:
+∇θ J(θ) ≈ 1
+n ∑
+i
+∇θπθ(s)|si∇aQω(s, a)
+⏐⏐⏐⏐⏐
+s=si,a=πθ (si)
+(20)
+
+===== PAGE 12 / 22 =====
+Drones 2023, 7, 491 12 of 22
+The target network is a network used in the training phase. This network is equivalent
+to the original network being trained, and it provides the target values used to compute the
+loss function. In the DDPG algorithm, the target network is modiﬁed using a soft update:
+{ θ− ← τθ + (1 − τ)θ−
+ω− ← τω + (1 − τ)ω− (21)
+This means that the target weights are constrained to change slowly. The use of target
+networks with soft updates allows them to give consistent targets during the temporal-
+difference backups and causes the learning process to remain stable.
+3.2. An Improved Measure for DDPG
+The DDPG algorithm has high execution efﬁciency, enabling continuous motion
+control of the agent. However, presented with the speciﬁc environment described in this
+paper, the DDPG consumes too much time in agent training, making it difﬁcult to respond
+quickly when the urban environment undergoes signiﬁcant changes and the agent needs
+to be retrained. To address such problems, this section improves the algorithm mainly in
+terms of the dynamic adjustment of the destination area.
+Due to the large spatial area of the city, the UAV destination is relatively small, and
+is replaced by a prime point in Equation (9), where Ui
+des ∈ Di
+u indicates that the UAV has
+reached its destination, and the agent receives the corresponding reward. However, in
+the actual training process, it is difﬁcult to achieve the above conditions when the UAV
+performs the search, so there is little chance for the agent to obtain a relatively large reward
+value, thus causing the convergence speed to decrease.
+In this section, the way of obtaining destination rewards in the algorithm is improved
+based on the Wright learning curve model, and a dynamic adjustment mechanism for the
+destination area is proposed. During the early stage of training, the destination area is
+expanded so that the agent can complete the task relatively easily and learn the primary
+strategy. According to the learning curve, the destination area is gradually reduced, and
+the agent gradually learns more difﬁcult strategies, which is conducive to improving the
+stability of the learning and accelerating the convergence speed of the algorithm. The
+destination range is deﬁned as being spherical:
+Ui
+des ∈ Di
+des, Di
+des =
+{
+r ∈ R3 : rTr ≤ Ri
+des
+}
+(22)
+In Equation (22), Di
+des represents the destination area, ifDi
+u ∩ Di
+des ̸= ∅ means the UAV
+has reached its destination, the area radius is adjusted with the training episode according
+to the Wright learning curve model:
+{
+α = lgC
+lg2
+Ri
+des = R · xα
+(23)
+In Equation (23), α is the learning rate, C is the attenuation coefﬁcient, R is the initial
+destination area radius, and x indicates the training episode. The dynamic adjustment
+mechanism of the destination area further optimizes the “dense” reward and allows the
+algorithm to learn useful experiences in the early stages.
+The original DDPG algorithm needs more training epochs to detect the accurate
+location due to the small and ﬁxed destination area, and sometimes even fails to obtain
+the destination reward. The improved DDPG algorithm adds a dynamic adjustment
+mechanism for the destination area, which enlarges the size of the destination area in the
+initial stage of training, so that the agent can easily obtain the approximate destination
+location, ensuring that it will move in the right direction in the subsequent training. As
+the training progresses, the algorithm gradually reduces the destination area based on the
+Wright learning curve, guiding the agent to the precise destination location. Compared
+
+===== PAGE 13 / 22 =====
+Drones 2023, 7, 491 13 of 22
+with the original algorithm, the improved DDPG algorithm is more goal oriented and
+avoids ineffective exploration on the part of the agent, so it can accelerate the convergence
+speed and save training resources.
+4. Results and Discussion
+4.1. Environment Setting and Hyperparameters
+To analyze the performance of the mUAV collision avoidance method, in this paper,
+a DJI Matrice 600 is selected as a case study, whose form factor (L × W × H) is set to
+1668 mm × 1668 mm × 759 mm, and the calculated elliptical collision zero parameters
+are 1445 mm × 1445 mm × 657 mm. The scenario range is set to 1000 m × 1000 m × 50 m,
+considering that the collision avoidance area of small UAVs in the city will not be too large.
+In the experimental scenario, we construct the spatial layout of buildings in the city
+and set up ﬁxed-volume obstacles at ﬁxed locations; the building collision zero is cylindrical,
+and the shape parameters are shown in Table 2. The experiment was based on eight UAVs,
+each with an initial speed and initial heading. At the beginning of training, a random origin
+is generated for each UAV and the terminal, and the agent assigns avoidance actions to
+UAVs according to the action space in Equation (5), and returns to the origin to restart the
+training if a UAV has a collision accident. The experimental parameters are as shown in
+Table 3, and the environment is as shown in Figure 6.
+Table 2. The shape parameters of the building.
+Obstacle Number X (m) Y (m) R (m) Z (m) Obstacle Number X (m) Y (m) R (m) Z (m)
+1 500 500 80 100 6 245 458 30 89
+2 200 200 15 70 7 660 150 40 56
+3 900 567 25 85 8 900 328 22 78
+4 850 820 35 80 9 326 895 17 78
+5 150 698 18 60 10 628 736 20 91
+Table 3. Parameter value.
+Parameter Value
+Total number of training episodes 5000
+Discount factor 0.99
+Target network update rate 0.001
+Buffer size 10,000
+Batch size 100
+The initial destination area radius: R 10
+Attenuation coefﬁcient: C 0.8
+Drones 2023, 7, x FOR PEER REVIEW  14  of  22 
+ 
+ 
+ 
+(a)  (b) 
+Figure 6. The experimental environment. (a) Two‐dimensional perspective. (b) Three‐dimensional 
+perspective. 
+ 
+Figure 7. The rewards for each episode during training. 
+The comparison eﬀect of the improved DDPG algorithm with the original algorithm 
+is shown in Figure 8. It can be seen that the improved algorithm demonstrates a better 
+improvement in convergence speed, achieving a higher reward value and showing a con‐
+vergence trend of around 380 training epochs, while the original algorithm was only able 
+to show such an eﬀect after around 1000 epochs. After the 2000th training epoch, the re‐
+wards obtained by the two algorithms did not diﬀer much. However, as for actual train‐
+ing,  the improved  DDPG  algorithm  obtained  stable reward  values  and determined  the 
+convergence trend at earlier epochs, and  thus  training can  be ended  earlier than in the 
+original algorithm, which saves training time. 
+ 
+Figure 8. Comparison of the convergence process. 
+Figure 6. The experimental environment. (a) Two-dimensional perspective. (b) Three-dimensional
+perspective.
+
+===== PAGE 14 / 22 =====
+Drones 2023, 7, 491 14 of 22
+4.2. Collision Avoidance Agent Training
+For various conﬂicts arising from UAV pairs, the trained agent can provide appropriate
+solutions. During training, the average reward obtained per episode is an important
+indicator of convergence and collision avoidance performance. Using the improved DDPG
+algorithm to train agents, the rewards for each episode are shown in Figure 7.
+Drones 2023, 7, x FOR PEER REVIEW  14  of  22 
+ 
+ 
+ 
+(a)  (b) 
+Figure 6. The experimental environment. (a) Two‐dimensional perspective. (b) Three‐dimensional 
+perspective. 
+ 
+Figure 7. The rewards for each episode during training. 
+The comparison eﬀect of the improved DDPG algorithm with the original algorithm 
+is shown in Figure 8. It can be seen that the improved algorithm demonstrates a better 
+improvement in convergence speed, achieving a higher reward value and showing a con‐
+vergence trend of around 380 training epochs, while the original algorithm was only able 
+to show such an eﬀect after around 1000 epochs. After the 2000th training epoch, the re‐
+wards obtained by the two algorithms did not diﬀer much. However, as for actual train‐
+ing,  the improved  DDPG  algorithm  obtained  stable reward  values  and determined  the 
+convergence trend at earlier epochs, and  thus  training can  be ended  earlier than in the 
+original algorithm, which saves training time. 
+ 
+Figure 8. Comparison of the convergence process. 
+Figure 7. The rewards for each episode during training.
+From Figure 7, the reward obtained by the agent is not stable at the beginning of the
+training, as the agent touches the events with a higher degree of punishment during the
+exploration process, resulting in a large degree of reward drop. With continuous training,
+the agent gradually learns the high-reward behavior, and the reward value increases. In
+the second half of training, the reward did not signiﬁcantly fall again, which indicates that
+the improved algorithm learned a better and more stable strategy, and therefore the reward
+oscillated less.
+The comparison effect of the improved DDPG algorithm with the original algorithm
+is shown in Figure 8. It can be seen that the improved algorithm demonstrates a better
+improvement in convergence speed, achieving a higher reward value and showing a
+convergence trend of around 380 training epochs, while the original algorithm was only
+able to show such an effect after around 1000 epochs. After the 2000th training epoch,
+the rewards obtained by the two algorithms did not differ much. However, as for actual
+training, the improved DDPG algorithm obtained stable reward values and determined
+the convergence trend at earlier epochs, and thus training can be ended earlier than in the
+original algorithm, which saves training time.
+Drones 2023, 7, x FOR PEER REVIEW  14  of  22 
+ 
+ 
+ 
+(a)  (b) 
+Figure 6. The experimental environment. (a) Two‐dimensional perspective. (b) Three‐dimensional 
+perspective. 
+ 
+Figure 7. The rewards for each episode during training. 
+The comparison eﬀect of the improved DDPG algorithm with the original algorithm 
+is shown in Figure 8. It can be seen that the improved algorithm demonstrates a better 
+improvement in convergence speed, achieving a higher reward value and showing a con‐
+vergence trend of around 380 training epochs, while the original algorithm was only able 
+to show such an eﬀect after around 1000 epochs. After the 2000th training epoch, the re‐
+wards obtained by the two algorithms did not diﬀer much. However, as for actual train‐
+ing,  the improved  DDPG  algorithm  obtained  stable reward  values  and determined  the 
+convergence trend at earlier epochs, and  thus  training can  be ended  earlier than in the 
+original algorithm, which saves training time. 
+ 
+Figure 8. Comparison of the convergence process. 
+Figure 8. Comparison of the convergence process.
+
+===== PAGE 15 / 22 =====
+Drones 2023, 7, 491 15 of 22
+4.3. Numerical Results Analysis
+4.3.1. Collision Avoidance Results
+Using the two −layer resolution framework, we obtained the collision avoidance
+results, as shown in Figure 9, while recording the distance between each UAV and the
+nearest obstacle, as well as the distance between the two nearest UAVs.
+Drones 2023, 7, x FOR PEER REVIEW  15  of  22 
+ 
+4.3. Numerical Results Analysis 
+4.3.1. Collision Avoidance Results 
+Using the two−layer resolution framework, we obtained the collision avoidance re‐
+sults, as shown in Figure 9, while recording the distance between each UA V and the near‐
+est obstacle, as well as the distance between the two nearest UA Vs. 
+ 
+Figure 9. Collision avoidance results. 
+From a two‐dimensional perspective, it is intuitively apparent that every UA V is in 
+conﬂict with at least one obstacle and avoids obstacles with as little extra ﬂight distance 
+as possible. In addition, there is a risk of conﬂict between UA V5 and UAV6, UAV7 and 
+UAV8, and UAV1 and UA V7, so the agent randomly selects one of the UA Vs to perform 
+the primary avoidance maneuver, while the other maintains almost its original direction 
+(or makes minor adjustments), in order to minimize the impact of the avoidance behavior 
+on normal navigation. In the three‐dimensional view, all the UA Vs have reached the in‐
+tended altitude. 
+The distance between each UA V and the obstacle has a process from small to large, 
+which indicates that UA Vs are making avoidance actions. The closest UA V pairs may be 
+diﬀerent at diﬀerent times, but the overall trend of distance variation is consistent, prov‐
+ing  that  the  UA Vs  can  also  avoid  each  other.  The  minimum  distance  from  buildings  is 
+about 7 m, and the minimum distance from other UA Vs is about 4 m throughout the whole 
+process, thus meeting the standard safety interval, proving that the model in this paper 
+can ensure the safe operation of UA Vs in cities with many buildings. 
+4.3.2. Avoidance Strategy Analysis 
+In the two−layer resolution framework, three strategies are used for collision avoid‐
+ance and destination guidance, to analyze the avoidance action selection pattern by the 
+agent, recording the actions (heading angle, altitude, speed change) selected by all UA Vs 
+at each step, as shown in Figures 10–12. 
+As shown in Figure 10, each approach of UA Vs and obstacles will lead to a signiﬁcant 
+change in the heading angle, and when the distance is kept at a relatively safe level, the 
+change in heading angle will ﬂuctuate around 0°, indicating that the UA V is ﬂying along 
+a straight line in the horizontal direction. It can be determined that the agent avoids colli‐
+sion with obstacles mainly by changing the heading angle of the UAV. 
+Figure 9. Collision avoidance results.
+From a two-dimensional perspective, it is intuitively apparent that every UAV is in
+conﬂict with at least one obstacle and avoids obstacles with as little extra ﬂight distance
+as possible. In addition, there is a risk of conﬂict between UAV5 and UAV6, UAV7 and
+UAV8, and UAV1 and UAV7, so the agent randomly selects one of the UAVs to perform
+the primary avoidance maneuver, while the other maintains almost its original direction
+(or makes minor adjustments), in order to minimize the impact of the avoidance behavior
+on normal navigation. In the three-dimensional view, all the UAVs have reached the
+intended altitude.
+The distance between each UAV and the obstacle has a process from small to large,
+which indicates that UAVs are making avoidance actions. The closest UAV pairs may be
+different at different times, but the overall trend of distance variation is consistent, proving
+that the UAVs can also avoid each other. The minimum distance from buildings is about
+7 m, and the minimum distance from other UAVs is about 4 m throughout the whole
+process, thus meeting the standard safety interval, proving that the model in this paper can
+ensure the safe operation of UAVs in cities with many buildings.
+4.3.2. Avoidance Strategy Analysis
+In the two−layer resolution framework, three strategies are used for collision avoid-
+ance and destination guidance, to analyze the avoidance action selection pattern by the
+agent, recording the actions (heading angle, altitude, speed change) selected by all UAVs at
+each step, as shown in Figures 10–12.
+As shown in Figure 10, each approach of UAVs and obstacles will lead to a signiﬁcant
+change in the heading angle, and when the distance is kept at a relatively safe level, the
+change in heading angle will ﬂuctuate around 0◦, indicating that the UAV is ﬂying along a
+straight line in the horizontal direction. It can be determined that the agent avoids collision
+with obstacles mainly by changing the heading angle of the UAV .
+As shown in Figures 11 and 12, climbing and descending actions ensure that the height
+of the UAV is ﬁnally consistent with the destination height, demonstrating that the agent
+has the guiding ability in the three-dimensional space. The speed change is generally stable
+
+===== PAGE 16 / 22 =====
+Drones 2023, 7, 491 16 of 22
+within a ﬁxed range, and there is no excessive speed, as the speed adjustment is coupled
+with the heading angle to avoid collision with obstacles. In addition, due to there being
+fewer obstacles near the destination, the UAV has a higher speed and a stable heading
+angle in the later stage, ultimately reaching the destination.
+Drones 2023, 7, x FOR PEER REVIEW  16  of  22 
+ 
+ 
+Figure 10. The heading angle change trend and distance to obstacles of UAV. 
+ 
+Figure 11. The altitude change trend of UA V. 
+ 
+Figure 12. The speed change trend of UA Vs. 
+As  shown  in  Figures  11  and  12,  climbing  and  descending  actions  ensure  that  the 
+height of the UA V is ﬁnally consistent with the destination height, demonstrating that the 
+agent has the guiding ability in the three‐dimensional space. The speed change is gener‐
+ally stable within a ﬁxed range, and there is no excessive speed, as the speed adjustment 
+is coupled with the heading angle to avoid collision with obstacles. In addition, due to 
+there being fewer obstacles near the destination, the UAV has a higher speed and a stable 
+heading angle in the later stage, ultimately reaching the destination. 
+Figure 10. The heading angle change trend and distance to obstacles of UAV .
+Drones 2023, 7, x FOR PEER REVIEW  16  of  22 
+ 
+ 
+Figure 10. The heading angle change trend and distance to obstacles of UAV. 
+ 
+Figure 11. The altitude change trend of UA V. 
+ 
+Figure 12. The speed change trend of UA Vs. 
+As  shown  in  Figures  11  and  12,  climbing  and  descending  actions  ensure  that  the 
+height of the UA V is ﬁnally consistent with the destination height, demonstrating that the 
+agent has the guiding ability in the three‐dimensional space. The speed change is gener‐
+ally stable within a ﬁxed range, and there is no excessive speed, as the speed adjustment 
+is coupled with the heading angle to avoid collision with obstacles. In addition, due to 
+there being fewer obstacles near the destination, the UAV has a higher speed and a stable 
+heading angle in the later stage, ultimately reaching the destination. 
+Figure 11. The altitude change trend of UAV .
+Drones 2023, 7, x FOR PEER REVIEW  16  of  22 
+ 
+ 
+Figure 10. The heading angle change trend and distance to obstacles of UAV. 
+ 
+Figure 11. The altitude change trend of UA V. 
+ 
+Figure 12. The speed change trend of UA Vs. 
+As  shown  in  Figures  11  and  12,  climbing  and  descending  actions  ensure  that  the 
+height of the UA V is ﬁnally consistent with the destination height, demonstrating that the 
+agent has the guiding ability in the three‐dimensional space. The speed change is gener‐
+ally stable within a ﬁxed range, and there is no excessive speed, as the speed adjustment 
+is coupled with the heading angle to avoid collision with obstacles. In addition, due to 
+there being fewer obstacles near the destination, the UAV has a higher speed and a stable 
+heading angle in the later stage, ultimately reaching the destination. 
+Figure 12. The speed change trend of UAVs.
+4.4. Performance Analysis
+4.4.1. Performance Testing of the Method
+To fully illustrate the collision avoidance effect of the method, 300 different scenarios
+were designed in the simulation area by randomly generating the starting and ending
+
+===== PAGE 17 / 22 =====
+Drones 2023, 7, 491 17 of 22
+points of eight UAVs. The considered performance metrics were the following: (1) collision
+avoidance success rate (SR), which is the percentage of successful collision avoidance;
+(2) computational efﬁciency (CE), which is the time required for an agent to calculate an
+action; (3) extra ﬂight distance (ED), which is the record of extra distance the UAV ﬂighted
+due to collision avoidance.
+(1) Collision avoidance success rate
+In the 300 random scenarios, 4523 conﬂicts were recorded in the conﬂict resolution
+pool, including 867 conﬂicts with other UAVs and 3656 conﬂicts with buildings. If the agent
+cannot assign the correct avoidance action to a UAV , a collision will occur, according to the
+current speed trend. The collision avoidance method described in this paper can guide
+UAVs out of collision risk, with success rates as shown in Table 4.
+Table 4. Success rates of collision avoidance.
+With Buildings With Other UA Vs Total
+Number of conﬂicts 3656 867 4523
+Number of
+resolutions 3502 796 4298
+Success rate 95.79% 91.81% 95.03%
+The data in Table 4 show that the method has a higher success rate when resolving
+conﬂicts with ﬁxed obstacles than with dynamic obstacles, as the invading UAV has
+positional uncertainty, the ﬂight state may not be fully perceived by the current UAV , and
+no avoidance action can be taken in time. However, the overall success rate reached 95.03%,
+indicating that the method is able to guide UAVs to avoid most collision risks and can
+provide an adequate and reliable reference for urban air trafﬁc management.
+(2) Computational efﬁciency
+Recording the total computation time and the number of avoidance actions performed
+by UAVs in each scenario, to calculate the average time that the method to plan an action
+for a UAV , and this is used as the evaluation index for computation efﬁciency, as shown in
+Equation (24).
+Tj
+f = Tj
+total
+8
+∑
+i=1
+num j
+i
+(24)
+where Tj
+total is the total time required to calculate an avoidance action in scenario j, and
+num j
+i is the number of avoidance actions performed by UAV i.
+The average time required for each scenario is shown in Figure 13. From the ﬁgure,
+the avoidance action calculation time of 300 scenarios is at the 0.01 s level, with an average
+time of 0.0963 s, which can meet the real-time requirements of collision avoidance.
+(3) Extra ﬂight distance
+When facing obstacles, the agent guides the UAV to change its heading or speed, which
+adds extra ﬂight distance (ED) compared with the original trajectory. The metrics of ED are
+used to measure the impact of collision avoidance on UAVs, as shown in Equation (25):
+de = 1
+n
+n
+∑
+i=1
+(doi − dni) (25)
+In Equation (25), de means the extra ﬂight distance (ED), doi means the distance of the
+i-th trajectory directly to the destination regardless of any conﬂicts, dni means the distance
+of the i-th trajectory which has considered the collision avoidance. n is the total number of
+trajectories in all scenarios.
+
+===== PAGE 18 / 22 =====
+Drones 2023, 7, 491 18 of 22
+From the perspective of ﬂight efﬁciency and green transportation, the shorter the ED,
+the less ﬂight energy is lost, and the less impact there is on the original ﬂight [ 29]. The
+average extra ﬂight distance of eight aircraft in 300 scenarios is 26.8 m, which is relatively
+good and is acceptable in terms of a collaborative resolution process for mUAVs.
+Drones 2023, 7, x FOR PEER REVIEW  18  of  22 
+ 
+In Equation (25), de means the extra ﬂight distance (ED), doi means the distance of the 
+i‐th trajectory directly to the destination regardless of any conﬂicts, dni means the distance 
+of the i‐th trajectory which has considered the collision avoidance. n is the total number 
+of trajectories in all scenarios. 
+From the perspective of ﬂight eﬃciency and green transportation, the shorter the ED, 
+the less ﬂight energy is lost, and the less impact there is on the original ﬂight [29]. The 
+average extra ﬂight distance of eight aircraft in 300 scenarios is 26.8 m, which is relatively 
+good and is acceptable in terms of a collaborative resolution process for mUA Vs. 
+ 
+Figure 13. The average time required for allocating actions in each scenario. 
+4.4.2. Impact of Noisy States 
+UA Vs may have positional uncertainty due to the interference of random factors such 
+as crosswinds, which can aﬀect collision avoidance behavior. To investigate the robust‐
+ness of the proposed method, we performed simulations with noisy states, adding noise 
+to the state information of UAV. It was assumed that each noise component was uniformly 
+distributed, i.e.,  𝑚ൌሾ 𝑚௫, 𝑚௬, 𝑚௭, 𝑚௩ሿ,  𝑚~𝑈ሺെ𝜀, 𝜀ሻ. The noise was added to the state in‐
+formation of UA V, i.e., ,,ttt
+ix iy izPx m y m z m     and  tt
+iivVVm , which will change 
+the state of the agent in Equation (4). 
+Table  5  shows  the  SR  and ED  performances  with  noisy  states.  The  table  shows  that 
+noise influences the SR and ED performance, meaning that the UAV does not have accurate 
+position and velocity information, leading to biased observations by the agent, which may 
+output incorrect avoidance actions. However, even if noise  𝜀ൌ 3  is added to both position 
+and velocity information, SR is, at most, 91.61%, and ED is 36.2 m, and thus a good level is 
+still maintained. Therefore, our method has high tolerance to noisy observations. 
+Table 5. SR, and ED performance when states are noisy. 
+  mx, mx, mx ≠ 0 
+vx = 0,  𝜺ൌ𝟎 . 𝟓 
+mx, mx, mx ≠ 0 
+vx = 0,  𝜺ൌ𝟏 . 𝟓 
+mx, mx, mx ≠ 0 
+vx = 0,  𝜺ൌ𝟑   No Noise 
+SR  94.32%  93.98%  92.90%  95.03% 
+ED  27.2 m  30.3 m  35.6 m  26.8 m 
+  mx, mx, mx = 0 
+vx ≠ 0,  𝜺ൌ𝟎 . 𝟓 
+mx, mx, mx = 0 
+vx ≠ 0,  𝜺ൌ𝟏 . 𝟓 
+mx, mx, mx = 0 
+vx ≠ 0,  𝜺ൌ𝟑    
+SR  94.54%  93.52%  93.3%   
+ED  27.5 m  29.6 m  34.3 m  
+  mx, mx, mx ≠ 0 
+vx ≠ 0,  𝜺ൌ𝟎 . 𝟓 
+mx, mx, mx ≠ 0 
+vx ≠ 0,  𝜺ൌ𝟏 . 𝟓 
+mx, mx, mx ≠ 0 
+vx ≠ 0,  𝜺ൌ𝟑    
+SR  94.01%  92.83%  91.61%  
+ED  27.6 m  33.3 m  36.2 m  
+Figure 13. The average time required for allocating actions in each scenario.
+4.5. Impact of Noisy States
+UAVs may have positional uncertainty due to the interference of random factors such
+as crosswinds, which can affect collision avoidance behavior. To investigate the robustness
+of the proposed method, we performed simulations with noisy states, adding noise to
+the state information of UAV . It was assumed that each noise component was uniformly
+distributed, i.e., m =
+[
+mx, my, mz, mv
+]
+, m ∼ U(−ε, ε). The noise was added to the state
+information of UAV , i.e.,P =
+[
+xt
+i + mx, yt
+i + my, zt
+i + mz
+]
+and Vt
+i = Vt
+i + mv, which will
+change the state of the agent in Equation (4).
+Table 5 shows the SR and ED performances with noisy states. The table shows that
+noise inﬂuences the SR and ED performance, meaning that the UAV does not have accurate
+position and velocity information, leading to biased observations by the agent, which may
+output incorrect avoidance actions. However, even if noise ε = 3 is added to both position
+and velocity information, SR is, at most, 91.61%, and ED is 36.2 m, and thus a good level is
+still maintained. Therefore, our method has high tolerance to noisy observations.
+Table 5. SR, and ED performance when states are noisy.
+mx, mx, mx ̸= 0
+vx = 0, ε = 0.5
+mx, mx, mx ̸= 0
+vx = 0, ε = 1.5
+mx, mx, mx ̸= 0
+vx = 0, ε = 3 No Noise
+SR 94.32% 93.98% 92.90% 95.03%
+ED 27.2 m 30.3 m 35.6 m 26.8 m
+mx, mx, mx = 0
+vx ̸= 0, ε = 0.5
+mx, mx, mx = 0
+vx ̸= 0, ε = 1.5
+mx, mx, mx = 0
+vx ̸= 0, ε = 3
+SR 94.54% 93.52% 93.3%
+ED 27.5 m 29.6 m 34.3 m
+mx, mx, mx ̸= 0
+vx ̸= 0, ε = 0.5
+mx, mx, mx ̸= 0
+vx ̸= 0, ε = 1.5
+mx, mx, mx ̸= 0
+vx ̸= 0, ε = 3
+SR 94.01% 92.83% 91.61%
+ED 27.6 m 33.3 m 36.2 m
+4.6. Different Numbers of UAVs
+Table 6 presents the CR, SR, and DR performances in scenarios with different numbers
+of UAVs J ∈ {2, 4, 8, 10, 12, 20}. The rates are averaged over 300 random realizations (all
+UAVs having random starting points and destinations). From the table, it can be noted that
+with increasing numbers of UAVs, the SR decreases due to the higher risk of collision, the
+ED has an overall upward trend, while the CE is not affected by the number of UAVs.
+
+===== PAGE 19 / 22 =====
+Drones 2023, 7, 491 19 of 22
+Table 6. SR, CE, and ED performance with different numbers of UAVs.
+J = 2 J = 4 J = 8 J = 10 J = 12 J = 20
+SR 100% 99.1% 95.03% 95.62% 92.10% 90.56%
+CE 0.0832 s 0.0721 s 0.0963 s 0.1861 s 0.0910 s 0.216 s
+ED 20.3 m 25.2 m 26.8 m 27.6 m 39.1 m 38.2 m
+We note that when there are 20 UAVs in an urban scenario of 1 square kilometer, our
+method still maintains a success rate of more than 90% in terms of conﬂict, indicating that
+this method can provide safe guidance for 20 UAVs in that area, which is sufﬁcient to adapt
+to the current scale of urban UAVs.
+In Figure 14, illustrations of collision avoidance in scenarios with different numbers
+of UAVs J ∈ {2, 8, 20} are presented. From Figure 14, it can be observed that due to the
+different locations and numbers of UAVs, the agent may determine different avoidance
+actions when facing collision risks, leading to different trajectories.
+Drones 2023, 7, x FOR PEER REVIEW  19  of  22 
+ 
+4.4.3. Diﬀerent Numbers of UA Vs 
+Table 6 presents the CR, SR, and DR performances in scenarios with diﬀerent num‐
+bers of UA Vs J ∈ {2, 4, 8, 10, 12, 20}. The rates are averaged over 300 random realizations 
+(all UAVs having random starting points and destinations). From the table, it can be noted 
+that with increasing numbers of UA Vs, the SR decreases due to the higher risk of collision, 
+the ED has an overall upward trend, while the CE is not aﬀected by the number of UAVs. 
+Table 6. SR, CE, and ED performance with diﬀerent numbers of UA Vs. 
+  J = 2  J = 4  J = 8  J = 10  J = 12  J = 20 
+SR  100%  99.1%  95.03%  95.62%  92.10%  90.56% 
+CE  0.0832 s  0.0721 s  0.0963 s  0.1861 s  0.0910 s  0.216 s 
+ED  20.3 m  25.2 m  26.8 m  27.6 m  39.1 m  38.2 m 
+We note that when there are 20 UA Vs in an urban scenario of 1 square kilometer, our 
+method still maintains a success rate of more than 90% in terms of conﬂict, indicating that 
+this  method  can  provide  safe  guidance  for  20  UAVs  in  that  area,  which  is  suﬃcient  to 
+adapt to the current scale of urban UA Vs. 
+In Figure 14, illustrations of collision avoidance in scenarios with diﬀerent numbers 
+of UA Vs J ∈ {2, 8, 20} are presented. From Figure 14, it can be observed that due to the 
+diﬀerent locations and numbers of UA Vs, the agent may determine diﬀerent avoidance 
+actions when facing collision risks, leading to diﬀerent trajectories. 
+ 
+Figure 14. Illustrations of collision avoidance in diﬀerent scenarios that J ∈ {2, 8, 20}. 
+4.4.4. Comparison with Other Algorithms 
+In the same scenario, two other algorithms are selected for comparison: the double 
+deep Q network (DDQN) and the artiﬁcial potential ﬁeld (APF). 
+DDQN is a typical value‐based DRL algorithm [18,19], while APF utilizes the repul‐
+sive force of obstacles and the gravitational force of target to guide the UA V motion, and 
+is widely used in research on collision avoidance [30,31]. DDQN requires that the agent 
+action  space  be  discrete,  which  is  set  to  ∆𝜑 ∈ ሼെ3°, 0, 3°ሽ ,  ∆𝑍 ∈ ሼെ1 m, 0 m, 1 mሽ , ∆𝑉 ∈
+ሼെ2 m/s, 0 m/s, 2 m/sሽ. The APF action space is consistent with our method. Experiments 
+using DDQN were conducted based on a two−layer resolution framework, and the APF 
+was  divided  into  two  categories: APF  with  a  two−layer  framework  and APF  without  a 
+two−layer framework. Table 7 presents the performances of the diﬀerent algorithms. 
+The improved DDPG algorithm has an absolute advantage in terms of the SR, which 
+is much greater than the other algorithms, at 95.03%. There was not much diﬀerence in 
+CE, and only APF was higher than the other algorithms. Our method achieved the mini‐
+mum ED, which was the largest value in DDQN; because of the constraints of the discrete 
+action space, the DDQN‐trained agent can only perform a limited number of action values 
+and the ﬂexibility of the UAV cannot be fully utilized. In addition, the performance of the 
+Figure 14. Illustrations of collision avoidance in different scenarios that J ∈ {2, 8, 20}.
+4.7. Comparison with Other Algorithms
+In the same scenario, two other algorithms are selected for comparison: the double
+deep Q network (DDQN) and the artiﬁcial potential ﬁeld (APF).
+DDQN is a typical value-based DRL algorithm [ 18,19], while APF utilizes the re-
+pulsive force of obstacles and the gravitational force of target to guide the UAV motion,
+and is widely used in research on collision avoidance [ 30,31]. DDQN requires that the
+agent action space be discrete, which is set to ∆ϕ ∈ {−3◦, 0, 3◦}, ∆Z ∈ {−1 m, 0 m, 1 m},
+∆V ∈ {−2 m/s, 0 m/s, 2 m/s}. The APF action space is consistent with our method. Exper-
+iments using DDQN were conducted based on a two−layer resolution framework, and the
+APF was divided into two categories: APF with a two−layer framework and APF without
+a two−layer framework. Table 7 presents the performances of the different algorithms.
+Table 7. SR, CE, and ED performance of different algorithms and J = 8.
+SR CE ED
+APF without two−layer framework 89.32% 1.8329 s 41.2 m
+APF with two−layer framework 91.65% 0.0821 s 34.3 m
+DDQN 93.83% 0.1839 s 56.3 m
+Improved DDPG 95.03% 0.0963 s 26.8 m
+The improved DDPG algorithm has an absolute advantage in terms of the SR, which
+is much greater than the other algorithms, at 95.03%. There was not much difference in CE,
+and only APF was higher than the other algorithms. Our method achieved the minimum
+ED, which was the largest value in DDQN; because of the constraints of the discrete action
+space, the DDQN-trained agent can only perform a limited number of action values and
+the ﬂexibility of the UAV cannot be fully utilized. In addition, the performance of the APF
+
+===== PAGE 20 / 22 =====
+Drones 2023, 7, 491 20 of 22
+with a two−layer framework was superior to that of the original APF algorithm, indicating
+that the two−layer resolution framework can better avoid conﬂict risks when presented
+with mUAVs.
+It is worth noting that we observed in training sessions that the improved DDPG
+completed convergence faster than the DDQN, which is consistent with our results in
+Section 4.2, compared to the original DDPG algorithm, and further indicates that the
+dynamic adjustment mechanism can reduce the number of training episodes.
+5. Conclusions
+In this paper, an adaptive method for mUAV collision avoidance in urban air trafﬁc
+was studied. The main conclusions are as follows:
+Firstly, the proposed two−layer resolution framework provides a new concept for
+realizing mUAV collision avoidance, in which each UAV is endowed with decision-making
+ability, and the computational complexity is controlled at the polynomial level. Using the
+improved DDPG algorithm to train the agent allows convergence to be completed faster,
+which saves training costs to a great extent.
+Secondly, the numerical results indicate that the proposed method is able to adapt to
+various scenarios, e.g., different numbers and positions of UAVs, and interference from
+random factors. More speciﬁcally, the average decision time of the method is 0.0963 s with
+eight UAVs, the overall resolution success rate is 95.03%, and the extra ﬂight distance is
+26.8 m. Our method has better performance when compared to APF, APF with a two−layer
+framework, and DDQN.
+Thirdly, from the perspective of the avoidance process, changing the heading angle
+is the main way of avoiding collision, the minimum distance from buildings is about 7 m,
+and the minimum distance from other UAVs is about 4 m, which further proves that the
+method has a relatively high sensitivity for static obstacles. Our future research focus
+will be on how to determine the appropriate safety interval and how to reﬂect this in the
+resolution process.
+Despite the strengths of our proposed approach, there are some drawbacks that
+require further study. In this paper, distance and velocity vector were calculated for conﬂict
+detection, which lacks objective quantiﬁcation of conﬂict risk and may have an impact on
+the subsequent collision avoidance. The quantitative assessment of UAV conﬂict risk based
+on multiple factors could guarantee a more accurate determination of conﬂict targets and
+resolution strategies, which would be a valuable research direction in the future. Another
+valuable research direction would be to combine kinematics theory and control theory.
+Assigning appropriate resolution strategies for UAV collision avoidance at the level of
+urban air trafﬁc management, while designing UAV controllers from the perspective of
+control performance, thus ensuring that UAVs can successfully complete avoidance actions
+by formulating suitable control parameters and suppressing the inﬂuence of external
+disturbances [32,33]. This would promote the engineering application of the method
+described in this paper.
+Author Contributions: Conceptualization, H.Z.; methodology, J.Z. (Jinpeng Zhang) and H.Z.; soft-
+ware, J.Z. (Jinpeng Zhang) and J.Z. (Jinlun Zhou); validation, J.Z. (Jinpeng Zhang), M.H. and G.Z.;
+formal analysis, J.Z. (Jinpeng Zhang) and H.L.; investigation, M.H. and J.Z. (Jinlun Zhou); resources,
+J.Z. (Jinpeng Zhang), H.Z. and H.L.; writing—original draft preparation, J.Z. (Jinpeng Zhang);
+writing—review and editing, J.Z. (Jinpeng Zhang) and M.H.; visualization, J.Z. (Jinpeng Zhang) and
+M.H. All authors have read and agreed to the published version of the manuscript.
+Funding: This research was funded by National Natural Science Foundation of China (71971114).
+Data Availability Statement: Data will be made available on request.
+Conﬂicts of Interest: The authors declare no conﬂict of interest.
+
+===== PAGE 21 / 22 =====
+Drones 2023, 7, 491 21 of 22
+Abbreviations
+Du, Do The collision zone of UAV and building
+ϕ The heading angle, horizontal speed and latitude
+V The horizontal speed of UAV
+Z The latitude of UAV
+ϕg The relative heading angle of the destination to UAV
+dg The horizontal distance of the destination to UAV
+ϕus The difference in heading angle between two UAV
+Zus The difference in altitude between two UAV
+dus The horizontal distance between two UAV
+ddet The UAV detection distance
+π(s; θ) Policy network
+π(s; θ−) Target policy network
+πθ(si) The learned policy function
+i, j Superscript or subscript, denote the speciﬁc UAV
+∆ϕ Alteration in direction
+∆Z Alteration in altitude
+∆V Alteration in horizontal speed
+dom The distance attribute of obstacle in sector m
+Rd Destination intent or collision avoidance reward
+Ruu The UAV collision avoidance reward
+Rex The additional reward
+S The state space of agent
+A The action space of agent
+P The collision resolution pool
+Q(s, a; ω) Q network
+Q(s, a; ω−) Target Q network
+Qω(s, a) The learned value function
+t Subscript, denote the speciﬁc moment
+References
+1. Garrow, L.A.; German, B.J.; Leonard, C.E. Urban air mobility: A comprehensive review and comparative analysis with au-
+tonomous and electric ground transportation for informing future research. Transp. Res. Part C Emerg. Technol. 2021, 132, 103377.
+[CrossRef]
+2. Barrado, C.; Boyero, M.; Brucculeri, L.; Ferrara, G.; Hately , A.; Hullah, P .; Martin-Marrero, D.; Pastor, E.; Rushton, A.P .; V olkert, A.
+U-Space Concept of Operations: A Key Enabler for Opening Airspace to Emerging Low-Altitude Operations.Aerospace2020, 7, 24.
+[CrossRef]
+3. 2022 Civil Aviation Development Statistical Bulletin. 2023. Available online: https://ﬁle.veryzhun.com/buckets/carnoc/keys/
+7390295f32633128e6e5cee44fc9fe4e.pdf (accessed on 1 May 2023).
+4. Kiran, B.R.; Sobh, I.; Talpaert, V .; Mannion, P .; Sallab, A.A.A.; Yogamani, S.; P érez, P . Deep Reinforcement Learning for
+Autonomous Driving: A Survey. IEEE Trans. Intell. Transp. Syst. 2022, 23, 4909–4926. [CrossRef]
+5. Wu, Y. A survey on population-based meta-heuristic algorithms for motion planning of aircraft. Swarm Evol. Comput. 2021,
+62, 100844. [CrossRef]
+6. Zeng, D.; Chen, H.; Yu, Y.; Hu, Y.; Deng, Z.; Leng, B.; Xiong, L.; Sun, Z. UGV Parking Planning Based on Swarm Optimization
+and Improved CBS in High-Density Scenarios for Innovative Urban Mobility. Drones 2023, 7, 295. [CrossRef]
+7. Zhao, P .; Erzberger, H.; Liu, Y. Multiple-Aircraft-Conﬂict Resolution Under Uncertainties.J. Guid. Control Dyn. 2021, 44, 2031–2049.
+[CrossRef]
+8. Yun, S.C.; Ganapathy, V .; Chien, T.W. Enhanced D* Lite Algorithm for mobile robot navigation. In Proceedings of the 2010 IEEE
+Symposium on Industrial Electronics and Applications (ISIEA), Penang, Malaysia, 3–5 October 2010; pp. 545–550.
+9. Wu, Y.; Low, K.H.; Pang, B.; Tan, Q. Swarm-Based 4D Path Planning For Drone Operations in Urban Environments.IEEE Trans.
+Veh. Technol. 2021, 70, 7464–7479. [CrossRef]
+10. Zhang, Q.; Wang, Z.; Zhang, H.; Jiang, C.; Hu, M. SMILO-VTAC Model Based Multi-Aircraft Conﬂict Resolution Method in
+Complex Low-Altitude Airspace. J. Trafﬁc Transp. Eng. 2019, 19, 125–136.
+11. Radmanesh, M.; Kumar, M. Flight formation of UAVs in presence of moving obstacles using fast-dynamic mixed integer linear
+programming. Aerosp. Sci. Technol. 2016, 50, 149–160. [CrossRef]
+
+===== PAGE 22 / 22 =====
+Drones 2023, 7, 491 22 of 22
+12. Waen, J.D.; Dinh, H.T.; Torres, M.H.C.; Holvoet, T. Scalable multirotor UAV trajectory planning using mixed integer linear
+programming. In Proceedings of the 2017 European Conference on Mobile Robots (ECMR), Paris, France, 6–8 September 2017;
+pp. 1–6.
+13. Alonso-Ayuso, A.; Escudero, L.F.; Martín-Campo, F.J. An exact multi-objective mixed integer nonlinear optimization approach for
+aircraft conﬂict resolution. TOP 2016, 24, 381–408. [CrossRef]
+14. Mnih, V .; Kavukcuoglu, K.; Silver, D.; Rusu, A.A.; Veness, J.; Bellemare, M.G.; Graves, A.; Riedmiller, M.; Fidjeland, A.K.;
+Ostrovski, G.; et al. Human-level control through deep reinforcement learning. Nature 2015, 518, 529–533. [CrossRef] [PubMed]
+15. Silver, D.; Huang, A.; Maddison, C.J.; Guez, A.; Sifre, L.; van den Driessche, G.; Schrittwieser, J.; Antonoglou, I.; Panneershelvam,
+V .; Lanctot, M.; et al. Mastering the game of Go with deep neural networks and tree search.Nature 2016, 529, 484–489. [CrossRef]
+16. Pham, H.X.; La, H.M.; Feil-Seifer, D.; Nguyen, L.V . Autonomous uav navigation using reinforcement learning. arXiv 2018,
+arXiv:1801.05086.
+17. Liu, X.; Liu, Y.; Chen, Y. Reinforcement Learning in Multiple-UAV Networks: Deployment and Movement Design.IEEE Trans.
+Veh. Technol. 2019, 68, 8036–8049. [CrossRef]
+18. Singla, A.; Padakandla, S.; Bhatnagar, S. Memory-Based Deep Reinforcement Learning for Obstacle Avoidance in UAV with
+Limited Environment Knowledge. IEEE Trans. Intell. Transp. Syst. 2021, 22, 107–118. [CrossRef]
+19. Zhai, P .; Zhang, Y.; Shaobo, W. Intelligent Ship Collision Avoidance Algorithm Based on DDQN with Prioritized Experience
+Replay under COLREGs. J. Mar. Sci. Eng. 2022, 10, 585. [CrossRef]
+20. Li, C.; Gu, W.; Zheng, Y.; Huang, L.; Zhang, X. An ETA-Based Tactical Conﬂict Resolution Method for Air Logistics Transportation.
+Drones 2023, 7, 334. [CrossRef]
+21. Lillicrap, T.P .; Hunt, J.J.; Pritzel, A.; Heess, N.; Erez, T.; Tassa, Y.; Silver, D.; Wierstra, D. Continuous control with deep
+reinforcement learning. arXiv 2015, arXiv:1509.02971.
+22. Ribeiro, M.; Ellerbroek, J.; Hoekstra, J. Improvement of conﬂict detection and resolution at high densities through reinforcement
+learning. In Proceedings of the ICRAT2020: International Conference on Research in Air Transportation 2020, Tampa, FL, USA,
+23–26 June 2020.
+23. Rubí, B.; Morcego, B.; Pérez, R. Deep reinforcement learning for quadrotor path following with adaptive velocity.Auton. Robot.
+2021, 45, 119–134. [CrossRef]
+24. Zhang, Y.; Zhang, Y.; Yu, Z. Path Following Control for UAV Using Deep Reinforcement Learning Approach.Guid. Navig. Control
+2021, 1, 18. [CrossRef]
+25. Wen, H.; Li, H.; Wang, Z.; Hou, X.; He, K. Application of DDPG-based Collision Avoidance Algorithm in Air Trafﬁc Control. In
+Proceedings of the 2019 12th International Symposium on Computational Intelligence and Design (ISCID), Hangzhou, China,
+14–15 December 2019; pp. 130–133.
+26. Hu, J.; Yang, X.; Wang, W.; Wei, P .; Ying, L.; Liu, Y. Obstacle Avoidance for UAS in Continuous Action Space Using Deep
+Reinforcement Learning. IEEE Access 2022, 10, 90623–90634. [CrossRef]
+27. Zhang, H.; Zhang, J.; Zhong, G.; Liu, H.; Liu, W. Multivariate Combined Collision Detection for Multi-Unmanned Aircraft
+Systems. IEEE Access 2022, 10, 103827–103839. [CrossRef]
+28. Qiu, C.; Hu, Y.; Chen, Y.; Zeng, B. Deep Deterministic Policy Gradient (DDPG)-Based Energy Harvesting Wireless Communica-
+tions. IEEE Internet Things J. 2019, 6, 8577–8588. [CrossRef]
+29. Bagdi, Z.; Csámer, L.; Bakó, G. The green light for air transport: Sustainable aviation at present. Cogn. Sustain. 2023, 2. [CrossRef]
+30. Guo, Y.; Liu, X.; Jiang, W.; Zhang, W. Collision-Free 4D Dynamic Path Planning for Multiple UAVs Based on Dynamic Priority
+RRT* and Artiﬁcial Potential Field. Drones 2023, 7, 180. [CrossRef]
+31. Sun, J.; Tang, J.; Lao, S. Collision Avoidance for Cooperative UAVs with Optimized Artiﬁcial Potential Field Algorithm.IEEE
+Access 2017, 5, 18382–18390. [CrossRef]
+32. Song, J.; Hu, Y.; Su, J.; Zhao, M.; Ai, S. Fractional-Order Linear Active Disturbance Rejection Control Design and Optimization
+Based Improved Sparrow Search Algorithm for Quadrotor UAV with System Uncertainties and External Disturbance.Drones
+2022, 6, 229. [CrossRef]
+33. Bauer, P .; Ritzinger, G.; Soumelidis, A.; Bokor, J. LQ servo control design with Kalman ﬁlter for a quadrotor UAV .Period. Polytech.
+Transp. Eng. 2008, 36, 9–14. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.

@@ -1,0 +1,78 @@
+simulation:
+  random_seed: 42
+  duration: 3600
+  time_step: 5
+  conflict_time_step: 10
+  departure_window: 900
+  max_departure_delay: 600
+  delay_step: 30
+
+map:
+  width: 1000
+  height: 1000
+  grid_size: 50
+  road_width: 10
+  building_density: 0.35
+  min_building_height: 30
+  max_building_height: 300
+  min_building_scale: 0.45
+  max_building_scale: 0.92
+  random_seed: 42
+
+aircraft:
+  count: 50
+  cruise_speed_kmh: 240
+  vertical_speed: 5
+  primary_safety_distance_m: 152.4
+  sensitivity_safety_distance_m: 30.0
+  vertical_separation_m: 50
+  base_cruise_altitude: 300
+
+altitude:
+  min_cruise_altitude: 300
+  max_cruise_altitude: 600
+  layer_interval: 50
+  building_vertical_margin: 30
+  building_horizontal_margin: 20
+
+avoidance:
+  max_detours: 8
+  detour_margin: 40
+
+vertiports:
+  enabled: true
+  count: 8
+  placement: building_rooftop
+  pad_occupancy_enabled: true
+  pad_count_per_vertiport: 1
+  pad_separation_time: 30
+  turnaround_time: 180
+  vertical_control_height: 50
+
+weather:
+  enabled: false
+  condition: clear
+
+experiments:
+  models: [A, B, C, D]
+  aircraft_counts: [10, 30, 50, 100]
+  speeds_kmh: [150, 240, 300]
+  building_densities: [0.2, 0.35, 0.5]
+  vertiport_counts: [4, 8, 20]
+  primary_safety_distances_m: [152.4]
+  sensitivity_safety_distances_m: [152.4, 30.0]
+  default_aircraft_count: 50
+  default_speed_kmh: 240
+  default_building_density: 0.35
+  default_vertiport_count: 8
+
+sources:
+  altitude_300_600m: "K-UAM 기술로드맵 pp. 206-207"
+  speeds_150_240_300kmh: "K-UAM 기술로드맵 단계별 시나리오 표"
+  safety_distance_500ft: "Yang and Wei (2021), NMAC 500 ft"
+  safety_distance_30m: "사용자 승인 민감도 분석용 가정값"
+  map_1000m: "Zhang et al. (2023) 도시 UAV 회피 실험 사례"
+  pad_separation_time_30s: "Pang et al. (2022)의 30초 시간 분리 기준 참고"
+  turnaround_time_180s: "K-UAM 기술로드맵의 버티포트 cycle 약 3분 근거 참고"
+  vertical_control_height_50m: "사용자 승인 필요 가정값"
+  assumption_values: "격자 크기, 도로 폭, 고도 레이어, 수직속도 등은 사용자 승인 시뮬레이션 가정값"
