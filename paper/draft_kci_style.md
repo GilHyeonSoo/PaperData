@@ -6,10 +6,10 @@
 Implementation of an eVTOL Mobility Model Simulator and Collision Avoidance Performance Analysis
 
 ## 요약
-본 연구는 도심 격자 환경에서 eVTOL의 건물 회피, 비행체 간 충돌 회피, 버티포트 패드 점유 제약을 함께 분석하기 위한 Python 기반 이동성 모델 시뮬레이터를 제안한다. 시뮬레이터는 랜덤 건물 배치와 옥상 버티포트, 연속 임무 생성, 상승-순항-하강 단계, waypoint 기반 건물 우회, 시간 bucket 기반 비행체 간 회피, 패드 점유 대기 모델을 포함한다. 실험은 여섯 개의 확장 도시 시나리오와 다섯 개의 기능 조합 조건으로 구성하였으며, 각 시나리오는 실제 약 1시간 동안 병렬 실행하였다. 전체 235개 run에서 253,800개의 임무가 생성되었고, 건물 회피와 비행체 간 회피를 함께 적용한 조건은 회피 기능 미적용 조건보다 정규화 충돌 위험 이벤트를 낮추었다. 또한 패드 점유 제약을 추가한 조건에서는 소형·고혼잡 시나리오에서 평균 패드 지연이 크게 증가하여, 버티포트 자원 제약이 장시간 누적 운항의 주요 병목으로 작용할 수 있음을 확인하였다.
+본 연구는 도심 격자 환경에서 eVTOL의 건물 회피, 비행체 간 충돌 회피, 버티포트 패드 점유 제약을 함께 분석하기 위한 Python 기반 이동성 모델 시뮬레이터를 제안한다. 시뮬레이터는 랜덤 건물 배치와 옥상 버티포트, 연속 임무 생성, 상승-순항-하강 단계, waypoint 기반 건물 우회, 시간 bucket 기반 비행체 간 회피, 패드 점유 대기 모델을 포함한다. 실험은 여섯 개의 확장 도시 시나리오와 다섯 개의 기능 조합 조건으로 구성하였으며, 각 시나리오는 실제 약 48시간 동안 병렬 실행하였다. 전체 93,919개 run에서 101,432,520개의 임무가 생성되었고, 건물 회피와 비행체 간 회피를 함께 적용한 조건은 회피 기능 미적용 조건보다 정규화 충돌 위험 이벤트를 낮추었다. 또한 패드 점유 제약을 추가한 조건에서는 소형·고혼잡 시나리오에서 평균 패드 지연이 크게 증가하여, 버티포트 자원 제약이 장시간 누적 운항의 주요 병목으로 작용할 수 있음을 확인하였다.
 
 ## Abstract
-This study proposes a Python-based eVTOL mobility model simulator for analyzing urban air mobility operations in a simplified grid city environment. The simulator represents buildings as three-dimensional obstacles, places rooftop vertiports, generates continuous origin-destination missions, and models takeoff, climb, cruise, avoidance, descent, landing, and vertiport pad waiting processes. Five experimental conditions are compared: no avoidance, building avoidance only, inter-aircraft avoidance only, integrated avoidance without pad occupancy, and integrated avoidance with pad occupancy. Six expanded city scenarios were executed in parallel for approximately one hour of wall-clock time, while each simulation run generated missions every 10 seconds over a 10,800 second simulated operation period. The resulting dataset contains 235 simulation runs and 253,800 generated missions. The integrated avoidance condition without pad occupancy reduced normalized collision-risk events by 61.5 to 93.1 percent compared with the no-avoidance condition. The pad occupancy condition revealed that vertiport resource constraints can substantially increase waiting time and reduce mission completion rates in small and congested scenarios. These results suggest that a lightweight mobility simulator can help separate the effects of avoidance functions from vertiport operational bottlenecks under controlled experimental settings.
+This study proposes a Python-based eVTOL mobility model simulator for analyzing urban air mobility operations in a simplified grid city environment. The simulator represents buildings as three-dimensional obstacles, places rooftop vertiports, generates continuous origin-destination missions, and models takeoff, climb, cruise, avoidance, descent, landing, and vertiport pad waiting processes. Five experimental conditions are compared: no avoidance, building avoidance only, inter-aircraft avoidance only, integrated avoidance without pad occupancy, and integrated avoidance with pad occupancy. Six expanded city scenarios were executed in parallel for approximately 48 hours of wall-clock time, while each simulation run generated missions every 10 seconds over a 10,800 second simulated operation period. The resulting dataset contains 93,919 simulation runs and 101,432,520 generated missions. The integrated avoidance condition without pad occupancy reduced normalized collision-risk events by 62.5 to 93.1 percent compared with the no-avoidance condition. The pad occupancy condition revealed that vertiport resource constraints can substantially increase waiting time and reduce mission completion rates in small and congested scenarios. These results suggest that a lightweight mobility simulator can help separate the effects of avoidance functions from vertiport operational bottlenecks under controlled experimental settings.
 
 ## Keywords
 eVTOL, urban air mobility, mobility model, simulation, collision avoidance, vertiport
@@ -23,7 +23,7 @@ K-UAM 기술로드맵은 UAM 운용고도를 300-600 m로 제시하고, UAM 교�
 
 본 연구의 목적은 고충실도 항공기 동역학이나 실제 UAM 운항 전 과정을 재현하는 데 있지 않고, 도심 격자 환경에서 건물 회피, 비행체 간 충돌 회피, 버티포트 패드 점유 제약이 장시간 누적 운항 지표에 미치는 영향을 분석할 수 있는 재현 가능한 시뮬레이션 프레임워크를 제안하는 데 있다. 이를 위해 Python 기반 eVTOL 이동성 모델 시뮬레이터를 구현하고, 여섯 개의 확장 도시 시나리오와 다섯 개의 기능 조합 조건을 적용하여 충돌 위험 이벤트, 임무 완료율, 패드 지연을 비교하였다.
 
-본 연구의 기여점은 다음과 같다. 첫째, 격자형 도시 환경과 랜덤 건물 배치를 반영한 eVTOL 시뮬레이션 프레임워크를 구현하였다. 둘째, 건물 회피와 비행체 간 충돌 회피의 적용 여부를 조합한 기능 제거 기반 실험 조건을 구성하였다. 셋째, 통합 회피 조건에 버티포트 패드 점유 제약을 추가하여 충돌 위험 감소와 운영 병목이 서로 다른 지표로 나타날 수 있음을 분석하였다. 넷째, S1-S6 확장 도시 시나리오를 실제 약 1시간 동안 병렬 실행하여 장시간 누적 임무, 충돌 위험 이벤트, 버티포트 패드 지연을 표와 그래프로 분석하였다.
+본 연구의 기여점은 다음과 같다. 첫째, 격자형 도시 환경과 랜덤 건물 배치를 반영한 eVTOL 시뮬레이션 프레임워크를 구현하였다. 둘째, 건물 회피와 비행체 간 충돌 회피의 적용 여부를 조합한 기능 제거 기반 실험 조건을 구성하였다. 셋째, 통합 회피 조건에 버티포트 패드 점유 제약을 추가하여 충돌 위험 감소와 운영 병목이 서로 다른 지표로 나타날 수 있음을 분석하였다. 넷째, S1-S6 확장 도시 시나리오를 실제 약 48시간 동안 병렬 실행하여 장시간 누적 임무, 충돌 위험 이벤트, 버티포트 패드 지연을 표와 그래프로 분석하였다.
 
 ## II. 관련 연구
 Pang et al. [3]은 다수 UAV의 4D 경로 충돌을 사전 탐지하고, 출발 지연, 속도 조정, 경로 재계획을 통해 충돌을 해소하는 적응형 최적화 프레임워크를 제안하였다. 이 연구는 6 km × 6 km × 120 m 공역과 100 m × 100 m × 30 m AirMatrix 블록을 사용하고, 최소 시간 분리 기준 30 s를 적용하였다. 본 연구는 해당 연구에서 제시한 다중 기체 경로 충돌과 시간 분리 개념을 단순 스케줄링 모델로 축소하여 반영하였다.
@@ -82,69 +82,69 @@ Yang and Wei [5]는 UAM 자유비행 환경에서 MDP와 MCTS를 이용한 온�
 | Model E | Model D with vertiport pad occupancy constraint |
 
 ### 2. 실험 시나리오
-공식 실험은 S1-S6의 여섯 확장 도시 시나리오를 동시에 실행하는 wall-clock 방식으로 구성하였다. 각 시나리오 프로세스는 실제 경과 시간이 약 1시간에 도달할 때까지 Model A-E를 반복 실행하였고, 각 run은 10,800 s의 가상 운항 시간 동안 10 s 간격으로 새 임무를 생성하였다. 생성된 임무는 사용 가능한 기체에 배정하고, 착륙 완료 후에는 동일 기체를 재투입하였다. 속도는 240 km/h, 기본 안전거리는 500 ft로 설정하였다.
+공식 실험은 S1-S6의 여섯 확장 도시 시나리오를 동시에 실행하는 wall-clock 방식으로 구성하였다. 각 시나리오 프로세스는 실제 경과 시간이 약 48시간에 도달할 때까지 Model A-E를 반복 실행하였고, 각 run은 10,800 s의 가상 운항 시간 동안 10 s 간격으로 새 임무를 생성하였다. 생성된 임무는 사용 가능한 기체에 배정하고, 착륙 완료 후에는 동일 기체를 재투입하였다. 속도는 240 km/h, 기본 안전거리는 500 ft로 설정하였다.
 
 [표] 확장 실험 시나리오 | Expanded experimental scenarios
 | Scenario | Map size | Building density | Vertiports | Fleet size | Runs | Generated missions |
 |---|---:|---:|---:|---:|---:|---:|
-| S1 | 1500 m × 1500 m | 0.35 | 8 | 75 | 45 | 48,600 |
-| S2 | 2000 m × 2000 m | 0.35 | 12 | 100 | 35 | 37,800 |
-| S3 | 3000 m × 3000 m | 0.45 | 20 | 150 | 30 | 32,400 |
-| S4 | 5000 m × 5000 m | 0.30 | 32 | 200 | 55 | 59,400 |
-| S5 | 6000 m × 6000 m | 0.35 | 40 | 300 | 40 | 43,200 |
-| S6 | 6000 m × 6000 m | 0.45 | 40 | 360 | 30 | 32,400 |
+| S1 | 1500 m × 1500 m | 0.35 | 8 | 75 | 17,525 | 18,927,000 |
+| S2 | 2000 m × 2000 m | 0.35 | 12 | 100 | 13,215 | 14,272,200 |
+| S3 | 3000 m × 3000 m | 0.45 | 20 | 150 | 13,064 | 14,109,120 |
+| S4 | 5000 m × 5000 m | 0.30 | 32 | 200 | 22,940 | 24,775,200 |
+| S5 | 6000 m × 6000 m | 0.35 | 40 | 300 | 15,698 | 16,953,840 |
+| S6 | 6000 m × 6000 m | 0.45 | 40 | 360 | 11,477 | 12,395,160 |
 
 ### 3. 출력 지표
 주요 출력 지표는 총 비행 횟수, 성공 비행 횟수, 실패 비행 횟수, 건물 충돌 위험 이벤트, 비행체 간 충돌 위험 이벤트, 총 충돌 위험 이벤트, 평균 비행 거리, 평균 비행 시간, 평균 지연 시간, 평균 우회 거리, 평균 고도 변경 횟수, 평균 경로 변경 횟수, 평균 이륙 패드 대기시간, 평균 착륙 패드 대기시간, 평균 총 패드 대기시간이다. 본 연구에서 충돌 위험 이벤트는 실제 사고 횟수가 아니라 시간 샘플 기반 위험 판정 횟수로 정의한다.
 
 ## V. 실험 결과
 ### 1. wall-clock 실행 규모
-공식 실험 데이터는 S1-S6을 동시에 시작한 뒤 각 시나리오 프로세스가 약 1시간 동안 Model A-E 조건을 반복 실행하는 방식으로 산출하였다. 전체 run 수는 235개이며, 생성 임무 수는 253,800개이다. 가상 운항 duration 내 완료된 임무는 238,288개로 전체 완료율은 93.9%이다. 패드 점유 구간을 검증한 결과, 총 101,520개 패드 점유 구간에서 동일 버티포트 내 이착륙 점유 구간 겹침은 0건이었다.
+공식 실험 데이터는 S1-S6을 동시에 시작한 뒤 각 시나리오 프로세스가 약 48시간 동안 Model A-E 조건을 반복 실행하는 방식으로 산출하였다. 전체 run 수는 93,919개이며, 생성 임무 수는 101,432,520개이다. 가상 운항 duration 내 완료된 임무는 95,355,390개로 전체 완료율은 94.0%이다. 패드 점유 제약이 적용되는 조건에서는 패드 대기 발생 임무 수와 평균 패드 지연을 별도 지표로 산출하였다.
 
 [표] 시나리오별 실행 결과 | Scenario-level results
 | Scenario | Runs | Completion rate (%) | Risks per 1000 missions | Mean pad delay (s) |
 |---|---:|---:|---:|---:|
-| S1 | 45 | 85.4 | 1,482.7 | 413.1 |
-| S2 | 35 | 88.7 | 1,341.7 | 356.2 |
-| S3 | 30 | 94.5 | 1,041.5 | 280.9 |
-| S4 | 55 | 97.9 | 624.2 | 91.1 |
-| S5 | 40 | 98.4 | 732.6 | 49.0 |
-| S6 | 30 | 98.4 | 867.2 | 53.6 |
+| S1 | 17,525 | 85.5 | 1,442.7 | 410.8 |
+| S2 | 13,215 | 88.8 | 1,275.3 | 356.0 |
+| S3 | 13,064 | 94.5 | 1,047.9 | 279.6 |
+| S4 | 22,940 | 98.0 | 619.4 | 89.1 |
+| S5 | 15,698 | 98.4 | 730.9 | 52.4 |
+| S6 | 11,477 | 98.4 | 891.2 | 52.5 |
 
-![시나리오별 임무 완료 규모 | Mission completion by scenario](../figures/wallclock_v2/v2_mission_completion.png)
+![시나리오별 임무 완료 규모 | Mission completion by scenario](../figures/wallclock_48h/48h_mission_completion.png)
 
 ### 2. 시나리오 규모와 혼잡 효과
-S1-S3는 상대적으로 작은 맵 규모와 제한된 버티포트 수에 비해 임무 투입률이 높아 평균 패드 지연과 미완료 임무가 크게 나타났다. 특히 S1은 평균 패드 지연이 413.1 s이고 완료율이 85.4%로 여섯 시나리오 중 가장 낮았다. S4-S6은 맵 규모와 버티포트 수가 증가하면서 완료율이 97.9-98.4%로 높게 나타났다. 다만 S6은 S5와 동일한 6000 m × 6000 m 맵과 40개 버티포트를 사용하면서 건물 밀도와 fleet size를 높인 스트레스 조건이므로, S5보다 충돌 위험 정규화 지표가 높게 나타났다.
+S1-S3는 상대적으로 작은 맵 규모와 제한된 버티포트 수에 비해 임무 투입률이 높아 평균 패드 지연과 미완료 임무가 크게 나타났다. 특히 S1은 평균 패드 지연이 410.8 s이고 완료율이 85.5%로 여섯 시나리오 중 가장 낮았다. S4-S6은 맵 규모와 버티포트 수가 증가하면서 완료율이 98.0-98.4%로 높게 나타났다. 다만 S6은 S5와 동일한 6000 m × 6000 m 맵과 40개 버티포트를 사용하면서 건물 밀도와 fleet size를 높인 스트레스 조건이므로, S5보다 충돌 위험 정규화 지표가 높게 나타났다.
 
-![시나리오별 평균 패드 지연 | Mean pad delay by scenario](../figures/wallclock_v2/v2_pad_delay_by_scenario.png)
+![시나리오별 평균 패드 지연 | Mean pad delay by scenario](../figures/wallclock_48h/48h_pad_delay_by_scenario.png)
 
 ### 3. 충돌 위험 이벤트
-시나리오별 총 위험 이벤트는 S1 72,061건, S2 50,717건, S3 33,744건, S4 37,079건, S5 31,649건, S6 28,096건으로 나타났다. 생성 임무 수가 시나리오마다 다르므로, 비교에는 1000개 생성 임무당 위험 이벤트 수를 함께 사용하였다. 이 정규화 지표는 S1 1,482.7, S2 1,341.7, S3 1,041.5, S4 624.2, S5 732.6, S6 867.2로, 소형·고혼잡 조건인 S1-S3에서 상대적으로 높게 나타났다.
+시나리오별 총 위험 이벤트는 S1 27,305,454건, S2 18,200,733건, S3 14,784,673건, S4 15,345,573건, S5 12,390,791건, S6 11,046,618건으로 나타났다. 생성 임무 수가 시나리오마다 다르므로, 비교에는 1000개 생성 임무당 위험 이벤트 수를 함께 사용하였다. 이 정규화 지표는 S1 1,442.7, S2 1,275.3, S3 1,047.9, S4 619.4, S5 730.9, S6 891.2로, 소형·고혼잡 조건인 S1-S3에서 상대적으로 높게 나타났다.
 
-![시나리오별 정규화 충돌 위험 이벤트 | Normalized collision-risk events by scenario](../figures/wallclock_v2/v2_collision_risk_per_1000.png)
+![시나리오별 정규화 충돌 위험 이벤트 | Normalized collision-risk events by scenario](../figures/wallclock_48h/48h_collision_risk_per_1000.png)
 
 ### 4. 회피 기능별 영향 분석
-기능 조합 조건별 결과는 각 회피 기능이 어떤 위험 유형에 영향을 주는지 보여준다. 건물 회피 기능만 적용한 Model B는 건물 위험 이벤트를 크게 줄이는 데 효과적이었지만 기체 간 위험 이벤트는 남았다. 비행체 간 회피 기능만 적용한 Model C는 기체 간 위험 이벤트를 줄였지만 건물 위험 이벤트가 남았다. 두 기능을 함께 적용한 Model D는 Model A보다 낮은 정규화 충돌 위험을 보였으며, D의 A 대비 위험 감소율은 시나리오별로 61.5-93.1%로 나타났다.
+기능 조합 조건별 결과는 각 회피 기능이 어떤 위험 유형에 영향을 주는지 보여준다. 건물 회피 기능만 적용한 Model B는 건물 위험 이벤트를 크게 줄이는 데 효과적이었지만 기체 간 위험 이벤트는 남았다. 비행체 간 회피 기능만 적용한 Model C는 기체 간 위험 이벤트를 줄였지만 건물 위험 이벤트가 남았다. 두 기능을 함께 적용한 Model D는 Model A보다 낮은 정규화 충돌 위험을 보였으며, A 대비 위험 감소율은 62.5-93.1%로 나타났다.
 
 [표] Model A, D, E 비교 | Comparison of Models A, D, and E
 | Scenario | Model A | Model D | Reduction (%) | Model E | E completion (%) |
 |---|---:|---:|---:|---:|---:|
-| S1 | 1,995.0 | 768.2 | 61.5 | 2,236.9 | 32.4 |
-| S2 | 2,279.6 | 488.0 | 78.6 | 1,817.2 | 47.6 |
-| S3 | 1,842.4 | 277.2 | 85.0 | 1,287.7 | 75.8 |
-| S4 | 1,290.2 | 176.5 | 86.3 | 306.9 | 93.7 |
-| S5 | 1,753.5 | 129.9 | 92.6 | 172.5 | 96.3 |
-| S6 | 2,131.9 | 146.6 | 93.1 | 175.3 | 96.2 |
+| S1 | 1,949.6 | 731.5 | 62.5 | 2,206.7 | 32.5 |
+| S2 | 1,967.4 | 463.7 | 76.4 | 1,829.0 | 47.7 |
+| S3 | 1,793.8 | 267.1 | 85.1 | 1,308.1 | 75.8 |
+| S4 | 1,277.0 | 163.5 | 87.2 | 298.1 | 93.8 |
+| S5 | 1,648.6 | 137.2 | 91.7 | 181.3 | 96.1 |
+| S6 | 2,054.0 | 141.2 | 93.1 | 185.6 | 96.1 |
 
-![모델별 정규화 충돌 위험 이벤트 | Normalized collision-risk events by model](../figures/wallclock_v2/v2_model_risk_per_1000.png)
+![모델별 정규화 충돌 위험 이벤트 | Normalized collision-risk events by model](../figures/wallclock_48h/48h_model_risk_per_1000.png)
 
 ### 5. 버티포트 패드 점유 제약의 영향
-Model E는 Model D에 패드 점유 제약을 추가한 조건이다. 따라서 D와 E의 차이는 회피 알고리즘의 성능 우열이 아니라, 버티포트 자원 제약을 반영했을 때 임무 완료율과 대기시간이 어떻게 변화하는지를 보여준다. S1-S3에서 E의 평균 패드 지연은 각각 2,065.3 s, 1,781.2 s, 1,404.7 s로 높게 나타났고, 완료율도 각각 32.4%, 47.6%, 75.8%로 낮아졌다. 이는 버티포트 수가 제한된 소형·고혼잡 조건에서 패드 점유 제약이 누적 운항의 주요 병목으로 작용함을 의미한다.
+Model E는 Model D에 패드 점유 제약을 추가한 조건이다. 따라서 D와 E의 차이는 회피 알고리즘의 성능 우열이 아니라, 버티포트 자원 제약을 반영했을 때 임무 완료율과 대기시간이 어떻게 변화하는지를 보여준다. S1-S3에서 E의 평균 패드 지연은 각각 2,054.2 s, 1,780.2 s, 1,398.3 s로 높게 나타났고, 완료율도 각각 32.5%, 47.7%, 75.8%로 낮아졌다. 이는 버티포트 수가 제한된 소형·고혼잡 조건에서 패드 점유 제약이 누적 운항의 주요 병목으로 작용함을 의미한다.
 
-![버티포트 패드 점유 제약 적용 시 평균 패드 지연 | Mean pad delay under vertiport pad occupancy constraint](../figures/wallclock_v2/v2_model_d_vs_e.png)
+![버티포트 패드 점유 제약 적용 시 평균 패드 지연 | Mean pad delay under vertiport pad occupancy constraint](../figures/wallclock_48h/48h_model_d_vs_e.png)
 
 ## VI. 결론
-본 연구는 도심 격자 환경에서 건물과 다중 eVTOL 간의 시공간적 충돌 가능성 및 버티포트 패드 점유 제약을 고려한 Python 기반 eVTOL 이동성 모델 시뮬레이터를 구현하였다. 장시간 누적 실험은 S1-S6 여섯 시나리오에서 총 235개 run과 253,800개 생성 임무를 산출하였다. 기능 조합 기반 비교 결과, 건물 회피 기능은 건물 위험 이벤트를 줄이는 데 직접적으로 작용하고, 비행체 간 회피 기능은 기체 간 위험 이벤트를 줄이는 데 기여하였다. 두 기능을 함께 적용한 Model D는 회피 기능 미적용 조건보다 낮은 정규화 충돌 위험을 보였다. 한편 Model E는 패드 점유 제약을 반영하면서, 특히 S1-S3에서 패드 지연과 duration 이후 완료 임무가 증가하여 버티포트 자원 제약이 장시간 누적 운항의 주요 병목으로 작용함을 확인하였다.
+본 연구는 도심 격자 환경에서 건물과 다중 eVTOL 간의 시공간적 충돌 가능성 및 버티포트 패드 점유 제약을 고려한 Python 기반 eVTOL 이동성 모델 시뮬레이터를 구현하였다. 48시간 누적 실험은 S1-S6 여섯 시나리오에서 총 93,919개 run과 101,432,520개 생성 임무를 산출하였다. 기능 조합 기반 비교 결과, 건물 회피 기능은 건물 위험 이벤트를 줄이는 데 직접적으로 작용하고, 비행체 간 회피 기능은 기체 간 위험 이벤트를 줄이는 데 기여하였다. 두 기능을 함께 적용한 Model D는 회피 기능 미적용 조건보다 낮은 정규화 충돌 위험을 보였다. 한편 Model E는 패드 점유 제약을 반영하면서, 특히 S1-S3에서 패드 지연과 가상 운항 시간 이후 완료 임무가 증가하여 버티포트 자원 제약이 장시간 누적 운항의 주요 병목으로 작용함을 확인하였다.
 
 본 연구는 지도 기반 충돌 위험 판정과 단순화된 비행 단계 모델을 사용하므로, 결과 해석은 제안한 실험 환경과 입력 조건의 범위 안에서 이루어져야 한다. 충돌 위험 이벤트는 실제 사고 횟수가 아니라 시간 샘플 기반 위험 판정 횟수이며, 버티포트 패드 점유는 버티포트당 패드 1개 조건에 기반한다. 향후 연구에서는 실제 도시 건물 데이터, 고해상도 기상자료, 통신 지연, 센서 오차, 정교한 4D trajectory 기반 교통관리, 에너지 소비 모델을 반영할 필요가 있다. 또한 패드 수와 turnaround time 변화, 수요 패턴 변화, 안전거리 민감도 분석을 확장 시나리오에 추가하여 통계적 신뢰도를 높여야 한다.
 

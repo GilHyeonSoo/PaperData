@@ -277,7 +277,7 @@ def plot_completion(df: pd.DataFrame, path: Path) -> None:
     fig, ax = plt.subplots(figsize=(8, 4.6))
     ax.bar(labels, within, label="completed within duration")
     ax.bar(labels, after, bottom=within, label="completed after duration")
-    ax.set_title("Wall-clock v2 Run Mission Completion by Scenario")
+    ax.set_title("Mission Completion by Scenario")
     ax.set_xlabel("Scenario")
     ax.set_ylabel("Missions")
     ax.legend()

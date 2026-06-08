@@ -1,0 +1,51 @@
+scenario_name: S4
+target_seconds: 172800
+resume: true
+save_run_details: first
+models:
+- A
+- B
+- C
+- D
+- E
+scenario_config:
+  description: 대형 저밀도 도시 시나리오
+  model: E
+  map:
+    width: 5000
+    height: 5000
+    grid_size: 100
+    road_width: 20
+    building_density: 0.3
+  vertiports:
+    count: 32
+    pad_occupancy_enabled: true
+  aircraft:
+    fleet_size: 200
+    cruise_speed_kmh: 240
+  simulation:
+    random_seed: 104
+    duration: 7200
+    mission_interval: 30
+    time_step: 10
+    conflict_time_step: 20
+    max_departure_delay: 300
+    delay_step: 60
+wallclock_runner:
+  target_seconds: 3600
+  max_workers: 6
+  output_root: outputs/scenarios_wallclock_v2
+  models:
+  - A
+  - B
+  - C
+  - D
+  - E
+  duration: 10800
+  mission_interval: 10
+  time_step: 10
+  conflict_time_step: 20
+  max_departure_delay: 300
+  delay_step: 60
+  seed_start: 1000
+  report_interval_seconds: 60

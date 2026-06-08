@@ -1,0 +1,13 @@
+scenario_name: S5
+run_count: 15698
+wall_time_s: 172803.15187019994
+generated_missions_total: 16953840
+completed_within_duration_total: 16685456
+completed_after_duration_total: 268384
+collision_risk_count_total: 12390791
+building_collision_count_total: 9394760
+aircraft_collision_count_total: 2996031
+avg_pad_delay_s_mean: 52.39513367237987
+max_pad_delay_s_max: 2286.791725870671
+avg_flight_time_s_mean: 133.8846143008013
+models: A,B,C,D,E

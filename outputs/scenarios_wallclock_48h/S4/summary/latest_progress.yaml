@@ -1,0 +1,13 @@
+scenario_name: S4
+run_count: 22940
+wall_time_s: 172813.45355099998
+generated_missions_total: 24775200
+completed_within_duration_total: 24281646
+completed_after_duration_total: 493554
+collision_risk_count_total: 15345573
+building_collision_count_total: 9681153
+aircraft_collision_count_total: 5664420
+avg_pad_delay_s_mean: 89.127017135211
+max_pad_delay_s_max: 3463.5176836410665
+avg_flight_time_s_mean: 140.48036661721645
+models: A,B,C,D,E
