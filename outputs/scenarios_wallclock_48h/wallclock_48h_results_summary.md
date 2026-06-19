@@ -1,4 +1,4 @@
-# S1-S6 / Model A-E wall-clock v2 결과 요약
+# S1-S6 / Model A-E 누적 결과 요약
 
 ## 시나리오별 요약
 | scenario_name | run_count | wall_time_s | generated_missions_total | completed_within_duration_total | completion_rate_pct | collision_risk_count_total | risk_per_1000_missions | avg_pad_delay_s_mean | avg_flight_time_s_mean | models |

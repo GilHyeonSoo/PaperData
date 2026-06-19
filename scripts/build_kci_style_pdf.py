@@ -93,6 +93,24 @@ def split_caption(text: str) -> tuple[str, str]:
     return text.strip(), ""
 
 
+def strip_caption_number(text: str, label: str) -> str:
+    return re.sub(rf"^{label}\s*\d+\.\s*", "", text.strip())
+
+
+def clean_equation(text: str) -> str:
+    text = text.strip()
+    replacements = {
+        r"\quad": "    ",
+        r"\,": " ",
+        r"\left": "",
+        r"\right": "",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    text = text.replace("\\", "")
+    return html.escape(text)
+
+
 def split_table_row(line: str) -> list[str]:
     line = line.strip()
     if line.startswith("|"):
@@ -301,6 +319,16 @@ def make_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
             spaceBefore=2,
             spaceAfter=0,
         ),
+        "equation": ParagraphStyle(
+            "equation",
+            parent=base["BodyText"],
+            fontName=fonts["en"],
+            fontSize=9.0,
+            leading=12,
+            alignment=TA_CENTER,
+            spaceBefore=4,
+            spaceAfter=4,
+        ),
         "figure_caption_en": ParagraphStyle(
             "figure_caption_en",
             parent=base["BodyText"],
@@ -313,17 +341,17 @@ def make_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
         "table_cell": ParagraphStyle(
             "table_cell",
             parent=base["BodyText"],
-            fontName=fonts["en"],
-            fontSize=5.8,
-            leading=7.0,
+            fontName=fonts["ko"],
+            fontSize=6.4,
+            leading=7.8,
             alignment=TA_CENTER,
         ),
         "table_head": ParagraphStyle(
             "table_head",
             parent=base["BodyText"],
-            fontName=fonts["en_bold"],
-            fontSize=5.8,
-            leading=7.0,
+            fontName=fonts["ko_bold"],
+            fontSize=6.4,
+            leading=7.8,
             alignment=TA_CENTER,
         ),
         "refs_heading": ParagraphStyle(
@@ -339,7 +367,7 @@ def make_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
         "reference": ParagraphStyle(
             "reference",
             parent=base["BodyText"],
-            fontName=fonts["en"],
+            fontName=fonts["ko"],
             fontSize=8.1,
             leading=11.5,
             alignment=TA_LEFT,
@@ -373,6 +401,8 @@ def append_table(
     for row in rows:
         row.extend([""] * (max_cols - len(row)))
     ko_caption, en_caption = split_caption(caption)
+    ko_caption = strip_caption_number(ko_caption, "표")
+    en_caption = re.sub(r"^(Table)\s*\d+\.\s*", "", en_caption.strip())
     flowables = [
         Paragraph(f"표 {table_no}. {clean_inline(ko_caption)}", styles["table_caption"]),
     ]
@@ -406,6 +436,8 @@ def append_image(story: list, line: str, styles: dict[str, ParagraphStyle], fig_
         return fig_no
     caption, path_text = match.groups()
     ko_caption, en_caption = split_caption(caption)
+    ko_caption = strip_caption_number(ko_caption, "그림")
+    en_caption = re.sub(r"^(Fig\\.|Figure)\s*\d+\.\s*", "", en_caption.strip())
     image_path = resolve_image_path(path_text)
     if not image_path.exists():
         story.append(Paragraph(f"[Missing figure: {clean_inline(path_text)}]", styles["figure_caption"]))
@@ -434,15 +466,29 @@ def append_body_lines(story: list, body_lines: list[str], references: list[str],
     table_caption = ""
     table_no = 1
     fig_no = 1
+    equation_buffer: list[str] | None = None
 
     for raw in body_lines:
         stripped = raw.strip()
+        if equation_buffer is not None:
+            if stripped == r"\]":
+                text = " ".join(clean_equation(part) for part in equation_buffer if part.strip())
+                if text:
+                    story.append(Paragraph(text, styles["equation"]))
+                equation_buffer = None
+            else:
+                equation_buffer.append(stripped)
+            continue
         if table_buffer and not stripped.startswith("|"):
             table_no = append_table(story, table_buffer, styles, table_no, table_caption)
             table_buffer = []
             table_caption = ""
         if not stripped:
             paragraph_from_buffer(story, buffer, styles["body"])
+            continue
+        if stripped == r"\[":
+            paragraph_from_buffer(story, buffer, styles["body"])
+            equation_buffer = []
             continue
         if stripped.startswith("## "):
             paragraph_from_buffer(story, buffer, styles["body"])
@@ -453,6 +499,9 @@ def append_body_lines(story: list, body_lines: list[str], references: list[str],
         elif stripped.startswith("[표]"):
             paragraph_from_buffer(story, buffer, styles["body"])
             table_caption = stripped.replace("[표]", "", 1).strip()
+        elif re.fullmatch(r"표\s*\d+\..*", stripped):
+            paragraph_from_buffer(story, buffer, styles["body"])
+            table_caption = re.sub(r"^표\s*\d+\.\s*", "", stripped)
         elif stripped.startswith("|"):
             table_buffer.append(stripped)
         elif stripped.startswith("!["):
@@ -463,6 +512,10 @@ def append_body_lines(story: list, body_lines: list[str], references: list[str],
 
     if table_buffer:
         append_table(story, table_buffer, styles, table_no, table_caption)
+    if equation_buffer:
+        text = " ".join(clean_equation(part) for part in equation_buffer if part.strip())
+        if text:
+            story.append(Paragraph(text, styles["equation"]))
     paragraph_from_buffer(story, buffer, styles["body"])
     story.append(Paragraph("References", styles["refs_heading"]))
 
