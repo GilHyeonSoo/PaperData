@@ -350,7 +350,7 @@ def write_figures(
         scenario_summary,
         "avg_pad_delay_s_mean",
         "",
-        "Mean pad delay (s)",
+        "Average pad delay (s)",
         figures_dir / f"{prefix}_pad_delay_by_scenario.png",
     )
     plot_model_metric(
@@ -381,7 +381,7 @@ def plot_completion(df: pd.DataFrame, path: Path) -> None:
     after = df["generated_missions_total"] - df["completed_within_duration_total"]
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
     ax.bar(labels, within, label="Completed within horizon", color="#4C78A8")
-    ax.bar(labels, after, bottom=within, label="Completed after horizon", color="#F58518")
+    ax.bar(labels, after, bottom=within, label="Not completed within horizon", color="#F58518")
     ax.set_xlabel("Scenario")
     ax.set_ylabel("Missions")
     ax.legend(frameon=False)
@@ -445,9 +445,9 @@ def plot_de_comparison(df: pd.DataFrame, path: Path) -> None:
         return
     subset = subset.sort_values("scenario_name", key=lambda col: col.map(scenario_sort_key))
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
-    ax.bar(subset["scenario_name"], subset["avg_pad_delay_s"], color="#E45756", label="Model E")
+    ax.bar(subset["scenario_name"], subset["avg_pad_delay_s"], color="#ff7e0b", label="Model E")
     ax.set_xlabel("Scenario")
-    ax.set_ylabel("Mean pad delay (s)")
+    ax.set_ylabel("Average pad delay (s)")
     ax.legend(frameon=False)
     ax.grid(axis="y", alpha=0.25)
     fig.tight_layout()
